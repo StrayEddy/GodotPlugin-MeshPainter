@@ -48,7 +48,6 @@ func get_face(point, normal, epsilon = 0.2):
 	return null
 
 func barycentric(P, A, B, C) -> Vector3:
-	# Returns barycentric co-ordinates of point P in triangle ABC
 	var v0 = B - A
 	var v1 = C - A
 	var v2 = P - A
