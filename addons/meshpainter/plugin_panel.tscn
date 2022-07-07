@@ -1,0 +1,83 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://addons/meshpainter/plugin_panel.gd" type="Script" id=1]
+[ext_resource path="res://addons/meshpainter/icons/brush.svg" type="Texture" id=2]
+[ext_resource path="res://addons/meshpainter/icons/bucket.svg" type="Texture" id=3]
+[ext_resource path="res://addons/meshpainter/icons/eraser.svg" type="Texture" id=4]
+[ext_resource path="res://addons/meshpainter/icons/brush-selected.svg" type="Texture" id=5]
+[ext_resource path="res://addons/meshpainter/icons/bucket-selected.svg" type="Texture" id=6]
+[ext_resource path="res://addons/meshpainter/icons/eraser-selected.svg" type="Texture" id=7]
+
+[node name="PluginPanel" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -874.0
+rect_min_size = Vector2( 180, 0 )
+script = ExtResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 180.0
+margin_bottom = 155.0
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 180.0
+margin_bottom = 14.0
+text = "Mesh Painter"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 18.0
+margin_right = 180.0
+margin_bottom = 22.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 26.0
+margin_right = 180.0
+margin_bottom = 58.0
+rect_min_size = Vector2( 0, 32 )
+
+[node name="BrushButton" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 0 )
+toggle_mode = true
+pressed = true
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 5 )
+expand = true
+
+[node name="BucketButton" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 36.0
+margin_right = 68.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 0 )
+toggle_mode = true
+texture_normal = ExtResource( 3 )
+texture_pressed = ExtResource( 6 )
+expand = true
+
+[node name="EraserButton" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 72.0
+margin_right = 104.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 0 )
+toggle_mode = true
+texture_normal = ExtResource( 4 )
+texture_pressed = ExtResource( 7 )
+expand = true
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+margin_top = 62.0
+margin_right = 180.0
+margin_bottom = 66.0
+
+[node name="MaterialsList" type="ItemList" parent="VBoxContainer"]
+margin_top = 70.0
+margin_right = 180.0
+margin_bottom = 79.0
+auto_height = true
+same_column_width = true
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/BrushButton" to="." method="_on_BrushButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/BucketButton" to="." method="_on_BucketButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/EraserButton" to="." method="_on_EraserButton_pressed"]
+[connection signal="item_selected" from="VBoxContainer/MaterialsList" to="." method="_on_MaterialsList_item_selected"]

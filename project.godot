@@ -1,0 +1,58 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "TextureButton",
+"class": "PluginButton",
+"language": "GDScript",
+"path": "res://addons/meshpainter/plugin_button.gd"
+}, {
+"base": "Spatial",
+"class": "PluginCursor",
+"language": "GDScript",
+"path": "res://addons/meshpainter/plugin_cursor.gd"
+}, {
+"base": "Node",
+"class": "PluginPainter",
+"language": "GDScript",
+"path": "res://addons/meshpainter/plugin_painter.gd"
+}, {
+"base": "Control",
+"class": "PluginPanel",
+"language": "GDScript",
+"path": "res://addons/meshpainter/plugin_panel.gd"
+} ]
+_global_script_class_icons={
+"PluginButton": "",
+"PluginCursor": "",
+"PluginPainter": "",
+"PluginPanel": ""
+}
+
+[application]
+
+config/name="MeshPainter"
+config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/meshpainter/plugin.cfg" )
+
+[meshpainter]
+
+handle_value=false
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
