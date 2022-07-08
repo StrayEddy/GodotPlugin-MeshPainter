@@ -70,14 +70,6 @@ margin_top = 62.0
 margin_right = 180.0
 margin_bottom = 66.0
 
-[node name="MaterialsList" type="ItemList" parent="VBoxContainer"]
-margin_top = 70.0
-margin_right = 180.0
-margin_bottom = 79.0
-auto_height = true
-same_column_width = true
-
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/BrushButton" to="." method="_on_BrushButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/BucketButton" to="." method="_on_BucketButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/EraserButton" to="." method="_on_EraserButton_pressed"]
-[connection signal="item_selected" from="VBoxContainer/MaterialsList" to="." method="_on_MaterialsList_item_selected"]

@@ -16,7 +16,9 @@ var temp_collision :CollisionShape
 var temp_body :StaticBody
 
 var current_material :ShaderMaterial
-var current_texture :ImageTexture
+var texture_brush_info :ImageTexture
+var texture_albedo_info :ImageTexture
+var texture_mrae_info :ImageTexture
 
 var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.shader")
 
@@ -30,40 +32,43 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 	self.mesh_instance = mesh_instance
 	if mesh_instance.mesh:
 		generate_collision()
-		setup_materials_list()
-		select_material(0)
-		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, current_material, current_texture)
+		setup_material()
+		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, current_material, texture_brush_info, texture_albedo_info)
 
-func setup_materials_list():
-	for i in mesh_instance.mesh.get_surface_count():
-		var material = mesh_instance.mesh.surface_set_material(i, null)
-		add_material(i)
-		$VBoxContainer/MaterialsList.clear()
-		$VBoxContainer/MaterialsList.add_item("Material " + str(i))
-
-func add_material(idx):
+func setup_material():
+	mesh_instance.mesh.surface_set_material(0, null)
+	
 	var mat = ShaderMaterial.new()
 	mat.shader = pbr_shader
 	
-	var imageTexture = ImageTexture.new()
-	var dynImage = Image.new()
-	dynImage.create(1024,1024,false,Image.FORMAT_RGB8)
-	dynImage.fill(Color(1,1,1,1))
-	imageTexture.create_from_image(dynImage)
-	imageTexture.resource_name = "Basic white texture"
+	var temp_image = Image.new()
+	temp_image.create(512,512,false,Image.FORMAT_RGBAH)
 	
-	mat.set_shader_param("texture_albedo", imageTexture)
-	mat.set_shader_param("albedo", Color(1,1,1,1))
-	mat.set_shader_param("roughness", 1.0)
+	# Build brush info texture
+	texture_brush_info = ImageTexture.new()
+	temp_image.fill(Color(0,0,0,0))
+	texture_brush_info.create_from_image(temp_image)
+	texture_brush_info.resource_name = "Brush info texture"
+	
+	# Build albedo info texture
+	texture_albedo_info = ImageTexture.new()
+	temp_image.fill(Color(1,1,1,1))
+	texture_albedo_info.create_from_image(temp_image)
+	texture_albedo_info.resource_name = "Albedo info texture"
+	
+	# Build mrae info texture
+	texture_mrae_info = ImageTexture.new()
+	temp_image.fill(Color(0,1,0,0))
+	texture_mrae_info.create_from_image(temp_image)
+	texture_mrae_info.resource_name = "MRAE info texture"
+	
+	mat.set_shader_param("texture_brush_info", texture_brush_info)
+	mat.set_shader_param("texture_albedo_info", texture_albedo_info)
+	mat.set_shader_param("texture_mrae_info", texture_mrae_info)
+	
 	mat.set_shader_param("uv1_scale", Vector3(1,1,1))
-	mat.set_shader_param("uv2_scale", Vector3(1,1,1))
-	mesh_instance.mesh.surface_set_material(idx, mat)
 	
-	current_texture = imageTexture
-
-func select_material(idx :int):
-	$VBoxContainer/MaterialsList.select(idx)
-	current_material = mesh_instance.mesh.surface_get_material(idx)
+	mesh_instance.mesh.surface_set_material(0, mat)
 
 func generate_collision():
 	temp_collision = CollisionShape.new()
@@ -118,7 +123,3 @@ func _on_EraserButton_pressed() -> void:
 	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(true)
-
-func _on_MaterialsList_item_selected(index: int) -> void:
-	var mat: SpatialMaterial = mesh_instance.mesh.surface_get_material(index)
-	current_texture = mat.albedo_texture

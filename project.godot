@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/meshpainter/plugin_cursor.gd"
 }, {
-"base": "Node",
-"class": "PluginPainter",
-"language": "GDScript",
-"path": "res://addons/meshpainter/plugin_painter.gd"
-}, {
 "base": "Control",
 "class": "PluginPanel",
 "language": "GDScript",
@@ -32,7 +27,6 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "PluginButton": "",
 "PluginCursor": "",
-"PluginPainter": "",
 "PluginPanel": ""
 }
 
