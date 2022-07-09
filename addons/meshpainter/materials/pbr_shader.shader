@@ -20,15 +20,13 @@ void vertex() {
 
 void fragment() {
 	vec2 base_uv = UV;
-	vec4 brush_info = texture(texture_brush_info,base_uv);
-	vec4 albedo_info = texture(texture_albedo_info,base_uv);
-	vec4 mrae_info = texture(texture_mrae_info,base_uv);
+	vec4 mrae_info = texture(texture_mrae_info, base_uv);
 	
-	vec3 albedo = vec3(1,1,1);
+	vec4 albedo = vec4(1,1,1,1);
 	
-	for (int x = 0; x < textureSize(texture_brush_info, 0).x; x++) 
+	for (int y = 0; y < textureSize(texture_brush_info, 0).y; y++) 
 	{
-		for (int y = 0; y < textureSize(texture_brush_info, 0).y; y++) 
+		for (int x = 0; x < textureSize(texture_brush_info, 0).x; x++) 
 		{
 			vec4 brush_texel = texelFetch(texture_brush_info, ivec2(x, y), 0);
 			float brush_size = brush_texel.a;
@@ -37,13 +35,14 @@ void fragment() {
 				break;
 			
 			if (dist < brush_size) {
-				albedo = texelFetch(texture_albedo_info, ivec2(x, y), 0).rgb;
+				vec4 color = texelFetch(texture_albedo_info, ivec2(x, y), 0);
+				albedo = mix(albedo, color, color.a);
 			}
 		}
 	}
 	
-	ALBEDO = albedo;
+	ALBEDO = albedo.rgb;
 	METALLIC = mrae_info.r;
 	ROUGHNESS = mrae_info.g;
-	EMISSION = albedo*mrae_info.a;
+	EMISSION = albedo.rgb*mrae_info.a;
 }

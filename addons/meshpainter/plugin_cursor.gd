@@ -10,6 +10,8 @@ var material :ShaderMaterial
 var texture_brush_info :ImageTexture
 var texture_albedo_info :ImageTexture
 
+var brush_color :Color
+var brush_size :float
 var brush_buffer :Array
 var albedo_buffer :Array
 var clicking = false
@@ -33,6 +35,18 @@ func hide_cursor():
 	clicking = false
 	temp_plugin_node.remove_child(self)
 	hide()
+
+func set_brush_color(color :Color):
+	brush_color.r = color.r
+	brush_color.g = color.g
+	brush_color.b = color.b
+
+func set_brush_opacity(alpha: float):
+	brush_color.a = alpha
+
+func set_brush_size(size :float):
+	brush_size = size
+	$Cursor.radius = size
 
 func textures_to_buffers():
 	brush_buffer = []
@@ -94,10 +108,8 @@ func input(camera :Camera, event: InputEvent) -> bool:
 			display_brush_at(hit.position, hit.normal)
 			if clicking:
 				var local_pos = mesh_instance.to_local(hit.position)
-				print(hit.position)
-				print(local_pos)
-				var brush_info = Color(local_pos.x, local_pos.y, local_pos.z, 0.1)
-				var albedo_info = Color.cornflower
+				var brush_info = Color(local_pos.x, local_pos.y, local_pos.z, brush_size)
+				var albedo_info = brush_color
 				brush_buffer.append(brush_info)
 				albedo_buffer.append(albedo_info)
 				buffers_to_textures()
@@ -114,15 +126,15 @@ func input(camera :Camera, event: InputEvent) -> bool:
 func display_brush_at(pos = null, normal = null) -> void:
 	if pos:
 		$Cursor.visible = true
-		$Cursor.transform.origin = pos
+		$Cursor.global_transform.origin = pos
 		
-		if $Cursor.transform.basis.z.cross(normal) != Vector3.ZERO:
-			$Cursor.transform.basis.y = normal
-			$Cursor.transform.basis.x = $Cursor.transform.basis.z.cross(normal)
-			$Cursor.transform.basis = $Cursor.transform.basis.orthonormalized()
+		if $Cursor.global_transform.basis.z.cross(normal) != Vector3.ZERO:
+			$Cursor.global_transform.basis.y = normal
+			$Cursor.global_transform.basis.x = $Cursor.global_transform.basis.z.cross(normal)
+			$Cursor.global_transform.basis = $Cursor.global_transform.basis.orthonormalized()
 		else:
-			$Cursor.transform.basis.y = normal
-			$Cursor.transform.basis.z = $Cursor.transform.basis.x.cross(normal)
-			$Cursor.transform.basis = $Cursor.transform.basis.orthonormalized()
+			$Cursor.global_transform.basis.y = normal
+			$Cursor.global_transform.basis.z = $Cursor.global_transform.basis.x.cross(normal)
+			$Cursor.global_transform.basis = $Cursor.global_transform.basis.orthonormalized()
 	else:
 		$Cursor.visible = false

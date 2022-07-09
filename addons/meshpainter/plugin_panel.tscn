@@ -70,6 +70,67 @@ margin_top = 62.0
 margin_right = 180.0
 margin_bottom = 66.0
 
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 70.0
+margin_right = 180.0
+margin_bottom = 90.0
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/VBoxContainer"]
+margin_right = 180.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.329412, 0.509804, 0.843137, 1 )
+edit_alpha = false
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
+margin_top = 94.0
+margin_right = 180.0
+margin_bottom = 98.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 102.0
+margin_right = 180.0
+margin_bottom = 140.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer2"]
+margin_right = 180.0
+margin_bottom = 14.0
+text = "Opacity"
+
+[node name="OpacitySlider" type="HSlider" parent="VBoxContainer/VBoxContainer2"]
+margin_top = 18.0
+margin_right = 180.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 120, 20 )
+min_value = 0.01
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 144.0
+margin_right = 180.0
+margin_bottom = 182.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer3"]
+margin_right = 180.0
+margin_bottom = 14.0
+text = "Size"
+
+[node name="SizeSlider" type="HSlider" parent="VBoxContainer/VBoxContainer3"]
+margin_top = 18.0
+margin_right = 180.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 120, 20 )
+min_value = 0.01
+max_value = 1.0
+step = 0.01
+value = 0.1
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/BrushButton" to="." method="_on_BrushButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/BucketButton" to="." method="_on_BucketButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/EraserButton" to="." method="_on_EraserButton_pressed"]
+[connection signal="color_changed" from="VBoxContainer/VBoxContainer/ColorPickerButton" to="." method="_on_ColorPickerButton_color_changed"]
+[connection signal="value_changed" from="VBoxContainer/VBoxContainer2/OpacitySlider" to="." method="_on_OpacitySlider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/VBoxContainer3/SizeSlider" to="." method="_on_SizeSlider_value_changed"]

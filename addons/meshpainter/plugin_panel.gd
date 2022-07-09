@@ -34,6 +34,9 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 		generate_collision()
 		setup_material()
 		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, current_material, texture_brush_info, texture_albedo_info)
+		_on_ColorPickerButton_color_changed(Color.cornflower)
+		_on_OpacitySlider_value_changed(1.0)
+		_on_SizeSlider_value_changed(0.1)
 
 func setup_material():
 	mesh_instance.mesh.surface_set_material(0, null)
@@ -123,3 +126,12 @@ func _on_EraserButton_pressed() -> void:
 	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(true)
+
+func _on_ColorPickerButton_color_changed(color: Color) -> void:
+	plugin_cursor.set_brush_color(color)
+
+func _on_OpacitySlider_value_changed(alpha: float) -> void:
+	plugin_cursor.set_brush_opacity(alpha)
+
+func _on_SizeSlider_value_changed(size: float) -> void:
+	plugin_cursor.set_brush_size(size)

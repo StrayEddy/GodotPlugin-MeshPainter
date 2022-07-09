@@ -1,18 +1,16 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://addons/meshpainter/materials/plugin_cursor.tres" type="Material" id=1]
 [ext_resource path="res://addons/meshpainter/plugin_cursor.gd" type="Script" id=2]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0, 0, 0, 0.196078 )
 
 [node name="PluginCursor" type="Spatial"]
 script = ExtResource( 2 )
 
-[node name="Cursor" type="CSGTorus" parent="."]
-inner_radius = 0.2
-outer_radius = 0.21
-sides = 24
-ring_sides = 24
-material = ExtResource( 1 )
-
-[node name="CSGSphere" type="CSGSphere" parent="Cursor"]
-radius = 0.0100746
-material = ExtResource( 1 )
+[node name="Cursor" type="CSGSphere" parent="."]
+radial_segments = 48
+rings = 24
+material = SubResource( 1 )
