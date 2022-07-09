@@ -13,6 +13,8 @@ func selection_changed() -> void:
 		var mesh_instance = selection[0]
 		editable = true
 		plugin_button.show_button(root, mesh_instance)
+		plugin_panel.hide_panel()
+		plugin_cursor.hide_cursor()
 	else:
 		editable = false
 		plugin_button.hide_button()

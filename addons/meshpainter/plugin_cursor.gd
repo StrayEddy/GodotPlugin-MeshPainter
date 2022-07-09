@@ -6,7 +6,6 @@ class_name PluginCursor
 var root :Node
 var mesh_instance :MeshInstance
 var temp_plugin_node :Spatial
-var material :ShaderMaterial
 var texture_brush_info :ImageTexture
 var texture_albedo_info :ImageTexture
 
@@ -16,13 +15,12 @@ var brush_buffer :Array
 var albedo_buffer :Array
 var clicking = false
 
-func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, material :ShaderMaterial, texture_brush_info :ImageTexture, texture_albedo_info :ImageTexture):
+func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, texture_brush_info :ImageTexture, texture_albedo_info :ImageTexture):
 	show()
 	
 	self.root = root
 	self.mesh_instance = mesh_instance
 	self.temp_plugin_node = temp_plugin_node
-	self.material = material
 	self.texture_brush_info = texture_brush_info
 	self.texture_albedo_info = texture_albedo_info
 	
@@ -59,18 +57,19 @@ func textures_to_buffers():
 	albedo_image.lock()
 	
 	var is_done = false
-	for x in range(0, brush_image.get_width()):
+	for y in range(0, brush_image.get_height()):
 		if is_done:
 			break
-		for y in range(0, brush_image.get_height()):
+		for x in range(0, brush_image.get_width()):
 			var brush_pixel = brush_image.get_pixel(x, y)
 			if brush_pixel.a == 0.0:
 				is_done = true
 				break
 			else:
-				brush_buffer.append(brush_image)
+				brush_buffer.append(brush_pixel)
 				albedo_buffer.append(albedo_image.get_pixel(x, y))
 	
+	print(brush_buffer)
 	brush_image.unlock()
 	albedo_image.unlock()
 

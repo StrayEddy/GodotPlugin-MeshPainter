@@ -15,7 +15,6 @@ var temp_plugin_node :Spatial
 var temp_collision :CollisionShape
 var temp_body :StaticBody
 
-var current_material :ShaderMaterial
 var texture_brush_info :ImageTexture
 var texture_albedo_info :ImageTexture
 var texture_mrae_info :ImageTexture
@@ -33,13 +32,20 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 	if mesh_instance.mesh:
 		generate_collision()
 		setup_material()
-		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, current_material, texture_brush_info, texture_albedo_info)
+		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, texture_brush_info, texture_albedo_info)
 		_on_ColorPickerButton_color_changed(Color.cornflower)
 		_on_OpacitySlider_value_changed(1.0)
 		_on_SizeSlider_value_changed(0.1)
 
 func setup_material():
-	mesh_instance.mesh.surface_set_material(0, null)
+	var existing_material :Material = mesh_instance.mesh.surface_get_material(0)
+	if existing_material:
+		if existing_material is ShaderMaterial:
+			if existing_material.shader == pbr_shader:
+				texture_brush_info = existing_material.get_shader_param("texture_brush_info")
+				texture_albedo_info = existing_material.get_shader_param("texture_albedo_info")
+				texture_mrae_info = existing_material.get_shader_param("texture_mrae_info")
+				return
 	
 	var mat = ShaderMaterial.new()
 	mat.shader = pbr_shader
@@ -76,6 +82,7 @@ func setup_material():
 func generate_collision():
 	temp_collision = CollisionShape.new()
 	temp_collision.set_shape(mesh_instance.mesh.create_trimesh_shape())
+	temp_collision.hide()
 	temp_body = StaticBody.new()
 	temp_body.add_child(temp_collision)
 	temp_body.collision_layer = 32
