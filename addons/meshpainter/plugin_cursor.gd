@@ -13,17 +13,17 @@ var clicking = false
 
 var brush_buffer :Array
 var color_buffer :Array
-var texture_brush_info :ImageTexture
-var texture_color_info :ImageTexture
+var tex_brush :ImageTexture
+var tex_color :ImageTexture
 
-func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, texture_brush_info :ImageTexture, texture_color_info :ImageTexture):
+func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, tex_brush :ImageTexture, tex_color :ImageTexture):
 	show()
 	
 	self.root = root
 	self.mesh_instance = mesh_instance
 	self.temp_plugin_node = temp_plugin_node
-	self.texture_brush_info = texture_brush_info
-	self.texture_color_info = texture_color_info
+	self.tex_brush = tex_brush
+	self.tex_color = tex_color
 	
 	textures_to_buffers()
 	
@@ -52,8 +52,8 @@ func textures_to_buffers():
 	brush_buffer = []
 	color_buffer = []
 	
-	var brush_image = texture_brush_info.get_data()
-	var color_image = texture_color_info.get_data()
+	var brush_image = tex_brush.get_data()
+	var color_image = tex_color.get_data()
 	
 	brush_image.lock()
 	color_image.lock()
@@ -75,8 +75,8 @@ func textures_to_buffers():
 	color_image.unlock()
 
 func buffers_to_textures():
-	var brush_image = texture_brush_info.get_data()
-	var color_image = texture_color_info.get_data()
+	var brush_image = tex_brush.get_data()
+	var color_image = tex_color.get_data()
 	brush_image.fill(Color(0,0,0,0))
 	color_image.fill(Color(1,1,1,1))
 	brush_image.lock()
@@ -93,8 +93,8 @@ func buffers_to_textures():
 	
 	brush_image.unlock()
 	color_image.unlock()
-	texture_brush_info.set_data(brush_image)
-	texture_color_info.set_data(color_image)
+	tex_brush.set_data(brush_image)
+	tex_color.set_data(color_image)
 
 func input(camera :Camera, event: InputEvent) -> bool:
 	var captured_event = false

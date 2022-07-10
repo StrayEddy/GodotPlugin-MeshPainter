@@ -3,22 +3,26 @@ extends Control
 
 class_name PluginPanel
 
-enum SelectionMode {BRUSH, BUCKET, ERASER}
+enum TabMode {ALBEDO, ROUGHNESS, METALNESS, EMISSION}
 
 var plugin_cursor :PluginCursor
 
 var root :Node
 var mesh_instance :MeshInstance
 
-var selected_mode = SelectionMode.BRUSH
+var tab_mode = TabMode.ALBEDO
 var temp_plugin_node :Spatial
 var temp_collision :CollisionShape
 var temp_body :StaticBody
 
-var texture_brush_info :ImageTexture
-var texture_albedo_info :ImageTexture
-var texture_roughness_info :ImageTexture
-var texture_mrae_info :ImageTexture
+var tex_albedo_brush :ImageTexture
+var tex_albedo_color :ImageTexture
+var tex_roughness_brush :ImageTexture
+var tex_roughness_color :ImageTexture
+var tex_metalness_brush :ImageTexture
+var tex_metalness_color :ImageTexture
+var tex_emission_brush :ImageTexture
+var tex_emission_color :ImageTexture
 
 var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.shader")
 
@@ -33,48 +37,22 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 	if mesh_instance.mesh:
 		generate_collision()
 		setup_material()
-		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, texture_brush_info, texture_albedo_info)
-		_on_BrushButton_pressed()
-
-func show_brush_panel():
-	$VBoxContainer/BrushPanel.show()
-	$VBoxContainer/BucketPanel.hide()
-	$VBoxContainer/EraserPanel.hide()
-	
-	$VBoxContainer/BrushPanel/ColorPickerButton.color = Color.cornflower
-	$VBoxContainer/BrushPanel/VBoxContainer2/OpacitySlider.value = 1.0
-	$VBoxContainer/BrushPanel/VBoxContainer3/SizeSlider.value = 0.1
-	_on_Brush_ColorPickerButton_color_changed(Color.cornflower)
-	_on_Brush_OpacitySlider_value_changed(1.0)
-	_on_Brush_SizeSlider_value_changed(0.1)
-
-func show_bucket_panel():
-	$VBoxContainer/BrushPanel.hide()
-	$VBoxContainer/BucketPanel.show()
-	$VBoxContainer/EraserPanel.hide()
-	
-	$VBoxContainer/BucketPanel/ColorPickerButton.color = Color.cornflower
-	$VBoxContainer/BucketPanel/VBoxContainer2/OpacitySlider.value = 1.0
-	_on_Bucket_ColorPickerButton_color_changed(Color.cornflower)
-	_on_Bucket_OpacitySlider_value_changed(1.0)
-
-func show_eraser_panel():
-	$VBoxContainer/BrushPanel.hide()
-	$VBoxContainer/BucketPanel.hide()
-	$VBoxContainer/EraserPanel.show()
-	
-	$VBoxContainer/EraserPanel/VBoxContainer3/SizeSlider.value = 0.1
-	_on_Eraser_SizeSlider_value_changed(0.1)
+		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, tex_albedo_brush, tex_albedo_color)
+		_on_TabContainer_tab_selected(0)
 
 func setup_material():
 	var existing_material :Material = mesh_instance.mesh.surface_get_material(0)
 	if existing_material:
 		if existing_material is ShaderMaterial:
 			if existing_material.shader == pbr_shader:
-				texture_brush_info = existing_material.get_shader_param("texture_brush_info")
-				texture_albedo_info = existing_material.get_shader_param("texture_albedo_info")
-				texture_roughness_info = existing_material.get_shader_param("texture_roughness_info")
-				texture_mrae_info = existing_material.get_shader_param("texture_mrae_info")
+				tex_albedo_brush = existing_material.get_shader_param("tex_albedo_brush")
+				tex_albedo_color = existing_material.get_shader_param("tex_albedo_color")
+				tex_roughness_brush = existing_material.get_shader_param("tex_roughness_color")
+				tex_roughness_color = existing_material.get_shader_param("tex_roughness_color")
+				tex_metalness_brush = existing_material.get_shader_param("tex_metalness_brush")
+				tex_metalness_color = existing_material.get_shader_param("tex_metalness_color")
+				tex_emission_brush = existing_material.get_shader_param("tex_emission_brush")
+				tex_emission_color = existing_material.get_shader_param("tex_emission_color")
 				return
 	
 	var mat = ShaderMaterial.new()
@@ -83,34 +61,58 @@ func setup_material():
 	var temp_image = Image.new()
 	temp_image.create(512,512,false,Image.FORMAT_RGBAH)
 	
-	# Build brush info texture
-	texture_brush_info = ImageTexture.new()
+	# Build albedo brush texture
+	tex_albedo_brush = ImageTexture.new()
 	temp_image.fill(Color(0,0,0,0))
-	texture_brush_info.create_from_image(temp_image)
-	texture_brush_info.resource_name = "Brush info texture"
-	
-	# Build albedo info texture
-	texture_albedo_info = ImageTexture.new()
+	tex_albedo_brush.create_from_image(temp_image)
+	tex_albedo_brush.resource_name = "Albedo brush texture"
+	# Build albedo color texture
+	tex_albedo_color = ImageTexture.new()
 	temp_image.fill(Color(1,1,1,1))
-	texture_albedo_info.create_from_image(temp_image)
-	texture_albedo_info.resource_name = "Albedo info texture"
+	tex_albedo_color.create_from_image(temp_image)
+	tex_albedo_color.resource_name = "Albedo color texture"
 	
-	# Build roughness info texture
-	texture_roughness_info = ImageTexture.new()
+	# Build roughness brush texture
+	tex_roughness_brush = ImageTexture.new()
+	temp_image.fill(Color(0,0,0,0))
+	tex_roughness_brush.create_from_image(temp_image)
+	tex_roughness_brush.resource_name = "Roughness brush texture"
+	# Build roughness color texture
+	tex_roughness_color = ImageTexture.new()
 	temp_image.fill(Color(1,1,1,1))
-	texture_roughness_info.create_from_image(temp_image)
-	texture_roughness_info.resource_name = "Roughness info texture"
+	tex_roughness_color.create_from_image(temp_image)
+	tex_roughness_color.resource_name = "Roughness color texture"
 	
-	# Build mrae info texture
-	texture_mrae_info = ImageTexture.new()
-	temp_image.fill(Color(0,1,0,0))
-	texture_mrae_info.create_from_image(temp_image)
-	texture_mrae_info.resource_name = "MRAE info texture"
+	# Build metalness brush texture
+	tex_metalness_brush = ImageTexture.new()
+	temp_image.fill(Color(0,0,0,0))
+	tex_metalness_brush.create_from_image(temp_image)
+	tex_metalness_brush.resource_name = "Metalness brush texture"
+	# Build metalness color texture
+	tex_metalness_color = ImageTexture.new()
+	temp_image.fill(Color(1,1,1,1))
+	tex_metalness_color.create_from_image(temp_image)
+	tex_metalness_color.resource_name = "Metalness color texture"
 	
-	mat.set_shader_param("texture_brush_info", texture_brush_info)
-	mat.set_shader_param("texture_albedo_info", texture_albedo_info)
-	mat.set_shader_param("texture_roughness_info", texture_roughness_info)
-	mat.set_shader_param("texture_mrae_info", texture_mrae_info)
+	# Build emission brush texture
+	tex_emission_brush = ImageTexture.new()
+	temp_image.fill(Color(0,0,0,0))
+	tex_emission_brush.create_from_image(temp_image)
+	tex_emission_brush.resource_name = "Emission brush texture"
+	# Build albedo color texture
+	tex_emission_color = ImageTexture.new()
+	temp_image.fill(Color(1,1,1,1))
+	tex_emission_color.create_from_image(temp_image)
+	tex_emission_color.resource_name = "Emission color texture"
+	
+	mat.set_shader_param("tex_albedo_brush", tex_albedo_brush)
+	mat.set_shader_param("tex_albedo_color", tex_albedo_color)
+	mat.set_shader_param("tex_roughness_brush", tex_roughness_brush)
+	mat.set_shader_param("tex_roughness_color", tex_roughness_color)
+	mat.set_shader_param("tex_metalness_brush", tex_metalness_brush)
+	mat.set_shader_param("tex_metalness_color", tex_metalness_color)
+	mat.set_shader_param("tex_emission_brush", tex_emission_brush)
+	mat.set_shader_param("tex_emission_color", tex_emission_color)
 	
 	mat.set_shader_param("uv1_scale", Vector3(1,1,1))
 	
@@ -150,50 +152,20 @@ func set_mesh_instance(mesh_instance :MeshInstance):
 			mesh_instance.add_child(temp_body)
 			self.mesh_instance = mesh_instance
 
+func _on_TabContainer_tab_selected(tab: int) -> void:
+	var tab_name = "A"
+	tab_mode = tab
+	match tab_mode:
+		TabMode.ALBEDO:
+			tab_name = "A"
+		TabMode.ROUGHNESS:
+			tab_name = "R"
+		TabMode.METALNESS:
+			tab_name = "M"
+		TabMode.EMISSION:
+			tab_name = "E"
 
-func _on_BrushButton_pressed() -> void:
-	selected_mode = SelectionMode.BRUSH
-	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(true)
-	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(false)
-	show_brush_panel()
-
-
-func _on_BucketButton_pressed() -> void:
-	selected_mode = SelectionMode.BUCKET
-	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(true)
-	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(false)
-	show_bucket_panel()
-
-
-func _on_EraserButton_pressed() -> void:
-	selected_mode = SelectionMode.ERASER
-	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(true)
-	show_eraser_panel()
-
-# Brush UI events
-func _on_Brush_ColorPickerButton_color_changed(color: Color) -> void:
-	plugin_cursor.set_brush_color(color)
-
-func _on_Brush_OpacitySlider_value_changed(alpha: float) -> void:
-	plugin_cursor.set_brush_opacity(alpha)
-
-func _on_Brush_SizeSlider_value_changed(size: float) -> void:
-	plugin_cursor.set_brush_size(size/100)
-
-# Bucket UI events
-func _on_Bucket_ColorPickerButton_color_changed(color: Color) -> void:
-	plugin_cursor.set_brush_color(color)
-	plugin_cursor.set_brush_size(1.0)
-
-func _on_Bucket_OpacitySlider_value_changed(alpha: float) -> void:
-	plugin_cursor.set_brush_opacity(alpha)
-
-# Eraser UI events
-func _on_Eraser_SizeSlider_value_changed(size: float) -> void:
-	plugin_cursor.set_brush_color(Color.white)
-	plugin_cursor.set_brush_size(size/100)
-	plugin_cursor.set_brush_opacity(1.0)
+func _on_Albedo_values_changed(brush_color, brush_opacity, brush_size) -> void:
+	plugin_cursor.set_brush_color(brush_color)
+	plugin_cursor.set_brush_opacity(brush_opacity)
+	plugin_cursor.set_brush_size(brush_size)
