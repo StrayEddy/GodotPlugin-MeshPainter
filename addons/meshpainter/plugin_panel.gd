@@ -17,6 +17,7 @@ var temp_body :StaticBody
 
 var texture_brush_info :ImageTexture
 var texture_albedo_info :ImageTexture
+var texture_roughness_info :ImageTexture
 var texture_mrae_info :ImageTexture
 
 var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.shader")
@@ -72,6 +73,7 @@ func setup_material():
 			if existing_material.shader == pbr_shader:
 				texture_brush_info = existing_material.get_shader_param("texture_brush_info")
 				texture_albedo_info = existing_material.get_shader_param("texture_albedo_info")
+				texture_roughness_info = existing_material.get_shader_param("texture_roughness_info")
 				texture_mrae_info = existing_material.get_shader_param("texture_mrae_info")
 				return
 	
@@ -93,6 +95,12 @@ func setup_material():
 	texture_albedo_info.create_from_image(temp_image)
 	texture_albedo_info.resource_name = "Albedo info texture"
 	
+	# Build roughness info texture
+	texture_roughness_info = ImageTexture.new()
+	temp_image.fill(Color(1,1,1,1))
+	texture_roughness_info.create_from_image(temp_image)
+	texture_roughness_info.resource_name = "Roughness info texture"
+	
 	# Build mrae info texture
 	texture_mrae_info = ImageTexture.new()
 	temp_image.fill(Color(0,1,0,0))
@@ -101,6 +109,7 @@ func setup_material():
 	
 	mat.set_shader_param("texture_brush_info", texture_brush_info)
 	mat.set_shader_param("texture_albedo_info", texture_albedo_info)
+	mat.set_shader_param("texture_roughness_info", texture_roughness_info)
 	mat.set_shader_param("texture_mrae_info", texture_mrae_info)
 	
 	mat.set_shader_param("uv1_scale", Vector3(1,1,1))
