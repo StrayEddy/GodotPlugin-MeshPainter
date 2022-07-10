@@ -70,37 +70,44 @@ margin_top = 62.0
 margin_right = 180.0
 margin_bottom = 66.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="BrushPanel" type="Panel" parent="VBoxContainer"]
 margin_top = 70.0
 margin_right = 180.0
-margin_bottom = 90.0
+margin_bottom = 190.0
+rect_min_size = Vector2( 180, 120 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/VBoxContainer"]
-margin_right = 180.0
-margin_bottom = 20.0
+[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/BrushPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 176.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0.329412, 0.509804, 0.843137, 1 )
 edit_alpha = false
 
-[node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
-margin_top = 94.0
-margin_right = 180.0
-margin_bottom = 98.0
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/BrushPanel"]
+margin_left = 4.0
+margin_top = 28.0
+margin_right = 176.0
+margin_bottom = 32.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
-margin_top = 102.0
-margin_right = 180.0
-margin_bottom = 140.0
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/BrushPanel"]
+margin_left = 4.0
+margin_top = 36.0
+margin_right = 176.0
+margin_bottom = 74.0
 
-[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer2"]
-margin_right = 180.0
+[node name="Label" type="Label" parent="VBoxContainer/BrushPanel/VBoxContainer2"]
+margin_right = 172.0
 margin_bottom = 14.0
 text = "Opacity"
 
-[node name="OpacitySlider" type="HSlider" parent="VBoxContainer/VBoxContainer2"]
+[node name="OpacitySlider" type="HSlider" parent="VBoxContainer/BrushPanel/VBoxContainer2"]
 margin_top = 18.0
-margin_right = 180.0
+margin_right = 172.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 120, 20 )
 min_value = 0.01
@@ -108,19 +115,95 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer"]
-margin_top = 144.0
-margin_right = 180.0
-margin_bottom = 182.0
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/BrushPanel"]
+margin_left = 4.0
+margin_top = 78.0
+margin_right = 176.0
+margin_bottom = 116.0
 
-[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer3"]
-margin_right = 180.0
+[node name="Label" type="Label" parent="VBoxContainer/BrushPanel/VBoxContainer3"]
+margin_right = 172.0
 margin_bottom = 14.0
 text = "Size"
 
-[node name="SizeSlider" type="HSlider" parent="VBoxContainer/VBoxContainer3"]
+[node name="SizeSlider" type="HSlider" parent="VBoxContainer/BrushPanel/VBoxContainer3"]
 margin_top = 18.0
+margin_right = 172.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 120, 20 )
+min_value = 0.01
+max_value = 1.0
+step = 0.01
+value = 0.1
+
+[node name="BucketPanel" type="Panel" parent="VBoxContainer"]
+margin_top = 194.0
 margin_right = 180.0
+margin_bottom = 274.0
+rect_min_size = Vector2( 180, 80 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/BucketPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 176.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.329412, 0.509804, 0.843137, 1 )
+edit_alpha = false
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/BucketPanel"]
+margin_left = 4.0
+margin_top = 28.0
+margin_right = 176.0
+margin_bottom = 32.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/BucketPanel"]
+margin_left = 4.0
+margin_top = 36.0
+margin_right = 176.0
+margin_bottom = 74.0
+
+[node name="Label" type="Label" parent="VBoxContainer/BucketPanel/VBoxContainer2"]
+margin_right = 172.0
+margin_bottom = 14.0
+text = "Opacity"
+
+[node name="OpacitySlider" type="HSlider" parent="VBoxContainer/BucketPanel/VBoxContainer2"]
+margin_top = 18.0
+margin_right = 172.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 120, 20 )
+min_value = 0.01
+max_value = 1.0
+step = 0.01
+value = 1.0
+ticks_on_borders = true
+
+[node name="EraserPanel" type="Panel" parent="VBoxContainer"]
+margin_top = 278.0
+margin_right = 180.0
+margin_bottom = 328.0
+rect_min_size = Vector2( 180, 50 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/EraserPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 176.0
+margin_bottom = 42.0
+
+[node name="Label" type="Label" parent="VBoxContainer/EraserPanel/VBoxContainer3"]
+margin_right = 172.0
+margin_bottom = 14.0
+text = "Size"
+
+[node name="SizeSlider" type="HSlider" parent="VBoxContainer/EraserPanel/VBoxContainer3"]
+margin_top = 18.0
+margin_right = 172.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 120, 20 )
 min_value = 0.01
@@ -131,6 +214,9 @@ value = 0.1
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/BrushButton" to="." method="_on_BrushButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/BucketButton" to="." method="_on_BucketButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/EraserButton" to="." method="_on_EraserButton_pressed"]
-[connection signal="color_changed" from="VBoxContainer/VBoxContainer/ColorPickerButton" to="." method="_on_ColorPickerButton_color_changed"]
-[connection signal="value_changed" from="VBoxContainer/VBoxContainer2/OpacitySlider" to="." method="_on_OpacitySlider_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/VBoxContainer3/SizeSlider" to="." method="_on_SizeSlider_value_changed"]
+[connection signal="color_changed" from="VBoxContainer/BrushPanel/ColorPickerButton" to="." method="_on_Brush_ColorPickerButton_color_changed"]
+[connection signal="value_changed" from="VBoxContainer/BrushPanel/VBoxContainer2/OpacitySlider" to="." method="_on_Brush_OpacitySlider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/BrushPanel/VBoxContainer3/SizeSlider" to="." method="_on_Brush_SizeSlider_value_changed"]
+[connection signal="color_changed" from="VBoxContainer/BucketPanel/ColorPickerButton" to="." method="_on_Bucket_ColorPickerButton_color_changed"]
+[connection signal="value_changed" from="VBoxContainer/BucketPanel/VBoxContainer2/OpacitySlider" to="." method="_on_Bucket_OpacitySlider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/EraserPanel/VBoxContainer3/SizeSlider" to="." method="_on_Eraser_SizeSlider_value_changed"]

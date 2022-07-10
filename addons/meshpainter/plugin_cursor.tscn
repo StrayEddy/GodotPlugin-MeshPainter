@@ -1,16 +1,57 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/meshpainter/plugin_cursor.gd" type="Script" id=2]
+
+[sub_resource type="Shader" id=5]
+code = "// NOTE: Shader automatically converted from Godot Engine 3.4.4.stable's SpatialMaterial.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,unshaded,depth_test_disable;
+uniform vec3 color1 = vec3(1.0,0.0,0.0);
+uniform vec3 color2 = vec3(0.0,1.0,0.0);
+
+varying vec3 world_position;
+
+void vertex() {
+	world_position = (WORLD_MATRIX * vec4(VERTEX, 1.0)).xyz;
+}
+
+void fragment() {
+//	ALBEDO = mix(color1, color2, (1.0 + cos(TIME))/2.0);
+//	ALBEDO = vec3(world_position.x, world_position.y, world_position.z);
+	ALBEDO = vec3(SCREEN_UV.x, SCREEN_UV.y, 0.);
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/color1 = Vector3( 1, 0, 0 )
+shader_param/color2 = Vector3( 0, 1, 0 )
+
+[sub_resource type="SphereMesh" id=4]
+material = SubResource( 6 )
+radius = 0.02
+height = 0.04
+radial_segments = 16
+rings = 8
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_transparent = true
 flags_unshaded = true
 albedo_color = Color( 0, 0, 0, 0.196078 )
 
+[sub_resource type="SphereMesh" id=2]
+material = SubResource( 1 )
+radial_segments = 48
+rings = 24
+
 [node name="PluginCursor" type="Spatial"]
 script = ExtResource( 2 )
 
-[node name="Cursor" type="CSGSphere" parent="."]
-radial_segments = 48
-rings = 24
-material = SubResource( 1 )
+[node name="CursorMiddle" type="MeshInstance" parent="."]
+mesh = SubResource( 4 )
+skeleton = NodePath("../Cursor")
+material/0 = null
+
+[node name="Cursor" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+material/0 = null

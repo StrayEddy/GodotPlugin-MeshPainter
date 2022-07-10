@@ -33,9 +33,37 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 		generate_collision()
 		setup_material()
 		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, texture_brush_info, texture_albedo_info)
-		_on_ColorPickerButton_color_changed(Color.cornflower)
-		_on_OpacitySlider_value_changed(1.0)
-		_on_SizeSlider_value_changed(0.1)
+		show_brush_panel()
+
+func show_brush_panel():
+	$VBoxContainer/BrushPanel.show()
+	$VBoxContainer/BucketPanel.hide()
+	$VBoxContainer/EraserPanel.hide()
+	
+	$VBoxContainer/BrushPanel/ColorPickerButton.color = Color.cornflower
+	$VBoxContainer/BrushPanel/VBoxContainer2/OpacitySlider.value = 1.0
+	$VBoxContainer/BrushPanel/VBoxContainer3/SizeSlider.value = 0.1
+	_on_Brush_ColorPickerButton_color_changed(Color.cornflower)
+	_on_Brush_OpacitySlider_value_changed(1.0)
+	_on_Brush_SizeSlider_value_changed(0.1)
+
+func show_bucket_panel():
+	$VBoxContainer/BrushPanel.hide()
+	$VBoxContainer/BucketPanel.show()
+	$VBoxContainer/EraserPanel.hide()
+	
+	$VBoxContainer/BucketPanel/ColorPickerButton.color = Color.cornflower
+	$VBoxContainer/BucketPanel/VBoxContainer2/OpacitySlider.value = 1.0
+	_on_Bucket_ColorPickerButton_color_changed(Color.cornflower)
+	_on_Bucket_OpacitySlider_value_changed(1.0)
+
+func show_eraser_panel():
+	$VBoxContainer/BrushPanel.hide()
+	$VBoxContainer/BucketPanel.hide()
+	$VBoxContainer/EraserPanel.show()
+	
+	$VBoxContainer/EraserPanel/VBoxContainer3/SizeSlider.value = 0.1
+	_on_Eraser_SizeSlider_value_changed(0.1)
 
 func setup_material():
 	var existing_material :Material = mesh_instance.mesh.surface_get_material(0)
@@ -119,6 +147,7 @@ func _on_BrushButton_pressed() -> void:
 	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(true)
 	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(false)
+	show_brush_panel()
 
 
 func _on_BucketButton_pressed() -> void:
@@ -126,6 +155,7 @@ func _on_BucketButton_pressed() -> void:
 	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(true)
 	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(false)
+	show_bucket_panel()
 
 
 func _on_EraserButton_pressed() -> void:
@@ -133,12 +163,28 @@ func _on_EraserButton_pressed() -> void:
 	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
 	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(true)
+	show_eraser_panel()
 
-func _on_ColorPickerButton_color_changed(color: Color) -> void:
+# Brush UI events
+func _on_Brush_ColorPickerButton_color_changed(color: Color) -> void:
 	plugin_cursor.set_brush_color(color)
 
-func _on_OpacitySlider_value_changed(alpha: float) -> void:
+func _on_Brush_OpacitySlider_value_changed(alpha: float) -> void:
 	plugin_cursor.set_brush_opacity(alpha)
 
-func _on_SizeSlider_value_changed(size: float) -> void:
-	plugin_cursor.set_brush_size(size)
+func _on_Brush_SizeSlider_value_changed(size: float) -> void:
+	plugin_cursor.set_brush_size(size/100)
+
+# Bucket UI events
+func _on_Bucket_ColorPickerButton_color_changed(color: Color) -> void:
+	plugin_cursor.set_brush_color(color)
+	plugin_cursor.set_brush_size(1.0)
+
+func _on_Bucket_OpacitySlider_value_changed(alpha: float) -> void:
+	plugin_cursor.set_brush_opacity(alpha)
+
+# Eraser UI events
+func _on_Eraser_SizeSlider_value_changed(size: float) -> void:
+	plugin_cursor.set_brush_color(Color.white)
+	plugin_cursor.set_brush_size(size/100)
+	plugin_cursor.set_brush_opacity(1.0)

@@ -44,7 +44,7 @@ func set_brush_opacity(alpha: float):
 
 func set_brush_size(size :float):
 	brush_size = size
-	$Cursor.radius = size
+	$Cursor.scale = Vector3(1.0, 1.0, 1.0) * size * 100
 
 func textures_to_buffers():
 	brush_buffer = []
@@ -69,7 +69,6 @@ func textures_to_buffers():
 				brush_buffer.append(brush_pixel)
 				albedo_buffer.append(albedo_image.get_pixel(x, y))
 	
-	print(brush_buffer)
 	brush_image.unlock()
 	albedo_image.unlock()
 
@@ -126,14 +125,8 @@ func display_brush_at(pos = null, normal = null) -> void:
 	if pos:
 		$Cursor.visible = true
 		$Cursor.global_transform.origin = pos
-		
-		if $Cursor.global_transform.basis.z.cross(normal) != Vector3.ZERO:
-			$Cursor.global_transform.basis.y = normal
-			$Cursor.global_transform.basis.x = $Cursor.global_transform.basis.z.cross(normal)
-			$Cursor.global_transform.basis = $Cursor.global_transform.basis.orthonormalized()
-		else:
-			$Cursor.global_transform.basis.y = normal
-			$Cursor.global_transform.basis.z = $Cursor.global_transform.basis.x.cross(normal)
-			$Cursor.global_transform.basis = $Cursor.global_transform.basis.orthonormalized()
+		$CursorMiddle.visible = true
+		$CursorMiddle.global_transform.origin = pos
 	else:
 		$Cursor.visible = false
+		$CursorMiddle.visible = false

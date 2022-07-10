@@ -29,7 +29,7 @@ void fragment() {
 		for (int x = 0; x < textureSize(texture_brush_info, 0).x; x++) 
 		{
 			vec4 brush_texel = texelFetch(texture_brush_info, ivec2(x, y), 0);
-			float brush_size = brush_texel.a;
+			float brush_size = brush_texel.a * 100.0;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
 			if (brush_size == 0.0)
 				break;
