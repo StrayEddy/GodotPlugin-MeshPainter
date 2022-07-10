@@ -90,7 +90,7 @@ func setup_material():
 	tex_metalness_brush.resource_name = "Metalness brush texture"
 	# Build metalness color texture
 	tex_metalness_color = ImageTexture.new()
-	temp_image.fill(Color(1,1,1,1))
+	temp_image.fill(Color(0,0,0,1))
 	tex_metalness_color.create_from_image(temp_image)
 	tex_metalness_color.resource_name = "Metalness color texture"
 	
@@ -177,6 +177,11 @@ func _on_Albedo_values_changed(brush_color, brush_opacity, brush_size) -> void:
 	plugin_cursor.set_brush_size(brush_size)
 
 func _on_Roughness_values_changed(brush_color, brush_opacity, brush_size) -> void:
+	plugin_cursor.set_brush_color(brush_color)
+	plugin_cursor.set_brush_opacity(brush_opacity)
+	plugin_cursor.set_brush_size(brush_size)
+
+func _on_Metalness_values_changed(brush_color, brush_opacity, brush_size) -> void:
 	plugin_cursor.set_brush_color(brush_color)
 	plugin_cursor.set_brush_opacity(brush_opacity)
 	plugin_cursor.set_brush_size(brush_size)

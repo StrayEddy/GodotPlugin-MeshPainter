@@ -64,11 +64,34 @@ vec4 get_roughness() {
 	return roughness;
 }
 
+vec4 get_metalness() {
+	vec4 metalness = vec4(0,0,0,1);
+	
+	for (int y = 0; y < textureSize(tex_metalness_brush, 0).y; y++) 
+	{
+		for (int x = 0; x < textureSize(tex_metalness_brush, 0).x; x++) 
+		{
+			vec4 brush_texel = texelFetch(tex_metalness_brush, ivec2(x, y), 0);
+			float brush_size = brush_texel.a * 100.0;
+			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
+			if (brush_size == 0.0)
+				break;
+			
+			if (dist < brush_size) {
+				vec4 color = texelFetch(tex_metalness_color, ivec2(x, y), 0);
+				metalness = color;
+			}
+		}
+	}
+	return metalness;
+}
+
 void fragment() {
 	vec4 albedo = get_albedo();
 	vec4 roughness = get_roughness();
+	vec4 metalness = get_metalness();
 	ALBEDO = albedo.rgb;
 	ROUGHNESS = roughness.r;
-//	METALLIC = mrae_info.r;
+	METALLIC = metalness.r;
 //	EMISSION = albedo.rgb*mrae_info.a;
 }
