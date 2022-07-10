@@ -31,7 +31,8 @@ func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spat
 
 func hide_cursor():
 	clicking = false
-	temp_plugin_node.remove_child(self)
+	if temp_plugin_node:
+		temp_plugin_node.remove_child(self)
 	hide()
 
 func set_brush_color(color :Color):
@@ -75,6 +76,8 @@ func textures_to_buffers():
 func buffers_to_textures():
 	var brush_image = texture_brush_info.get_data()
 	var albedo_image = texture_albedo_info.get_data()
+	brush_image.fill(Color(0,0,0,0))
+	albedo_image.fill(Color(1,1,1,1))
 	brush_image.lock()
 	albedo_image.lock()
 	
@@ -108,6 +111,11 @@ func input(camera :Camera, event: InputEvent) -> bool:
 				var local_pos = mesh_instance.to_local(hit.position)
 				var brush_info = Color(local_pos.x, local_pos.y, local_pos.z, brush_size)
 				var albedo_info = brush_color
+				
+				if brush_size == 1.0 and brush_color.a == 1.0:
+					brush_buffer = []
+					albedo_buffer = []
+				
 				brush_buffer.append(brush_info)
 				albedo_buffer.append(albedo_info)
 				buffers_to_textures()

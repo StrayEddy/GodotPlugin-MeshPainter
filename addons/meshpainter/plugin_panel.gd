@@ -23,7 +23,7 @@ var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	_on_BrushButton_pressed()
+	pass
 
 func show_panel(root :Node, mesh_instance :MeshInstance):
 	show()
@@ -33,7 +33,7 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 		generate_collision()
 		setup_material()
 		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, texture_brush_info, texture_albedo_info)
-		show_brush_panel()
+		_on_BrushButton_pressed()
 
 func show_brush_panel():
 	$VBoxContainer/BrushPanel.show()
