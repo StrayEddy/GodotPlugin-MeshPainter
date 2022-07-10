@@ -3,7 +3,7 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 
 uniform sampler2D tex_albedo_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
 uniform sampler2D tex_albedo_color : hint_albedo;
-uniform sampler2D tex_rouhgness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
+uniform sampler2D tex_roughness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
 uniform sampler2D tex_roughness_color : hint_albedo;
 uniform sampler2D tex_metalness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
 uniform sampler2D tex_metalness_color : hint_albedo;
@@ -42,10 +42,33 @@ vec4 get_albedo() {
 	return albedo;
 }
 
+vec4 get_roughness() {
+	vec4 roughness = vec4(1,1,1,1);
+	
+	for (int y = 0; y < textureSize(tex_roughness_brush, 0).y; y++) 
+	{
+		for (int x = 0; x < textureSize(tex_roughness_brush, 0).x; x++) 
+		{
+			vec4 brush_texel = texelFetch(tex_roughness_brush, ivec2(x, y), 0);
+			float brush_size = brush_texel.a * 100.0;
+			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
+			if (brush_size == 0.0)
+				break;
+			
+			if (dist < brush_size) {
+				vec4 color = texelFetch(tex_roughness_color, ivec2(x, y), 0);
+				roughness = color;
+			}
+		}
+	}
+	return roughness;
+}
+
 void fragment() {
 	vec4 albedo = get_albedo();
+	vec4 roughness = get_roughness();
 	ALBEDO = albedo.rgb;
+	ROUGHNESS = roughness.r;
 //	METALLIC = mrae_info.r;
-//	ROUGHNESS = mrae_info.g;
 //	EMISSION = albedo.rgb*mrae_info.a;
 }

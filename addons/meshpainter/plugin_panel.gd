@@ -37,7 +37,7 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 	if mesh_instance.mesh:
 		generate_collision()
 		setup_material()
-		plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, tex_albedo_brush, tex_albedo_color)
+		$VBoxContainer/TabContainer/A.show()
 		_on_TabContainer_tab_selected(0)
 
 func setup_material():
@@ -47,7 +47,7 @@ func setup_material():
 			if existing_material.shader == pbr_shader:
 				tex_albedo_brush = existing_material.get_shader_param("tex_albedo_brush")
 				tex_albedo_color = existing_material.get_shader_param("tex_albedo_color")
-				tex_roughness_brush = existing_material.get_shader_param("tex_roughness_color")
+				tex_roughness_brush = existing_material.get_shader_param("tex_roughness_brush")
 				tex_roughness_color = existing_material.get_shader_param("tex_roughness_color")
 				tex_metalness_brush = existing_material.get_shader_param("tex_metalness_brush")
 				tex_metalness_color = existing_material.get_shader_param("tex_metalness_color")
@@ -139,7 +139,9 @@ func hide_panel():
 		if temp_plugin_node:
 			mesh_instance.remove_child(temp_plugin_node)
 		mesh_instance = null
-	plugin_cursor.hide_cursor()
+	
+	if plugin_cursor:
+		plugin_cursor.hide_cursor()
 	hide()
 
 func set_mesh_instance(mesh_instance :MeshInstance):
@@ -158,14 +160,23 @@ func _on_TabContainer_tab_selected(tab: int) -> void:
 	match tab_mode:
 		TabMode.ALBEDO:
 			tab_name = "A"
+			plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, tex_albedo_brush, tex_albedo_color)
 		TabMode.ROUGHNESS:
 			tab_name = "R"
+			plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, tex_roughness_brush, tex_roughness_color)
 		TabMode.METALNESS:
 			tab_name = "M"
+			plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, tex_metalness_brush, tex_metalness_color)
 		TabMode.EMISSION:
 			tab_name = "E"
+			plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, tex_emission_brush, tex_emission_color)
 
 func _on_Albedo_values_changed(brush_color, brush_opacity, brush_size) -> void:
+	plugin_cursor.set_brush_color(brush_color)
+	plugin_cursor.set_brush_opacity(brush_opacity)
+	plugin_cursor.set_brush_size(brush_size)
+
+func _on_Roughness_values_changed(brush_color, brush_opacity, brush_size) -> void:
 	plugin_cursor.set_brush_color(brush_color)
 	plugin_cursor.set_brush_opacity(brush_opacity)
 	plugin_cursor.set_brush_size(brush_size)

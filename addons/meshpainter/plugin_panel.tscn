@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/meshpainter/plugin_panel.gd" type="Script" id=1]
+[ext_resource path="res://addons/meshpainter/roughness_panel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/meshpainter/albedo_panel.tscn" type="PackedScene" id=8]
 
 [node name="PluginPanel" type="Control"]
@@ -32,7 +33,7 @@ tab_align = 0
 
 [node name="A" parent="VBoxContainer/TabContainer" instance=ExtResource( 8 )]
 
-[node name="R" parent="VBoxContainer/TabContainer" instance=ExtResource( 8 )]
+[node name="R" parent="VBoxContainer/TabContainer" instance=ExtResource( 2 )]
 visible = false
 
 [node name="M" parent="VBoxContainer/TabContainer" instance=ExtResource( 8 )]
@@ -43,3 +44,4 @@ visible = false
 
 [connection signal="tab_selected" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_selected"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/A" to="." method="_on_Albedo_values_changed"]
+[connection signal="values_changed" from="VBoxContainer/TabContainer/R" to="." method="_on_Roughness_values_changed"]
