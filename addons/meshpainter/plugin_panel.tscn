@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/meshpainter/plugin_panel.gd" type="Script" id=1]
 [ext_resource path="res://addons/meshpainter/roughness_panel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/meshpainter/metalness_panel.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/meshpainter/emission_panel.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/meshpainter/albedo_panel.tscn" type="PackedScene" id=8]
 
 [node name="PluginPanel" type="Control"]
@@ -40,10 +41,11 @@ visible = false
 [node name="M" parent="VBoxContainer/TabContainer" instance=ExtResource( 3 )]
 visible = false
 
-[node name="E" parent="VBoxContainer/TabContainer" instance=ExtResource( 8 )]
+[node name="E" parent="VBoxContainer/TabContainer" instance=ExtResource( 4 )]
 visible = false
 
 [connection signal="tab_selected" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_selected"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/A" to="." method="_on_Albedo_values_changed"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/R" to="." method="_on_Roughness_values_changed"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/M" to="." method="_on_Metalness_values_changed"]
+[connection signal="values_changed" from="VBoxContainer/TabContainer/E" to="." method="_on_Emission_values_changed"]
