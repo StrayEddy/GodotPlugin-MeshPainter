@@ -5,14 +5,14 @@
 shader_type spatial;
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
 
-uniform sampler2D tex_albedo_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
-uniform sampler2D tex_albedo_color : hint_albedo;
-uniform sampler2D tex_roughness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
-uniform sampler2D tex_roughness_color : hint_albedo; // r, g and b all at same value (0.0 - 1.0)
-uniform sampler2D tex_metalness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
-uniform sampler2D tex_metalness_color : hint_albedo; // r, g and b all at same value (0.0 - 1.0)
-uniform sampler2D tex_emission_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
-uniform sampler2D tex_emission_color : hint_albedo; // r, g and b all at same roughness value (0.0 - 1.0) and a for emission intensity
+uniform sampler2DArray tex_albedo_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
+uniform sampler2DArray tex_albedo_color : hint_albedo;
+uniform sampler2DArray tex_roughness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
+uniform sampler2DArray tex_roughness_color : hint_albedo; // r, g and b all at same value (0.0 - 1.0)
+uniform sampler2DArray tex_metalness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
+uniform sampler2DArray tex_metalness_color : hint_albedo; // r, g and b all at same value (0.0 - 1.0)
+uniform sampler2DArray tex_emission_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
+uniform sampler2DArray tex_emission_color : hint_albedo; // r, g and b all at same roughness value (0.0 - 1.0) and a for emission intensity
 
 uniform vec3 uv1_scale;
 uniform vec3 uv1_offset;
@@ -38,7 +38,7 @@ vec4 get_albedo() {
 		for (int x = 0; x < textureSize(tex_albedo_brush, 0).x; x++) 
 		{
 			// Get brush pixel info
-			vec4 brush_texel = texelFetch(tex_albedo_brush, ivec2(x, y), 0);
+			vec4 brush_texel = texelFetch(tex_albedo_brush, ivec3(x, y, 0), 0);
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
 			float brush_size = brush_texel.a * 100.0;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
@@ -48,7 +48,7 @@ vec4 get_albedo() {
 			
 			// Get color of close enough brush to mix paint the current pixel
 			if (dist < brush_size) {
-				vec4 color = texelFetch(tex_albedo_color, ivec2(x, y), 0);
+				vec4 color = texelFetch(tex_albedo_color, ivec3(x, y, 0), 0);
 				albedo = mix(albedo, color, color.a);
 			}
 		}
@@ -68,7 +68,7 @@ vec4 get_roughness() {
 		for (int x = 0; x < textureSize(tex_roughness_brush, 0).x; x++) 
 		{
 			// Get brush pixel info
-			vec4 brush_texel = texelFetch(tex_roughness_brush, ivec2(x, y), 0);
+			vec4 brush_texel = texelFetch(tex_roughness_brush, ivec3(x, y, 0), 0);
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
 			float brush_size = brush_texel.a * 100.0;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
@@ -78,7 +78,7 @@ vec4 get_roughness() {
 			
 			// Use last color of close enough brush for current pixel
 			if (dist < brush_size) {
-				vec4 color = texelFetch(tex_roughness_color, ivec2(x, y), 0);
+				vec4 color = texelFetch(tex_roughness_color, ivec3(x, y, 0), 0);
 				roughness = color;
 			}
 		}
@@ -98,7 +98,7 @@ vec4 get_metalness() {
 		for (int x = 0; x < textureSize(tex_metalness_brush, 0).x; x++) 
 		{
 			// Get brush pixel info
-			vec4 brush_texel = texelFetch(tex_metalness_brush, ivec2(x, y), 0);
+			vec4 brush_texel = texelFetch(tex_metalness_brush, ivec3(x, y, 0), 0);
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
 			float brush_size = brush_texel.a * 100.0;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
@@ -108,7 +108,7 @@ vec4 get_metalness() {
 			
 			// Use last color of close enough brush for current pixel
 			if (dist < brush_size) {
-				vec4 color = texelFetch(tex_metalness_color, ivec2(x, y), 0);
+				vec4 color = texelFetch(tex_metalness_color, ivec3(x, y, 0), 0);
 				metalness = color;
 			}
 		}
@@ -128,7 +128,7 @@ vec4 get_emission() {
 		for (int x = 0; x < textureSize(tex_emission_brush, 0).x; x++) 
 		{
 			// Get brush pixel info
-			vec4 brush_texel = texelFetch(tex_emission_brush, ivec2(x, y), 0);
+			vec4 brush_texel = texelFetch(tex_emission_brush, ivec3(x, y, 0), 0);
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
 			float brush_size = brush_texel.a * 100.0;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
@@ -138,7 +138,7 @@ vec4 get_emission() {
 			
 			// Use last color of close enough brush for current pixel
 			if (dist < brush_size) {
-				vec4 color = texelFetch(tex_emission_color, ivec2(x, y), 0);
+				vec4 color = texelFetch(tex_emission_color, ivec3(x, y, 0), 0);
 				emission = color;
 			}
 		}

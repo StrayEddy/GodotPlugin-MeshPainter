@@ -20,14 +20,15 @@ var temp_collision :CollisionShape
 var temp_body :StaticBody
 
 # All the textures containing brush and color info, which will be passed on to PBR shader
-var tex_albedo_brush :ImageTexture
-var tex_albedo_color :ImageTexture
-var tex_roughness_brush :ImageTexture
-var tex_roughness_color :ImageTexture
-var tex_metalness_brush :ImageTexture
-var tex_metalness_color :ImageTexture
-var tex_emission_brush :ImageTexture
-var tex_emission_color :ImageTexture
+
+var tex_albedo_brush :TextureArray
+var tex_albedo_color :TextureArray
+var tex_roughness_brush :TextureArray
+var tex_roughness_color :TextureArray
+var tex_metalness_brush :TextureArray
+var tex_metalness_color :TextureArray
+var tex_emission_brush :TextureArray
+var tex_emission_color :TextureArray
 
 # PBR shader which will receive all textures
 var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.shader")
@@ -70,48 +71,56 @@ func setup_material():
 	temp_image.create(512,512,false,Image.FORMAT_RGBAH)
 	
 	# Build albedo brush texture, transparent means empty
-	tex_albedo_brush = ImageTexture.new()
+	tex_albedo_brush = TextureArray.new()
+	tex_albedo_brush.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(0,0,0,0))
-	tex_albedo_brush.create_from_image(temp_image)
-	tex_albedo_brush.resource_name = "Albedo brush texture"
+	tex_albedo_brush.set_layer_data(temp_image, 0)
+	tex_albedo_brush.resource_name = "Albedo brush texture array"
 	# Build albedo color texture, default to white
-	tex_albedo_color = ImageTexture.new()
+	tex_albedo_color = TextureArray.new()
+	tex_albedo_color.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(1,1,1,1))
-	tex_albedo_color.create_from_image(temp_image)
-	tex_albedo_color.resource_name = "Albedo color texture"
+	tex_albedo_color.set_layer_data(temp_image, 0)
+	tex_albedo_color.resource_name = "Albedo color texture array"
 	
 	# Build roughness brush texture, transparent means empty
-	tex_roughness_brush = ImageTexture.new()
+	tex_roughness_brush = TextureArray.new()
+	tex_roughness_brush.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(0,0,0,0))
-	tex_roughness_brush.create_from_image(temp_image)
-	tex_roughness_brush.resource_name = "Roughness brush texture"
+	tex_roughness_brush.set_layer_data(temp_image, 0)
+	tex_roughness_brush.resource_name = "Roughness brush texture array"
 	# Build roughness color texture, default to full roughness
-	tex_roughness_color = ImageTexture.new()
+	tex_roughness_color = TextureArray.new()
+	tex_roughness_color.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(1,1,1,1))
-	tex_roughness_color.create_from_image(temp_image)
-	tex_roughness_color.resource_name = "Roughness color texture"
+	tex_roughness_color.set_layer_data(temp_image, 0)
+	tex_roughness_color.resource_name = "Roughness color texture array"
 	
 	# Build metalness brush texture, transparent means empty
-	tex_metalness_brush = ImageTexture.new()
+	tex_metalness_brush = TextureArray.new()
+	tex_metalness_brush.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(0,0,0,0))
-	tex_metalness_brush.create_from_image(temp_image)
-	tex_metalness_brush.resource_name = "Metalness brush texture"
+	tex_metalness_brush.set_layer_data(temp_image, 0)
+	tex_metalness_brush.resource_name = "Metalness brush texture array"
 	# Build metalness color texture, default to no metalness
-	tex_metalness_color = ImageTexture.new()
+	tex_metalness_color = TextureArray.new()
+	tex_metalness_color.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(0,0,0,1))
-	tex_metalness_color.create_from_image(temp_image)
-	tex_metalness_color.resource_name = "Metalness color texture"
+	tex_metalness_color.set_layer_data(temp_image, 0)
+	tex_metalness_color.resource_name = "Metalness color texture array"
 	
 	# Build emission brush texture, transparent means empty
-	tex_emission_brush = ImageTexture.new()
+	tex_emission_brush = TextureArray.new()
+	tex_emission_brush.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(0,0,0,0))
-	tex_emission_brush.create_from_image(temp_image)
-	tex_emission_brush.resource_name = "Emission brush texture"
+	tex_emission_brush.set_layer_data(temp_image, 0)
+	tex_emission_brush.resource_name = "Emission brush texture array"
 	# Build emission color texture, default to no emission
-	tex_emission_color = ImageTexture.new()
+	tex_emission_color = TextureArray.new()
+	tex_emission_color.create(512,512,1,Image.FORMAT_RGBAH)
 	temp_image.fill(Color(0,0,0,0))
-	tex_emission_color.create_from_image(temp_image)
-	tex_emission_color.resource_name = "Emission color texture"
+	tex_emission_color.set_layer_data(temp_image, 0)
+	tex_emission_color.resource_name = "Emission color texture array"
 	
 	# Set new textures as parameters of PBR shader
 	mat.set_shader_param("tex_albedo_brush", tex_albedo_brush)

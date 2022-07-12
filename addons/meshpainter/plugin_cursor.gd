@@ -18,11 +18,11 @@ var clicking = false
 var brush_buffer :Array
 var color_buffer :Array
 # Textures will contain the texture version of buffers to pass it to PBR shader
-var tex_brush :ImageTexture
-var tex_color :ImageTexture
+var tex_brush :TextureArray
+var tex_color :TextureArray
 
 # Show cursor and setup textures to paint
-func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, tex_brush :ImageTexture, tex_color :ImageTexture):
+func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, tex_brush :TextureArray, tex_color :TextureArray):
 	show()
 	
 	self.root = root
@@ -66,8 +66,8 @@ func textures_to_buffers():
 	brush_buffer = []
 	color_buffer = []
 	
-	var brush_image = tex_brush.get_data()
-	var color_image = tex_color.get_data()
+	var brush_image = tex_brush.get_layer_data(0)
+	var color_image = tex_color.get_layer_data(0)
 	
 	brush_image.lock()
 	color_image.lock()
@@ -92,8 +92,8 @@ func textures_to_buffers():
 
 # Use buffers to update current textures
 func buffers_to_textures():
-	var brush_image = tex_brush.get_data()
-	var color_image = tex_color.get_data()
+	var brush_image = tex_brush.get_layer_data(0)
+	var color_image = tex_color.get_layer_data(0)
 	
 	# Clear textures first
 	brush_image.fill(Color(0,0,0,0))
@@ -115,8 +115,8 @@ func buffers_to_textures():
 	
 	brush_image.unlock()
 	color_image.unlock()
-	tex_brush.set_data(brush_image)
-	tex_color.set_data(color_image)
+	tex_brush.set_layer_data(brush_image, 0)
+	tex_color.set_layer_data(color_image, 0)
 
 # Where we paint with mouse
 func input(camera :Camera, event: InputEvent) -> bool:
