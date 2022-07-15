@@ -35,14 +35,28 @@ func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spat
 	textures_to_buffers()
 	
 	# Add cursor to tree under the temporary plugin node
-	temp_plugin_node.add_child(self)
-	self.owner = root
+	var cursor_absent = true
+	for child in temp_plugin_node.get_children():
+		if child == self:
+			cursor_absent = false
+			break
+	
+	if cursor_absent:
+		temp_plugin_node.add_child(self)
+		self.owner = root
 
 # Hide cursor and remove it from the tree
 func hide_cursor():
 	painting = false
 	if temp_plugin_node:
-		temp_plugin_node.remove_child(self)
+		# Add cursor to tree under the temporary plugin node
+		var cursor_present = false
+		for child in temp_plugin_node.get_children():
+			if child == self:
+				cursor_present = true
+				break
+		if cursor_present:
+			temp_plugin_node.remove_child(self)
 	hide()
 
 # Set brush rgb
