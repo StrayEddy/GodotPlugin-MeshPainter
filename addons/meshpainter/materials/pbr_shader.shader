@@ -165,10 +165,17 @@ vec4 get_emission() {
 			if (brush_size == 0.0)
 				break;
 			
-			// Use last color of close enough brush for current pixel
+			// Get color of close enough brush to mix paint the current pixel
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_emission_color, ivec2(x, y), 0);
-				emission = color;
+				if (color.a == 0.0) {
+					vec4 new_emission = triplanar_texture(tex_emission_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
+					emission = mix(emission, new_emission, color.g);
+				}
+				else {
+					emission.rgb = color.rgb;
+					emission.a += color.a;
+				}
 			}
 		}
 	}

@@ -48,5 +48,6 @@ visible = false
 
 [connection signal="tab_selected" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_selected"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/A" to="." method="_on_Albedo_values_changed"]
+[connection signal="values_changed" from="VBoxContainer/TabContainer/R" to="." method="_on_Roughness_values_changed"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/M" to="." method="_on_Metalness_values_changed"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/E" to="." method="_on_Emission_values_changed"]

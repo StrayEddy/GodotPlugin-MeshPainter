@@ -1,6 +1,5 @@
-# Panel with parameters to paint emission brush and color textures
-# Brush color is used for emission color
-# Brush opacity is used for emission intensity
+# Panel with parameters to paint albedo brush and color textures
+# Brush color and opacity are used for albedo
 # Brush size is used for size
 
 tool
@@ -9,98 +8,145 @@ extends PanelContainer
 # Signal sent when parameters are changed
 signal values_changed(brush_color, brush_opacity, brush_size)
 
+enum Modes {BRUSH, BUCKET, ERASER}
+
+var mode = Modes.BRUSH
 var brush_color :Color
 var brush_size :float
 var brush_opacity :float
+var tex_layers :TextureArray
+var layer_nb = 0
+var layer_value = Color.black
 
-# When showing panel, use brush mode
-func show():
-	.show()
+func setup(tex_layers :TextureArray):
+	self.tex_layers = tex_layers
 	_on_BrushButton_pressed()
+	$VBoxContainer/ColorContainer/LayerButton4.set_value(tex_layers.get_layer_data(3))
+	$VBoxContainer/ColorContainer/LayerButton3.set_value(tex_layers.get_layer_data(2))
+	$VBoxContainer/ColorContainer/LayerButton2.set_value(tex_layers.get_layer_data(1))
+	$VBoxContainer/ColorContainer/LayerButton.set_value(tex_layers.get_layer_data(0))
+	$VBoxContainer/ColorContainer/LayerButton.select()
 
 # When brush button pressed, show brush panel
 func _on_BrushButton_pressed() -> void:
-	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(true)
-	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(false)
-	show_brush_panel()
+	mode = Modes.BRUSH
+	$VBoxContainer/Modes/BrushButton.set_pressed_no_signal(true)
+	$VBoxContainer/Modes/BucketButton.set_pressed_no_signal(false)
+	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(false)
+	
+	$VBoxContainer/ColorContainer.show()
+	$VBoxContainer/IntensityContainer.show()
+	$VBoxContainer/SizeContainer.show()
+	
+	update_brush()
 
 # When bucket button pressed, show bucket panel
 func _on_BucketButton_pressed() -> void:
-	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(true)
-	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(false)
-	show_bucket_panel()
+	mode = Modes.BUCKET
+	
+	$VBoxContainer/Modes/BrushButton.set_pressed_no_signal(false)
+	$VBoxContainer/Modes/BucketButton.set_pressed_no_signal(true)
+	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(false)
+	
+	$VBoxContainer/ColorContainer.show()
+	$VBoxContainer/IntensityContainer.show()
+	$VBoxContainer/SizeContainer.hide()
+	
+	update_brush()
 
 # When eraser button pressed, show eraser panel
 func _on_EraserButton_pressed() -> void:
-	$VBoxContainer/HBoxContainer/BrushButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/BucketButton.set_pressed_no_signal(false)
-	$VBoxContainer/HBoxContainer/EraserButton.set_pressed_no_signal(true)
-	show_eraser_panel()
-
-# Brush panel shows and sets default brush values (corflower color, max emission, small size)
-func show_brush_panel():
-	$VBoxContainer/BrushPanel.show()
-	$VBoxContainer/BucketPanel.hide()
-	$VBoxContainer/EraserPanel.hide()
-	$VBoxContainer/BrushPanel/ColorPickerButton.color = Color.cornflower
-	$VBoxContainer/BrushPanel/VBoxContainer2/ValueSlider.value = 1.0
-	$VBoxContainer/BrushPanel/VBoxContainer3/SizeSlider.value = 0.1
-	_on_Brush_ColorPickerButton_color_changed(Color.cornflower)
-	_on_Brush_ValueSlider_value_changed(1.0)
-	_on_Brush_SizeSlider_value_changed(0.1)
-
-# Bucket panel shows and sets default bucket values (corflower color, max emission)
-func show_bucket_panel():
-	$VBoxContainer/BrushPanel.hide()
-	$VBoxContainer/BucketPanel.show()
-	$VBoxContainer/EraserPanel.hide()
+	mode = Modes.ERASER
 	
-	$VBoxContainer/BucketPanel/ColorPickerButton.color = Color.cornflower
-	$VBoxContainer/BucketPanel/VBoxContainer2/ValueSlider.value = 1.0
-	_on_Bucket_ColorPickerButton_color_changed(Color.cornflower)
-	_on_Bucket_ValueSlider_value_changed(1.0)
-
-# Eraser panel shows and sets default eraser values (small size)
-func show_eraser_panel():
-	$VBoxContainer/BrushPanel.hide()
-	$VBoxContainer/BucketPanel.hide()
-	$VBoxContainer/EraserPanel.show()
+	$VBoxContainer/Modes/BrushButton.set_pressed_no_signal(false)
+	$VBoxContainer/Modes/BucketButton.set_pressed_no_signal(false)
+	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(true)
 	
-	$VBoxContainer/EraserPanel/VBoxContainer3/SizeSlider.value = 0.1
-	_on_Eraser_SizeSlider_value_changed(0.1)
+	$VBoxContainer/ColorContainer.hide()
+	$VBoxContainer/IntensityContainer.hide()
+	$VBoxContainer/SizeContainer.show()
+	
+	update_brush()
 
 
-# Brush UI events
-func _on_Brush_ColorPickerButton_color_changed(color: Color) -> void:
-	brush_color = color
-	on_Brush_values_changed()
-func _on_Brush_ValueSlider_value_changed(value: float) -> void:
-	brush_opacity = value
-	on_Brush_values_changed()
-func _on_Brush_SizeSlider_value_changed(size: float) -> void:
-	brush_size = size/100
-	on_Brush_values_changed()
+func _on_LayerButton_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 0)
+func _on_LayerButton2_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 1)
+func _on_LayerButton3_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 2)
+func _on_LayerButton4_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 3)
 
-# Bucket UI events
-func _on_Bucket_ColorPickerButton_color_changed(color: Color) -> void:
-	brush_color = color
-	# Size at max for bucket fill (becomes 100 meters in shader)
-	brush_size = 1.0
-	on_Brush_values_changed()
-func _on_Bucket_ValueSlider_value_changed(value: float) -> void:
-	brush_opacity = value
-	on_Brush_values_changed()
+func _on_LayerButton_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 0)
+func _on_LayerButton2_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 1)
+func _on_LayerButton3_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 2)
+func _on_LayerButton4_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 3)
 
-# Eraser UI events
-func _on_Eraser_SizeSlider_value_changed(size: float) -> void:
-	brush_color = Color.white
-	brush_size = size/100
-	# Use 0 opacity on top as a way to "erase"
-	brush_opacity = 0.0
-	on_Brush_values_changed()
 
-# Signaling new parameters
-func on_Brush_values_changed():
+func on_layer_change(value, is_color, layer_idx):
+	layer_nb = layer_idx
+	layer_value = value
+	if not is_color:
+		tex_layers.set_layer_data(value.get_data(), layer_idx)
+	update_brush()
+
+func _on_IntensitySlider_value_changed(value: float) -> void:
+	update_brush()
+
+func _on_SizeSlider_value_changed(value: float) -> void:
+	update_brush()
+
+
+
+func get_mode():
+	return mode
+
+func get_layer_nb():
+	return layer_nb
+
+func get_layer_value():
+	return layer_value
+
+func get_intensity():
+	return $VBoxContainer/IntensityContainer/IntensitySlider.value
+
+func get_size():
+	return $VBoxContainer/SizeContainer/SizeSlider.value
+
+func update_brush():
+	var mode = get_mode()
+	var layer_nb = get_layer_nb()
+	var layer_value = get_layer_value()
+	var intensity = get_intensity()
+	var size = get_size()
+	
+	match mode:
+		Modes.BRUSH:
+			if layer_value is Color:
+				brush_color = layer_value
+				brush_opacity = intensity
+				brush_size = size/100
+			else:
+				brush_color = Color(layer_nb, intensity, 0, 0)
+				brush_opacity = 0.0
+				brush_size = size/100
+		Modes.BUCKET:
+			if layer_value is Color:
+				brush_color = layer_value
+				brush_opacity = intensity
+				brush_size = 1.0
+			else:
+				brush_color = Color(layer_nb, intensity, 0, 0)
+				brush_opacity = 0.0
+				brush_size = 1.0
+		Modes.ERASER:
+			brush_color = Color.white
+			brush_opacity = 0.0
+			brush_size = size/100
+	
 	emit_signal("values_changed", brush_color, brush_opacity, brush_size)

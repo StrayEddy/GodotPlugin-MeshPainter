@@ -213,9 +213,9 @@ func generate_collision():
 	temp_plugin_node.owner = root
 
 func setup_tabs():
-#	$VBoxContainer/TabContainer/E.setup(tex_emission_layers)
-#	$VBoxContainer/TabContainer/M.setup(tex_metalness_layers)
-#	$VBoxContainer/TabContainer/R.setup(tex_roughness_layers)
+	$VBoxContainer/TabContainer/E.setup(tex_emission_layers)
+	$VBoxContainer/TabContainer/M.setup()
+	$VBoxContainer/TabContainer/R.setup()
 	$VBoxContainer/TabContainer/A.setup(tex_albedo_layers)
 
 # When tab selected, pass on right textures for cursor to paint on (albedo, roughness, metalness, emission)

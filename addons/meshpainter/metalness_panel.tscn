@@ -28,13 +28,13 @@ margin_right = 1002.0
 margin_bottom = 14.0
 text = "Metalness"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Modes" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 18.0
 margin_right = 1002.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 32 )
 
-[node name="BrushButton" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+[node name="BrushButton" type="TextureButton" parent="VBoxContainer/Modes"]
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 0 )
@@ -44,7 +44,7 @@ texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 5 )
 expand = true
 
-[node name="BucketButton" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+[node name="BucketButton" type="TextureButton" parent="VBoxContainer/Modes"]
 margin_left = 36.0
 margin_right = 68.0
 margin_bottom = 32.0
@@ -54,7 +54,7 @@ texture_normal = ExtResource( 2 )
 texture_pressed = ExtResource( 1 )
 expand = true
 
-[node name="EraserButton" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+[node name="EraserButton" type="TextureButton" parent="VBoxContainer/Modes"]
 margin_left = 72.0
 margin_right = 104.0
 margin_bottom = 32.0
@@ -64,53 +64,43 @@ texture_normal = ExtResource( 3 )
 texture_pressed = ExtResource( 6 )
 expand = true
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 margin_top = 54.0
 margin_right = 1002.0
 margin_bottom = 58.0
 
-[node name="BrushPanel" type="Panel" parent="VBoxContainer"]
+[node name="ValueContainer" type="VBoxContainer" parent="VBoxContainer"]
 margin_top = 62.0
 margin_right = 1002.0
-margin_bottom = 550.0
-rect_min_size = Vector2( 180, 120 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
+margin_bottom = 100.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/BrushPanel"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 176.0
-margin_bottom = 42.0
-
-[node name="Label" type="Label" parent="VBoxContainer/BrushPanel/VBoxContainer2"]
-margin_right = 172.0
+[node name="Label" type="Label" parent="VBoxContainer/ValueContainer"]
+margin_right = 1002.0
 margin_bottom = 14.0
 text = "Value"
 
-[node name="ValueSlider" type="HSlider" parent="VBoxContainer/BrushPanel/VBoxContainer2"]
+[node name="ValueSlider" type="HSlider" parent="VBoxContainer/ValueContainer"]
 margin_top = 18.0
-margin_right = 172.0
+margin_right = 1002.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 120, 20 )
 max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/BrushPanel"]
-margin_left = 4.0
-margin_top = 46.0
-margin_right = 176.0
-margin_bottom = 84.0
+[node name="SizeContainer" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 104.0
+margin_right = 1002.0
+margin_bottom = 142.0
 
-[node name="Label" type="Label" parent="VBoxContainer/BrushPanel/VBoxContainer3"]
-margin_right = 172.0
+[node name="Label" type="Label" parent="VBoxContainer/SizeContainer"]
+margin_right = 1002.0
 margin_bottom = 14.0
 text = "Size"
 
-[node name="SizeSlider" type="HSlider" parent="VBoxContainer/BrushPanel/VBoxContainer3"]
+[node name="SizeSlider" type="HSlider" parent="VBoxContainer/SizeContainer"]
 margin_top = 18.0
-margin_right = 172.0
+margin_right = 1002.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 120, 20 )
 min_value = 0.01
@@ -118,70 +108,8 @@ max_value = 1.0
 step = 0.01
 value = 0.1
 
-[node name="BucketPanel" type="Panel" parent="VBoxContainer"]
-visible = false
-margin_top = 308.0
-margin_right = 1002.0
-margin_bottom = 550.0
-rect_min_size = Vector2( 180, 80 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/BucketPanel"]
-margin_left = 4.0
-margin_top = 3.0
-margin_right = 176.0
-margin_bottom = 41.0
-
-[node name="Label" type="Label" parent="VBoxContainer/BucketPanel/VBoxContainer2"]
-margin_right = 172.0
-margin_bottom = 14.0
-text = "Value"
-
-[node name="ValueSlider" type="HSlider" parent="VBoxContainer/BucketPanel/VBoxContainer2"]
-margin_top = 18.0
-margin_right = 172.0
-margin_bottom = 38.0
-rect_min_size = Vector2( 120, 20 )
-max_value = 1.0
-step = 0.01
-value = 1.0
-ticks_on_borders = true
-
-[node name="EraserPanel" type="Panel" parent="VBoxContainer"]
-visible = false
-margin_top = 62.0
-margin_right = 1002.0
-margin_bottom = 550.0
-rect_min_size = Vector2( 180, 50 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/EraserPanel"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 176.0
-margin_bottom = 42.0
-
-[node name="Label" type="Label" parent="VBoxContainer/EraserPanel/VBoxContainer3"]
-margin_right = 172.0
-margin_bottom = 14.0
-text = "Size"
-
-[node name="SizeSlider" type="HSlider" parent="VBoxContainer/EraserPanel/VBoxContainer3"]
-margin_top = 18.0
-margin_right = 172.0
-margin_bottom = 38.0
-rect_min_size = Vector2( 120, 20 )
-min_value = 0.01
-max_value = 1.0
-step = 0.01
-value = 0.1
-
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/BrushButton" to="." method="_on_BrushButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/BucketButton" to="." method="_on_BucketButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/EraserButton" to="." method="_on_EraserButton_pressed"]
-[connection signal="value_changed" from="VBoxContainer/BrushPanel/VBoxContainer2/ValueSlider" to="." method="_on_Brush_ValueSlider_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/BrushPanel/VBoxContainer3/SizeSlider" to="." method="_on_Brush_SizeSlider_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/BucketPanel/VBoxContainer2/ValueSlider" to="." method="_on_Bucket_ValueSlider_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/EraserPanel/VBoxContainer3/SizeSlider" to="." method="_on_Eraser_SizeSlider_value_changed"]
+[connection signal="pressed" from="VBoxContainer/Modes/BrushButton" to="." method="_on_BrushButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Modes/BucketButton" to="." method="_on_BucketButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Modes/EraserButton" to="." method="_on_EraserButton_pressed"]
+[connection signal="value_changed" from="VBoxContainer/ValueContainer/ValueSlider" to="." method="_on_ValueSlider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/SizeContainer/SizeSlider" to="." method="_on_SizeSlider_value_changed"]
