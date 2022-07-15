@@ -1,0 +1,77 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/meshpainter/layer_button.gd" type="Script" id=2]
+[ext_resource path="res://addons/meshpainter/icons/color-picker.svg" type="Texture" id=3]
+[ext_resource path="res://addons/meshpainter/icons/folder.svg" type="Texture" id=4]
+
+[sub_resource type="GradientTexture" id=1]
+
+[node name="LayerButton" type="TextureButton"]
+margin_right = 172.0
+margin_bottom = 172.0
+texture_normal = SubResource( 1 )
+expand = true
+script = ExtResource( 2 )
+
+[node name="PopupDialog" type="PopupDialog" parent="."]
+anchor_right = 0.5
+margin_right = 40.0
+margin_bottom = 67.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupDialog"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -42.0
+margin_top = -20.0
+margin_right = 42.0
+margin_bottom = 20.0
+
+[node name="ColorButton" type="TextureButton" parent="PopupDialog/HBoxContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 40, 40 )
+texture_normal = ExtResource( 3 )
+expand = true
+
+[node name="VSeparator" type="VSeparator" parent="PopupDialog/HBoxContainer"]
+margin_left = 44.0
+margin_right = 48.0
+margin_bottom = 40.0
+
+[node name="TextureButton" type="TextureButton" parent="PopupDialog/HBoxContainer"]
+margin_left = 52.0
+margin_right = 92.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 40, 40 )
+texture_normal = ExtResource( 4 )
+expand = true
+
+[node name="TextureDialog" type="FileDialog" parent="."]
+margin_right = 443.0
+margin_bottom = 268.0
+window_title = "Choose a texture"
+dialog_hide_on_ok = true
+mode_overrides_title = false
+mode = 0
+filters = PoolStringArray( "*.png", "*.jpg", "*.jpeg" )
+
+[node name="ColorDialog" type="ConfirmationDialog" parent="."]
+margin_right = 324.0
+margin_bottom = 482.0
+window_title = ""
+
+[node name="ColorPicker" type="ColorPicker" parent="ColorDialog"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 316.0
+margin_bottom = 446.0
+color = Color( 0, 0, 0, 1 )
+edit_alpha = false
+
+[connection signal="gui_input" from="." to="." method="_on_LayerButton_gui_input"]
+[connection signal="pressed" from="PopupDialog/HBoxContainer/ColorButton" to="." method="_on_ColorButton_pressed"]
+[connection signal="pressed" from="PopupDialog/HBoxContainer/TextureButton" to="." method="_on_TextureButton_pressed"]
+[connection signal="file_selected" from="TextureDialog" to="." method="_on_TextureDialog_file_selected"]
+[connection signal="confirmed" from="ColorDialog" to="." method="_on_ColorDialog_confirmed"]
