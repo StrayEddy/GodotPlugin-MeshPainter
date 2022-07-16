@@ -1,4 +1,6 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://demo/ninomaru_teien_2k.exr" type="Texture" id=1]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "demo_Mesh"
@@ -14,12 +16,16 @@ surfaces/0 = {
 "vertex_count": 10603
 }
 
-[sub_resource type="ProceduralSky" id=2]
+[sub_resource type="PanoramaSky" id=4]
+panorama = ExtResource( 1 )
 
 [sub_resource type="Environment" id=3]
-background_mode = 3
-background_sky = SubResource( 2 )
-ambient_light_color = Color( 1, 1, 1, 1 )
+background_mode = 2
+background_sky = SubResource( 4 )
+background_energy = 0.5
+dof_blur_far_enabled = true
+dof_blur_far_amount = 0.2
+dof_blur_far_quality = 2
 
 [node name="Demo" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000454187 )
@@ -28,11 +34,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000454187 )
 mesh = SubResource( 1 )
 skeleton = NodePath("")
 material/0 = null
-
-[node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( 0.678557, 0.557738, -0.478005, 0, 0.650748, 0.759294, 0.734548, -0.515224, 0.44157, 0, 3.95713, 0 )
-light_color = Color( 1, 0.823529, 0.615686, 1 )
-light_energy = 0.5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 3 )
