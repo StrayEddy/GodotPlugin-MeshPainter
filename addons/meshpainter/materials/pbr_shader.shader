@@ -110,13 +110,13 @@ float get_roughness() {
 				vec4 color = texelFetch(tex_roughness_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
 					vec4 new_roughness = triplanar_texture(tex_roughness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
-					roughness = clamp(roughness - (1.0-color.g)/10.0, new_roughness.g, 1.0);
+					roughness = clamp(roughness - color.g/10.0, new_roughness.g, 1.0);
 				}
 				else if (color.a == 1.0) {
 					roughness = clamp(roughness + .1, 0.0, 1.0);
 				}
 				else {
-					roughness = clamp(roughness - (1.0-color.a)/10.0, 0.0, 1.0);
+					roughness = clamp(roughness - color.a/10.0, 0.0, 1.0);
 				}
 			}
 		}
@@ -149,13 +149,13 @@ float get_metalness() {
 				vec4 color = texelFetch(tex_metalness_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
 					vec4 new_metalness = triplanar_texture(tex_metalness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
-					metalness = clamp(metalness + (1.0-color.g)/10.0, 0.0, new_metalness.g);
+					metalness = clamp(metalness + color.g/10.0, 0.0, new_metalness.g);
 				}
 				else if (color.a == 1.0) {
 					metalness = clamp(metalness - .1, 0.0, 1.0);
 				}
 				else {
-					metalness = clamp(metalness + (1.0-color.a)/10.0, 0.0, 1.0);
+					metalness = clamp(metalness + color.a/10.0, 0.0, 1.0);
 				}
 			}
 		}

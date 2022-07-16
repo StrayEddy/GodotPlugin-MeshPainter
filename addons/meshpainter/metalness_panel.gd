@@ -35,7 +35,7 @@ func _on_BrushButton_pressed() -> void:
 	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(false)
 	
 	$VBoxContainer/ColorContainer.show()
-	$VBoxContainer/ValueContainer.show()
+	$VBoxContainer/IntensityContainer.show()
 	$VBoxContainer/SizeContainer.show()
 	
 	update_brush()
@@ -49,7 +49,7 @@ func _on_BucketButton_pressed() -> void:
 	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(false)
 	
 	$VBoxContainer/ColorContainer.show()
-	$VBoxContainer/ValueContainer.show()
+	$VBoxContainer/IntensityContainer.show()
 	$VBoxContainer/SizeContainer.hide()
 	
 	update_brush()
@@ -63,7 +63,7 @@ func _on_EraserButton_pressed() -> void:
 	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(true)
 	
 	$VBoxContainer/ColorContainer.hide()
-	$VBoxContainer/ValueContainer.hide()
+	$VBoxContainer/IntensityContainer.hide()
 	$VBoxContainer/SizeContainer.show()
 	
 	update_brush()
@@ -105,7 +105,7 @@ func on_layer_change(value, is_color, layer_idx):
 		tex_layers.set_layer_data(value.get_data(), layer_idx)
 	update_brush()
 
-func _on_ValueSlider_value_changed(value: float) -> void:
+func _on_IntensitySlider_value_changed(value: float) -> void:
 	update_brush()
 
 func _on_SizeSlider_value_changed(value: float) -> void:
@@ -121,8 +121,8 @@ func get_layer_nb():
 func get_layer_value():
 	return layer_value
 
-func get_value():
-	return $VBoxContainer/ValueContainer/ValueSlider.value
+func get_intensity():
+	return $VBoxContainer/IntensityContainer/IntensitySlider.value
 
 func get_size():
 	return $VBoxContainer/SizeContainer/SizeSlider.value
@@ -131,26 +131,26 @@ func update_brush():
 	var mode = get_mode()
 	var layer_nb = get_layer_nb()
 	var layer_value = get_layer_value()
-	var value = get_value()
+	var intensity = get_intensity()
 	var size = get_size()
 	
 	match mode:
 		Modes.BRUSH:
 			if layer_value is Color:
 				brush_color = Color.black
-				brush_opacity = value
+				brush_opacity = intensity
 				brush_size = size/100
 			else:
-				brush_color = Color(layer_nb, value, 0, 0)
+				brush_color = Color(layer_nb, intensity, 0, 0)
 				brush_opacity = 0.0
 				brush_size = size/100
 		Modes.BUCKET:
 			if layer_value is Color:
 				brush_color = Color.black
-				brush_opacity = value
+				brush_opacity = intensity
 				brush_size = 1.0
 			else:
-				brush_color = Color(layer_nb, value, 0, 0)
+				brush_color = Color(layer_nb, intensity, 0, 0)
 				brush_opacity = 0.0
 				brush_size = 1.0
 		Modes.ERASER:

@@ -109,17 +109,17 @@ margin_top = 242.0
 margin_right = 1002.0
 margin_bottom = 246.0
 
-[node name="ValueContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="IntensityContainer" type="VBoxContainer" parent="VBoxContainer"]
 margin_top = 250.0
 margin_right = 1002.0
 margin_bottom = 288.0
 
-[node name="Label" type="Label" parent="VBoxContainer/ValueContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/IntensityContainer"]
 margin_right = 1002.0
 margin_bottom = 14.0
-text = "Value"
+text = "Intensity"
 
-[node name="ValueSlider" type="HSlider" parent="VBoxContainer/ValueContainer"]
+[node name="IntensitySlider" type="HSlider" parent="VBoxContainer/IntensityContainer"]
 margin_top = 18.0
 margin_right = 1002.0
 margin_bottom = 38.0
@@ -160,5 +160,5 @@ value = 0.1
 [connection signal="value_changed" from="VBoxContainer/ColorContainer/LayerButton3" to="." method="_on_LayerButton3_value_changed"]
 [connection signal="selected" from="VBoxContainer/ColorContainer/LayerButton4" to="." method="_on_LayerButton4_selected"]
 [connection signal="value_changed" from="VBoxContainer/ColorContainer/LayerButton4" to="." method="_on_LayerButton4_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/ValueContainer/ValueSlider" to="." method="_on_ValueSlider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/IntensityContainer/IntensitySlider" to="." method="_on_IntensitySlider_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/SizeContainer/SizeSlider" to="." method="_on_SizeSlider_value_changed"]

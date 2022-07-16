@@ -36,6 +36,7 @@ rect_min_size = Vector2( 202, 500 )
 tab_align = 0
 
 [node name="A" parent="VBoxContainer/TabContainer" instance=ExtResource( 8 )]
+margin_right = -4.0
 
 [node name="R" parent="VBoxContainer/TabContainer" instance=ExtResource( 2 )]
 visible = false
