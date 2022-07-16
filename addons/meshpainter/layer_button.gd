@@ -60,7 +60,10 @@ func _on_ColorDialog_confirmed() -> void:
 func _on_TextureDialog_file_selected(path: String) -> void:
 	var image = Image.new()
 	image.load(path)
-	image.convert(Image.FORMAT_RGBAH)
+	if image.get_format() != Image.FORMAT_RGBAH:
+		image.convert(Image.FORMAT_RGBAH)
+	if image.get_size() != Vector2(512, 512):
+		image.resize(512, 512)
 	var tex = ImageTexture.new()
 	tex.create_from_image(image)
 	set_value(tex)
