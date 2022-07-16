@@ -8,8 +8,8 @@ You can paint albedo, glossiness, metalness and emission, with colors and/or tex
 
 # How to use
 
-- Add the `meshpainter` folder into your Godot addons folder (res://addons)
-- Enable the addon in Projet/Project Settings/Plugins
+- Add the `meshpainter` folder into your Godot addons folder (`res://addons`)
+- Enable the addon in `Project/Project Settings/Plugins`
 - Select a `MeshIntance` node in your scene tree, a brush button will appear in the 3D view top menu
 - Click on the brush button
 - Start painting !
