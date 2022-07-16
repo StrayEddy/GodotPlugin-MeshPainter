@@ -2,8 +2,9 @@
 
 This is a PBR painter for Godot 3.x
 
-
 You can paint albedo, glossiness, metalness and emission, with colors and/or textures. By using the UI you can specify the intensity and size of your brush. Three modes are available: brush tool, bucket tool (fill) and eraser.
+
+![Example](demo/example.gif)
 
 # How to use
 
@@ -12,5 +13,3 @@ You can paint albedo, glossiness, metalness and emission, with colors and/or tex
 - Select a `MeshIntance` node in your scene tree, a brush button will appear in the 3D view top menu
 - Click on the brush button
 - Start painting !
-
-![Example](demo/example.gif)
