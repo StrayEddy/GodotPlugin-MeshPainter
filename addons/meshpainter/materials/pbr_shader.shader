@@ -86,9 +86,9 @@ vec4 get_albedo() {
 }
 
 // Roughness retrieval
-vec4 get_roughness() {
+float get_roughness() {
 	// Default roughness is 1.0
-	vec4 roughness = vec4(1,1,1,1);
+	float roughness = 1.0;
 	
 	// Go through roughness brush texture to find brush centers that are close enough to current pixel
 	// Then calculate roughness based on the combination of all those brush distances
@@ -105,10 +105,19 @@ vec4 get_roughness() {
 			if (brush_size == 0.0)
 				break;
 			
-			// Use last color of close enough brush for current pixel
+			// Get color of close enough brush to mix paint the current pixel
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_roughness_color, ivec2(x, y), 0);
-				roughness = color;
+				if (color.a == 0.0) {
+					vec4 new_roughness = triplanar_texture(tex_roughness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
+					roughness = clamp(roughness - (1.0-color.g)/10.0 + new_roughness.g/10.0, new_roughness.g, 1.0);
+				}
+				else if (color.a == 1.0) {
+					roughness = clamp(roughness + .1, 0.0, 1.0);
+				}
+				else {
+					roughness = clamp(roughness - (1.0-color.a)/10.0, 0.0, 1.0);
+				}
 			}
 		}
 	}
@@ -185,12 +194,12 @@ vec4 get_emission() {
 void fragment() {
 	// Get albedo, roughness, metalness and emission from brush and color textures
 	vec4 albedo = get_albedo();
-	vec4 roughness = get_roughness();
+	float roughness = get_roughness();
 	vec4 metalness = get_metalness();
 	vec4 emission = get_emission();
 	
 	ALBEDO = albedo.rgb;
-	ROUGHNESS = roughness.r; // r, g or b all have same value
+	ROUGHNESS = roughness; // r, g or b all have same value
 	METALLIC = metalness.r; // r, g or b all have same value
 	EMISSION = emission.rgb * emission.a; // rgb is color of emission, a is intensity
 }

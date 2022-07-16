@@ -14,11 +14,18 @@ var mode = Modes.BRUSH
 var brush_color :Color
 var brush_size :float
 var brush_opacity :float
+var tex_layers :TextureArray
 var layer_nb = 0
 var layer_value = Color.black
 
-func setup():
+func setup(tex_layers :TextureArray):
+	self.tex_layers = tex_layers
 	_on_BrushButton_pressed()
+	$VBoxContainer/ColorContainer/LayerButton4.set_value(tex_layers.get_layer_data(3))
+	$VBoxContainer/ColorContainer/LayerButton3.set_value(tex_layers.get_layer_data(2))
+	$VBoxContainer/ColorContainer/LayerButton2.set_value(tex_layers.get_layer_data(1))
+	$VBoxContainer/ColorContainer/LayerButton.set_value(tex_layers.get_layer_data(0))
+	$VBoxContainer/ColorContainer/LayerButton.select()
 
 # When brush button pressed, show brush panel
 func _on_BrushButton_pressed() -> void:
@@ -58,6 +65,31 @@ func _on_EraserButton_pressed() -> void:
 	
 	update_brush()
 
+func _on_LayerButton_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 0)
+func _on_LayerButton_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 0)
+func _on_LayerButton2_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 1)
+func _on_LayerButton2_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 1)
+func _on_LayerButton3_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 2)
+func _on_LayerButton3_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 2)
+func _on_LayerButton4_selected(value, is_color) -> void:
+	on_layer_change(value, is_color, 3)
+func _on_LayerButton4_value_changed(value, is_color) -> void:
+	on_layer_change(value, is_color, 3)
+
+
+func on_layer_change(value, is_color, layer_idx):
+	layer_nb = layer_idx
+	layer_value = value
+	if not is_color:
+		tex_layers.set_layer_data(value.get_data(), layer_idx)
+	update_brush()
+
 func _on_ValueSlider_value_changed(value: float) -> void:
 	update_brush()
 
@@ -68,6 +100,12 @@ func _on_SizeSlider_value_changed(value: float) -> void:
 func get_mode():
 	return mode
 
+func get_layer_nb():
+	return layer_nb
+
+func get_layer_value():
+	return layer_value
+
 func get_value():
 	return $VBoxContainer/ValueContainer/ValueSlider.value
 
@@ -76,23 +114,38 @@ func get_size():
 
 func update_brush():
 	var mode = get_mode()
+	var layer_nb = get_layer_nb()
+	var layer_value = get_layer_value()
 	var value = get_value()
 	var size = get_size()
 	
 	match mode:
 		Modes.BRUSH:
-			brush_color = Color(value, value, value, 1.0)
-			brush_opacity = 1.0
-			brush_size = size/100
+			if layer_value is Color:
+				brush_color = Color.white
+				brush_opacity = value
+				brush_size = size/100
+			else:
+				brush_color = Color(layer_nb, value, 0, 0)
+				brush_opacity = 0.0
+				brush_size = size/100
 		Modes.BUCKET:
-			brush_color = Color(value, value, value, 1.0)
-			brush_opacity = 1.0
-			brush_size = 1.0
+			if layer_value is Color:
+				brush_color = Color.white
+				brush_opacity = value
+				brush_size = 1.0
+			else:
+				brush_color = Color(layer_nb, value, 0, 0)
+				brush_opacity = 0.0
+				brush_size = 1.0
 		Modes.ERASER:
-			brush_color = Color(1.0, 1.0, 1.0, 1.0)
+			brush_color = Color.white
 			brush_opacity = 1.0
 			brush_size = size/100
 	
 	emit_signal("values_changed", brush_color, brush_opacity, brush_size)
+
+
+
 
 
