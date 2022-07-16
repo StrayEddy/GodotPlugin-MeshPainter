@@ -9,7 +9,7 @@
 [ext_resource path="res://addons/meshpainter/roughness_panel.gd" type="Script" id=7]
 [ext_resource path="res://addons/meshpainter/layer_button.tscn" type="PackedScene" id=9]
 
-[node name="R" type="PanelContainer"]
+[node name="G" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -27,7 +27,7 @@ margin_bottom = 557.0
 [node name="Label" type="Label" parent="VBoxContainer"]
 margin_right = 1002.0
 margin_bottom = 14.0
-text = "Roughness"
+text = "Glossiness"
 
 [node name="Modes" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 18.0

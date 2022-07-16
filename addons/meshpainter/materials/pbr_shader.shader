@@ -110,7 +110,7 @@ float get_roughness() {
 				vec4 color = texelFetch(tex_roughness_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
 					vec4 new_roughness = triplanar_texture(tex_roughness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
-					roughness = clamp(roughness - color.g/10.0, new_roughness.g, 1.0);
+					roughness = clamp(roughness - color.g/10.0, 1.0-new_roughness.g, 1.0);
 				}
 				else if (color.a == 1.0) {
 					roughness = clamp(roughness + .1, 0.0, 1.0);

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://demo/ninomaru_teien_2k.exr" type="Texture" id=1]
+[ext_resource path="res://demo/ninomaru_teien_2k.exr" type="Texture" id=4]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "demo_Mesh"
@@ -17,7 +17,7 @@ surfaces/0 = {
 }
 
 [sub_resource type="PanoramaSky" id=4]
-panorama = ExtResource( 1 )
+panorama = ExtResource( 4 )
 
 [sub_resource type="Environment" id=3]
 background_mode = 2
