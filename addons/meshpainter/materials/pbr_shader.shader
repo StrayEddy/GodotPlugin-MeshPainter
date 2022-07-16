@@ -110,7 +110,7 @@ float get_roughness() {
 				vec4 color = texelFetch(tex_roughness_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
 					vec4 new_roughness = triplanar_texture(tex_roughness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
-					roughness = clamp(roughness - (1.0-color.g)/10.0 + new_roughness.g/10.0, new_roughness.g, 1.0);
+					roughness = clamp(roughness - (1.0-color.g)/10.0, new_roughness.g, 1.0);
 				}
 				else if (color.a == 1.0) {
 					roughness = clamp(roughness + .1, 0.0, 1.0);
@@ -125,9 +125,9 @@ float get_roughness() {
 }
 
 // Metalness retrieval
-vec4 get_metalness() {
+float get_metalness() {
 	// Default metalness is 0.0
-	vec4 metalness = vec4(0,0,0,1);
+	float metalness = 0.0;
 	
 	// Go through metalness brush texture to find brush centers that are close enough to current pixel
 	// Then calculate metalness based on the combination of all those brush distances
@@ -147,7 +147,16 @@ vec4 get_metalness() {
 			// Use last color of close enough brush for current pixel
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_metalness_color, ivec2(x, y), 0);
-				metalness = color;
+				if (color.a == 0.0) {
+					vec4 new_metalness = triplanar_texture(tex_metalness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
+					metalness = clamp(metalness + (1.0-color.g)/10.0, 0.0, new_metalness.g);
+				}
+				else if (color.a == 1.0) {
+					metalness = clamp(metalness - .1, 0.0, 1.0);
+				}
+				else {
+					metalness = clamp(metalness + (1.0-color.a)/10.0, 0.0, 1.0);
+				}
 			}
 		}
 	}
@@ -179,11 +188,11 @@ vec4 get_emission() {
 				vec4 color = texelFetch(tex_emission_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
 					vec4 new_emission = triplanar_texture(tex_emission_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
-					emission = mix(emission, new_emission, color.g);
+					emission = clamp(emission + color.g/10.0, 0.0, new_emission.g*2.0);
 				}
 				else {
 					emission.rgb = color.rgb;
-					emission.a += color.a;
+					emission.a = clamp(emission.a + color.a, 0.0, 2.0);
 				}
 			}
 		}
@@ -195,12 +204,12 @@ void fragment() {
 	// Get albedo, roughness, metalness and emission from brush and color textures
 	vec4 albedo = get_albedo();
 	float roughness = get_roughness();
-	vec4 metalness = get_metalness();
+	float metalness = get_metalness();
 	vec4 emission = get_emission();
 	
 	ALBEDO = albedo.rgb;
 	ROUGHNESS = roughness; // r, g or b all have same value
-	METALLIC = metalness.r; // r, g or b all have same value
+	METALLIC = metalness; // r, g or b all have same value
 	EMISSION = emission.rgb * emission.a; // rgb is color of emission, a is intensity
 }
 
