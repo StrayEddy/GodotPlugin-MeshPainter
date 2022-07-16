@@ -13,5 +13,4 @@ You can paint albedo, glossiness, metalness and emission, with colors and/or tex
 - Click on the brush button
 - Start painting !
 
-# Example
 ![Example](demo/example.gif)
