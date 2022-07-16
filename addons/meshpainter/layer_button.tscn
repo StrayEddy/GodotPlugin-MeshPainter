@@ -15,9 +15,13 @@ expand = true
 script = ExtResource( 2 )
 
 [node name="PopupDialog" type="PopupDialog" parent="."]
+visible = true
 anchor_right = 0.5
 margin_right = 40.0
 margin_bottom = 67.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 126, 67 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PopupDialog"]
 anchor_left = 0.5

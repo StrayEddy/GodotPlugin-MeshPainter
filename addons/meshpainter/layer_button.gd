@@ -4,7 +4,9 @@ extends TextureButton
 signal value_changed(value, is_color)
 signal selected(value, is_color)
 
-var value = Color.black
+export var can_pick_color = true
+
+var value = Color.white
 
 func select():
 	var event = InputEventMouseButton.new()
@@ -20,7 +22,7 @@ func set_value(value):
 	elif value is Image:
 		value.lock()
 		if value.get_pixel(0,0) == Color(0,0,0,0):
-			set_color(Color.cornflower)
+			set_color(Color.white)
 		else:
 			var tex = ImageTexture.new()
 			tex.create_from_image(value)
@@ -43,12 +45,19 @@ func set_texture(texture :Texture):
 	emit_signal("value_changed", value, false)
 
 func _on_ColorButton_pressed() -> void:
-	$ColorDialog.popup()
-	$PopupDialog.hide()
+	if can_pick_color:
+		$PopupDialog.hide()
+		$ColorDialog.popup()
+		$ColorDialog.set_global_position(get_global_mouse_position())
+	else:
+		$PopupDialog.hide()
+		$ColorDialog/ColorPicker.color = Color.white
+		_on_ColorDialog_confirmed()
 
 func _on_TextureButton_pressed() -> void:
-	$TextureDialog.popup()
 	$PopupDialog.hide()
+	$TextureDialog.popup()
+	$TextureDialog.set_global_position(get_global_mouse_position())
 
 func _on_ColorDialog_confirmed() -> void:
 	var color = $ColorDialog/ColorPicker.color
@@ -78,3 +87,5 @@ func _on_LayerButton_gui_input(event: InputEvent) -> void:
 			emit_signal("selected", value, value is Color)
 		if event.button_mask == BUTTON_RIGHT:
 			$PopupDialog.popup()
+			$PopupDialog.set_global_position(get_global_mouse_position())
+			$PopupDialog.set_as_minsize()

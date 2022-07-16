@@ -81,6 +81,7 @@ margin_right = 86.0
 margin_bottom = 86.0
 rect_min_size = Vector2( 86, 86 )
 button_mask = 3
+can_pick_color = false
 
 [node name="LayerButton2" parent="VBoxContainer/ColorContainer" instance=ExtResource( 8 )]
 margin_left = 90.0
@@ -88,6 +89,7 @@ margin_right = 176.0
 margin_bottom = 86.0
 rect_min_size = Vector2( 86, 86 )
 button_mask = 3
+can_pick_color = false
 
 [node name="LayerButton3" parent="VBoxContainer/ColorContainer" instance=ExtResource( 8 )]
 margin_top = 90.0
@@ -95,6 +97,7 @@ margin_right = 86.0
 margin_bottom = 176.0
 rect_min_size = Vector2( 86, 86 )
 button_mask = 3
+can_pick_color = false
 
 [node name="LayerButton4" parent="VBoxContainer/ColorContainer" instance=ExtResource( 8 )]
 margin_left = 90.0
@@ -103,6 +106,7 @@ margin_right = 176.0
 margin_bottom = 176.0
 rect_min_size = Vector2( 86, 86 )
 button_mask = 3
+can_pick_color = false
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 margin_top = 242.0
