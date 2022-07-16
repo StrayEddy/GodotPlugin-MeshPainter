@@ -11,6 +11,9 @@ func select():
 	event.button_mask = BUTTON_LEFT
 	_on_LayerButton_gui_input(event)
 
+func deselect():
+	$Frame.hide()
+
 func set_value(value):
 	if value is Color:
 		set_color(value)
@@ -50,6 +53,9 @@ func _on_TextureButton_pressed() -> void:
 func _on_ColorDialog_confirmed() -> void:
 	var color = $ColorDialog/ColorPicker.color
 	set_value(color)
+	
+	$Frame.show()
+	emit_signal("selected", value, value is Color)
 
 func _on_TextureDialog_file_selected(path: String) -> void:
 	var image = Image.new()
@@ -58,10 +64,14 @@ func _on_TextureDialog_file_selected(path: String) -> void:
 	var tex = ImageTexture.new()
 	tex.create_from_image(image)
 	set_value(tex)
+	
+	$Frame.show()
+	emit_signal("selected", value, value is Color)
 
 func _on_LayerButton_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_mask == BUTTON_LEFT:
+			$Frame.show()
 			emit_signal("selected", value, value is Color)
 		if event.button_mask == BUTTON_RIGHT:
 			$PopupDialog.popup()

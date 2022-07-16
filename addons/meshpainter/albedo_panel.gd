@@ -71,12 +71,24 @@ func _on_EraserButton_pressed() -> void:
 
 func _on_LayerButton_selected(value, is_color) -> void:
 	on_layer_change(value, is_color, 0)
+	$VBoxContainer/ColorContainer/LayerButton2.deselect()
+	$VBoxContainer/ColorContainer/LayerButton3.deselect()
+	$VBoxContainer/ColorContainer/LayerButton4.deselect()
 func _on_LayerButton2_selected(value, is_color) -> void:
 	on_layer_change(value, is_color, 1)
+	$VBoxContainer/ColorContainer/LayerButton.deselect()
+	$VBoxContainer/ColorContainer/LayerButton3.deselect()
+	$VBoxContainer/ColorContainer/LayerButton4.deselect()
 func _on_LayerButton3_selected(value, is_color) -> void:
 	on_layer_change(value, is_color, 2)
+	$VBoxContainer/ColorContainer/LayerButton.deselect()
+	$VBoxContainer/ColorContainer/LayerButton2.deselect()
+	$VBoxContainer/ColorContainer/LayerButton4.deselect()
 func _on_LayerButton4_selected(value, is_color) -> void:
 	on_layer_change(value, is_color, 3)
+	$VBoxContainer/ColorContainer/LayerButton.deselect()
+	$VBoxContainer/ColorContainer/LayerButton2.deselect()
+	$VBoxContainer/ColorContainer/LayerButton3.deselect()
 
 func _on_LayerButton_value_changed(value, is_color) -> void:
 	on_layer_change(value, is_color, 0)

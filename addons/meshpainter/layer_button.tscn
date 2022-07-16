@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
+[ext_resource path="res://addons/meshpainter/icons/selected-layer-frame.png" type="Texture" id=1]
 [ext_resource path="res://addons/meshpainter/layer_button.gd" type="Script" id=2]
 [ext_resource path="res://addons/meshpainter/icons/color-picker.svg" type="Texture" id=3]
 [ext_resource path="res://addons/meshpainter/icons/folder.svg" type="Texture" id=4]
@@ -69,6 +70,13 @@ margin_right = 316.0
 margin_bottom = 446.0
 color = Color( 0, 0, 0, 1 )
 edit_alpha = false
+
+[node name="Frame" type="TextureRect" parent="."]
+visible = false
+margin_right = 86.0
+margin_bottom = 86.0
+texture = ExtResource( 1 )
+expand = true
 
 [connection signal="gui_input" from="." to="." method="_on_LayerButton_gui_input"]
 [connection signal="pressed" from="PopupDialog/HBoxContainer/ColorButton" to="." method="_on_ColorButton_pressed"]
