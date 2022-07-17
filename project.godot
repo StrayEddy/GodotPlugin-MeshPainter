@@ -33,7 +33,13 @@ _global_script_class_icons={
 [application]
 
 config/name="MeshPainter"
+run/main_scene="res://demo/Demo.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/resizable=false
+window/size/fullscreen=true
 
 [editor_plugins]
 
