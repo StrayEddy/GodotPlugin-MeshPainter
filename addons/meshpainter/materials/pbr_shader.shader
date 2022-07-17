@@ -7,19 +7,31 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 
 uniform sampler2D tex_albedo_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
 uniform sampler2D tex_albedo_color : hint_albedo;
-uniform sampler2DArray tex_albedo_layers : hint_albedo;
+uniform sampler2D tex_albedo_layer_0 : hint_albedo;
+uniform sampler2D tex_albedo_layer_1 : hint_albedo;
+uniform sampler2D tex_albedo_layer_2 : hint_albedo;
+uniform sampler2D tex_albedo_layer_3 : hint_albedo;
 
 uniform sampler2D tex_roughness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
 uniform sampler2D tex_roughness_color : hint_albedo; // r, g and b all at same value (0.0 - 1.0)
-uniform sampler2DArray tex_roughness_layers : hint_albedo;
+uniform sampler2D tex_roughness_layer_0 : hint_albedo;
+uniform sampler2D tex_roughness_layer_1 : hint_albedo;
+uniform sampler2D tex_roughness_layer_2 : hint_albedo;
+uniform sampler2D tex_roughness_layer_3 : hint_albedo;
 
 uniform sampler2D tex_metalness_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
 uniform sampler2D tex_metalness_color : hint_albedo; // r, g and b all at same value (0.0 - 1.0)
-uniform sampler2DArray tex_metalness_layers : hint_albedo;
+uniform sampler2D tex_metalness_layer_0 : hint_albedo;
+uniform sampler2D tex_metalness_layer_1 : hint_albedo;
+uniform sampler2D tex_metalness_layer_2 : hint_albedo;
+uniform sampler2D tex_metalness_layer_3 : hint_albedo;
 
 uniform sampler2D tex_emission_brush : hint_albedo; // (r: x, g: y, b:z, a: size)
 uniform sampler2D tex_emission_color : hint_albedo; // rgb at same value (0.0 - 1.0) and a for intensity
-uniform sampler2DArray tex_emission_layers : hint_albedo;
+uniform sampler2D tex_emission_layer_0 : hint_albedo;
+uniform sampler2D tex_emission_layer_1 : hint_albedo;
+uniform sampler2D tex_emission_layer_2 : hint_albedo;
+uniform sampler2D tex_emission_layer_3 : hint_albedo;
 
 uniform vec3 uv1_scale;
 uniform vec3 uv1_offset;
@@ -41,11 +53,11 @@ void vertex() {
 	uv1_triplanar_pos *= vec3(1.0,-1.0, 1.0);
 }
 
-vec4 triplanar_texture(sampler2DArray p_sampler_array, float layer_idx, vec3 p_weights,vec3 p_triplanar_pos) {
+vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights,vec3 p_triplanar_pos) {
 	vec4 samp=vec4(0.0);
-	samp+= texture(p_sampler_array,vec3(p_triplanar_pos.xy,layer_idx)) * p_weights.z;
-	samp+= texture(p_sampler_array,vec3(p_triplanar_pos.xz,layer_idx)) * p_weights.y;
-	samp+= texture(p_sampler_array,vec3(p_triplanar_pos.zy * vec2(-1.0,1.0),layer_idx)) * p_weights.x;
+	samp+= texture(p_sampler,p_triplanar_pos.xy) * p_weights.z;
+	samp+= texture(p_sampler,p_triplanar_pos.xz) * p_weights.y;
+	samp+= texture(p_sampler,p_triplanar_pos.zy * vec2(-1.0,1.0)) * p_weights.x;
 	return samp;
 }
 
@@ -73,7 +85,20 @@ vec4 get_albedo() {
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_albedo_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
-					vec4 new_albedo = triplanar_texture(tex_albedo_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
+					vec4 new_albedo;
+					if (color.r == 0.0) {
+						new_albedo = triplanar_texture(tex_albedo_layer_0,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 1.0) {
+						new_albedo = triplanar_texture(tex_albedo_layer_1,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 2.0) {
+						new_albedo = triplanar_texture(tex_albedo_layer_2,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 3.0) {
+						new_albedo = triplanar_texture(tex_albedo_layer_3,uv1_power_normal,uv1_triplanar_pos);
+					}
+						
 					albedo = mix(albedo, new_albedo, color.g);
 				}
 				else {
@@ -109,7 +134,19 @@ float get_roughness() {
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_roughness_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
-					vec4 new_roughness = triplanar_texture(tex_roughness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
+					vec4 new_roughness;
+					if (color.r == 0.0) {
+						new_roughness = triplanar_texture(tex_roughness_layer_0,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 1.0) {
+						new_roughness = triplanar_texture(tex_roughness_layer_1,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 2.0) {
+						new_roughness = triplanar_texture(tex_roughness_layer_2,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 3.0) {
+						new_roughness = triplanar_texture(tex_roughness_layer_3,uv1_power_normal,uv1_triplanar_pos);
+					}
 					roughness = clamp(roughness - color.g/10.0, 1.0-new_roughness.g, 1.0);
 				}
 				else if (color.a == 1.0) {
@@ -148,7 +185,19 @@ float get_metalness() {
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_metalness_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
-					vec4 new_metalness = triplanar_texture(tex_metalness_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
+					vec4 new_metalness;
+					if (color.r == 0.0) {
+						new_metalness = triplanar_texture(tex_metalness_layer_0,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 1.0) {
+						new_metalness = triplanar_texture(tex_metalness_layer_1,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 2.0) {
+						new_metalness = triplanar_texture(tex_metalness_layer_2,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 3.0) {
+						new_metalness = triplanar_texture(tex_metalness_layer_3,uv1_power_normal,uv1_triplanar_pos);
+					}
 					metalness = clamp(metalness + color.g/10.0, 0.0, new_metalness.g);
 				}
 				else if (color.a == 1.0) {
@@ -187,7 +236,19 @@ vec4 get_emission() {
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_emission_color, ivec2(x, y), 0);
 				if (color.a == 0.0) {
-					vec4 new_emission = triplanar_texture(tex_emission_layers,color.r,uv1_power_normal,uv1_triplanar_pos);
+					vec4 new_emission;
+					if (color.r == 0.0) {
+						new_emission = triplanar_texture(tex_emission_layer_0,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 1.0) {
+						new_emission = triplanar_texture(tex_emission_layer_1,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 2.0) {
+						new_emission = triplanar_texture(tex_emission_layer_2,uv1_power_normal,uv1_triplanar_pos);
+					}
+					else if (color.r == 3.0) {
+						new_emission = triplanar_texture(tex_emission_layer_3,uv1_power_normal,uv1_triplanar_pos);
+					}
 					emission = clamp(emission + color.g/10.0, 0.0, new_emission.g*2.0);
 				}
 				else {

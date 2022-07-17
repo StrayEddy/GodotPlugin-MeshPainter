@@ -14,17 +14,23 @@ var mode = Modes.BRUSH
 var brush_color :Color
 var brush_size :float
 var brush_opacity :float
-var tex_layers :TextureArray
+var tex_layer_0 :ImageTexture
+var tex_layer_1 :ImageTexture
+var tex_layer_2 :ImageTexture
+var tex_layer_3 :ImageTexture
 var layer_nb = 0
 var layer_value = Color.black
 
-func setup(tex_layers :TextureArray):
-	self.tex_layers = tex_layers
+func setup(tex_layer_0 :ImageTexture, tex_layer_1 :ImageTexture, tex_layer_2 :ImageTexture, tex_layer_3 :ImageTexture):
+	self.tex_layer_0 = tex_layer_0
+	self.tex_layer_1 = tex_layer_1
+	self.tex_layer_2 = tex_layer_2
+	self.tex_layer_3 = tex_layer_3
 	_on_BrushButton_pressed()
-	$VBoxContainer/ColorContainer/LayerButton4.set_value(tex_layers.get_layer_data(3))
-	$VBoxContainer/ColorContainer/LayerButton3.set_value(tex_layers.get_layer_data(2))
-	$VBoxContainer/ColorContainer/LayerButton2.set_value(tex_layers.get_layer_data(1))
-	$VBoxContainer/ColorContainer/LayerButton.set_value(tex_layers.get_layer_data(0))
+	$VBoxContainer/ColorContainer/LayerButton4.set_value(tex_layer_3)
+	$VBoxContainer/ColorContainer/LayerButton3.set_value(tex_layer_2)
+	$VBoxContainer/ColorContainer/LayerButton2.set_value(tex_layer_1)
+	$VBoxContainer/ColorContainer/LayerButton.set_value(tex_layer_0)
 	$VBoxContainer/ColorContainer/LayerButton.select()
 
 # When brush button pressed, show brush panel
@@ -100,7 +106,15 @@ func on_layer_change(value, is_color, layer_idx):
 	layer_nb = layer_idx
 	layer_value = value
 	if not is_color:
-		tex_layers.set_layer_data(value.get_data(), layer_idx)
+		match layer_idx:
+			0:
+				tex_layer_0.set_data(value.get_data())
+			1:
+				tex_layer_1.set_data(value.get_data())
+			2:
+				tex_layer_2.set_data(value.get_data())
+			3:
+				tex_layer_3.set_data(value.get_data())
 	update_brush()
 
 func _on_IntensitySlider_value_changed(value: float) -> void:

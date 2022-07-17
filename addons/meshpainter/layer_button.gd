@@ -19,16 +19,7 @@ func deselect():
 func set_value(value):
 	if value is Color:
 		set_color(value)
-	elif value is Image:
-		value.lock()
-		if value.get_pixel(0,0) == Color(0,0,0,0):
-			set_color(Color.white)
-		else:
-			var tex = ImageTexture.new()
-			tex.create_from_image(value)
-			set_texture(tex)
-		value.unlock()
-	elif value is Texture:
+	elif value is ImageTexture:
 		set_texture(value)
 
 func set_color(color :Color):
@@ -39,9 +30,16 @@ func set_color(color :Color):
 	self.texture_normal = gradient_tex
 	emit_signal("value_changed", value, true)
 
-func set_texture(texture :Texture):
-	self.value = texture
-	self.texture_normal = texture
+func set_texture(texture :ImageTexture):
+	var image = texture.get_data()
+	if image.get_format() != Image.FORMAT_RGBAH:
+		image.convert(Image.FORMAT_RGBAH)
+	if image.get_size() != Vector2(512, 512):
+		image.resize(512, 512)
+	var tex :ImageTexture = ImageTexture.new()
+	tex.create_from_image(image)
+	self.value = tex
+	self.texture_normal = tex
 	emit_signal("value_changed", value, false)
 
 func _on_ColorButton_pressed() -> void:
@@ -67,14 +65,11 @@ func _on_ColorDialog_confirmed() -> void:
 	emit_signal("selected", value, value is Color)
 
 func _on_TextureDialog_file_selected(path: String) -> void:
-	var image = Image.new()
+	var image :Image = Image.new()
 	image.load(path)
-	if image.get_format() != Image.FORMAT_RGBAH:
-		image.convert(Image.FORMAT_RGBAH)
-	if image.get_size() != Vector2(512, 512):
-		image.resize(512, 512)
 	var tex = ImageTexture.new()
 	tex.create_from_image(image)
+	self.value = tex
 	set_value(tex)
 	
 	$Frame.show()
