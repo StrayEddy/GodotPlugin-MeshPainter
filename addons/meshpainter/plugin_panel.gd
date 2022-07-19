@@ -6,6 +6,8 @@ extends Control
 class_name PluginPanel
 
 var plugin_cursor :PluginCursor
+var editor_filesystem :EditorFileSystem
+var dir_path :String
 
 var root :Node
 var mesh_instance :MeshInstance
@@ -62,179 +64,6 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 		setup_tabs()
 		_on_TabContainer_tab_selected(0)
 
-# Hide panel, remove added plugin nodes from tree and hide cursor
-func hide_panel():
-	if mesh_instance:
-		if temp_plugin_node:
-			mesh_instance.remove_child(temp_plugin_node)
-		mesh_instance = null
-	
-	if plugin_cursor:
-		plugin_cursor.hide_cursor()
-	hide()
-
-# Edit current material if it's our custom plugin material, otherwise create a new custom PBR material
-func setup_material():
-	var existing_material :Material = mesh_instance.mesh.surface_get_material(0)
-	if existing_material:
-		if existing_material is ShaderMaterial:
-			if existing_material.shader == pbr_shader:
-				# Edit current custom material
-				# Hookup existing textures to keep painting on them
-				tex_albedo_brush = existing_material.get_shader_param("tex_albedo_brush")
-				tex_albedo_color = existing_material.get_shader_param("tex_albedo_color")
-				tex_albedo_layer_0 = existing_material.get_shader_param("tex_albedo_layer_0")
-				tex_albedo_layer_1 = existing_material.get_shader_param("tex_albedo_layer_1")
-				tex_albedo_layer_2 = existing_material.get_shader_param("tex_albedo_layer_2")
-				tex_albedo_layer_3 = existing_material.get_shader_param("tex_albedo_layer_3")
-				
-				tex_roughness_brush = existing_material.get_shader_param("tex_roughness_brush")
-				tex_roughness_color = existing_material.get_shader_param("tex_roughness_color")
-				tex_roughness_layer_0 = existing_material.get_shader_param("tex_roughness_layer_0")
-				tex_roughness_layer_1 = existing_material.get_shader_param("tex_roughness_layer_1")
-				tex_roughness_layer_2 = existing_material.get_shader_param("tex_roughness_layer_2")
-				tex_roughness_layer_3 = existing_material.get_shader_param("tex_roughness_layer_3")
-				
-				tex_metalness_brush = existing_material.get_shader_param("tex_metalness_brush")
-				tex_metalness_color = existing_material.get_shader_param("tex_metalness_color")
-				tex_metalness_layer_0 = existing_material.get_shader_param("tex_metalness_layer_0")
-				tex_metalness_layer_1 = existing_material.get_shader_param("tex_metalness_layer_1")
-				tex_metalness_layer_2 = existing_material.get_shader_param("tex_metalness_layer_2")
-				tex_metalness_layer_3 = existing_material.get_shader_param("tex_metalness_layer_3")
-				
-				tex_emission_brush = existing_material.get_shader_param("tex_emission_brush")
-				tex_emission_color = existing_material.get_shader_param("tex_emission_color")
-				tex_emission_layer_0 = existing_material.get_shader_param("tex_emission_layer_0")
-				tex_emission_layer_1 = existing_material.get_shader_param("tex_emission_layer_1")
-				tex_emission_layer_2 = existing_material.get_shader_param("tex_emission_layer_2")
-				tex_emission_layer_3 = existing_material.get_shader_param("tex_emission_layer_3")
-	else:
-		# Create new custom material
-		var mat = ShaderMaterial.new()
-		mat.shader = pbr_shader
-		
-		# Image used for building textures
-		var temp_image = Image.new()
-		temp_image.create(512,512,false,Image.FORMAT_RGBAH)
-		
-		# Build albedo brush texture, transparent means empty
-		tex_albedo_brush = ImageTexture.new()
-		temp_image.fill(Color(0,0,0,0))
-		tex_albedo_brush.create_from_image(temp_image)
-		tex_albedo_brush.resource_name = "Albedo brush texture"
-		# Build albedo color texture, default to white
-		tex_albedo_color = ImageTexture.new()
-		temp_image.fill(Color(1,1,1,1))
-		tex_albedo_color.create_from_image(temp_image)
-		tex_albedo_color.resource_name = "Albedo color texture"
-		# Build albedo layers
-		tex_albedo_layer_0 = ImageTexture.new()
-		tex_albedo_layer_1 = ImageTexture.new()
-		tex_albedo_layer_2 = ImageTexture.new()
-		tex_albedo_layer_3 = ImageTexture.new()
-		temp_image.fill(Color(1,1,1,1))
-		tex_albedo_layer_0.create_from_image(temp_image)
-		tex_albedo_layer_1.create_from_image(temp_image)
-		tex_albedo_layer_2.create_from_image(temp_image)
-		tex_albedo_layer_3.create_from_image(temp_image)
-		
-		# Build roughness brush texture, transparent means empty
-		tex_roughness_brush = ImageTexture.new()
-		temp_image.fill(Color(0,0,0,0))
-		tex_roughness_brush.create_from_image(temp_image)
-		tex_roughness_brush.resource_name = "Roughness brush texture"
-		# Build roughness color texture, default to full roughness
-		tex_roughness_color = ImageTexture.new()
-		temp_image.fill(Color(1,1,1,1))
-		tex_roughness_color.create_from_image(temp_image)
-		tex_roughness_color.resource_name = "Roughness color texture"
-		# Build roughness layers
-		tex_roughness_layer_0 = ImageTexture.new()
-		tex_roughness_layer_1 = ImageTexture.new()
-		tex_roughness_layer_2 = ImageTexture.new()
-		tex_roughness_layer_3 = ImageTexture.new()
-		temp_image.fill(Color(1,1,1,1))
-		tex_roughness_layer_0.create_from_image(temp_image)
-		tex_roughness_layer_1.create_from_image(temp_image)
-		tex_roughness_layer_2.create_from_image(temp_image)
-		tex_roughness_layer_3.create_from_image(temp_image)
-		
-		# Build metalness brush texture, transparent means empty
-		tex_metalness_brush = ImageTexture.new()
-		temp_image.fill(Color(0,0,0,0))
-		tex_metalness_brush.create_from_image(temp_image)
-		tex_metalness_brush.resource_name = "Metalness brush texture"
-		# Build metalness color texture, default to no metalness
-		tex_metalness_color = ImageTexture.new()
-		temp_image.fill(Color(0,0,0,1))
-		tex_metalness_color.create_from_image(temp_image)
-		tex_metalness_color.resource_name = "Metalness color texture"
-		# Build metalness layers
-		tex_metalness_layer_0 = ImageTexture.new()
-		tex_metalness_layer_1 = ImageTexture.new()
-		tex_metalness_layer_2 = ImageTexture.new()
-		tex_metalness_layer_3 = ImageTexture.new()
-		temp_image.fill(Color(1,1,1,1))
-		tex_metalness_layer_0.create_from_image(temp_image)
-		tex_metalness_layer_1.create_from_image(temp_image)
-		tex_metalness_layer_2.create_from_image(temp_image)
-		tex_metalness_layer_3.create_from_image(temp_image)
-		
-		# Build emission brush texture, transparent means empty
-		tex_emission_brush = ImageTexture.new()
-		temp_image.fill(Color(0,0,0,0))
-		tex_emission_brush.create_from_image(temp_image)
-		tex_emission_brush.resource_name = "Emission brush texture"
-		# Build emission color texture, default to no emission
-		tex_emission_color = ImageTexture.new()
-		temp_image.fill(Color(0,0,0,0))
-		tex_emission_color.create_from_image(temp_image)
-		tex_emission_color.resource_name = "Emission color texture"
-		# Build emission layers
-		tex_emission_layer_0 = ImageTexture.new()
-		tex_emission_layer_1 = ImageTexture.new()
-		tex_emission_layer_2 = ImageTexture.new()
-		tex_emission_layer_3 = ImageTexture.new()
-		temp_image.fill(Color(1,1,1,1))
-		tex_emission_layer_0.create_from_image(temp_image)
-		tex_emission_layer_1.create_from_image(temp_image)
-		tex_emission_layer_2.create_from_image(temp_image)
-		tex_emission_layer_3.create_from_image(temp_image)
-		
-		# Set new textures as parameters of PBR shader
-		mat.set_shader_param("tex_albedo_brush", tex_albedo_brush)
-		mat.set_shader_param("tex_albedo_color", tex_albedo_color)
-		mat.set_shader_param("tex_albedo_layer_0", tex_albedo_layer_0)
-		mat.set_shader_param("tex_albedo_layer_1", tex_albedo_layer_1)
-		mat.set_shader_param("tex_albedo_layer_2", tex_albedo_layer_2)
-		mat.set_shader_param("tex_albedo_layer_3", tex_albedo_layer_3)
-		
-		mat.set_shader_param("tex_roughness_brush", tex_roughness_brush)
-		mat.set_shader_param("tex_roughness_color", tex_roughness_color)
-		mat.set_shader_param("tex_roughness_layer_0", tex_roughness_layer_0)
-		mat.set_shader_param("tex_roughness_layer_1", tex_roughness_layer_1)
-		mat.set_shader_param("tex_roughness_layer_2", tex_roughness_layer_2)
-		mat.set_shader_param("tex_roughness_layer_3", tex_roughness_layer_3)
-		
-		mat.set_shader_param("tex_metalness_brush", tex_metalness_brush)
-		mat.set_shader_param("tex_metalness_color", tex_metalness_color)
-		mat.set_shader_param("tex_metalness_layer_0", tex_metalness_layer_0)
-		mat.set_shader_param("tex_metalness_layer_1", tex_metalness_layer_1)
-		mat.set_shader_param("tex_metalness_layer_2", tex_metalness_layer_2)
-		mat.set_shader_param("tex_metalness_layer_3", tex_metalness_layer_3)
-		
-		mat.set_shader_param("tex_emission_brush", tex_emission_brush)
-		mat.set_shader_param("tex_emission_color", tex_emission_color)
-		mat.set_shader_param("tex_emission_layer_0", tex_emission_layer_0)
-		mat.set_shader_param("tex_emission_layer_1", tex_emission_layer_1)
-		mat.set_shader_param("tex_emission_layer_2", tex_emission_layer_2)
-		mat.set_shader_param("tex_emission_layer_3", tex_emission_layer_3)
-		
-		mat.set_shader_param("uv1_scale", Vector3(1,1,1))
-		
-		# Use material for current mesh instance
-		mesh_instance.mesh.surface_set_material(0, mat)
-
 # Add collision to current mesh to retreive brush positions on mesh later on
 func generate_collision():
 	# Generate collision shape from mesh 
@@ -254,6 +83,109 @@ func generate_collision():
 	temp_collision.owner = root
 	temp_body.owner = root
 	temp_plugin_node.owner = root
+
+# Edit current material if it's our custom plugin material, otherwise create a new custom PBR material
+func setup_material():
+	# Create new custom material
+	var mat = ShaderMaterial.new()
+	mat.shader = pbr_shader
+	
+	# Get folder which will hold that meshinstance textures
+	var id :String = str(mesh_instance.get_instance_id())
+	var dir :Directory = Directory.new()
+	var folder :String = dir_path + "/" + id
+	if not dir.dir_exists(folder):
+		dir.make_dir(folder)
+		folder += "/"
+		
+		# Create mpaint files
+		create_mpaint_files(folder, "albedo")
+		create_mpaint_files(folder, "roughness")
+		create_mpaint_files(folder, "metalness")
+		create_mpaint_files(folder, "emission")
+		
+		# Scan those new images
+		editor_filesystem.scan_sources()
+		print("Scanning sources")
+	else:
+		folder += "/"
+	
+	# Setup all textures
+	setup_textures(folder)
+	
+	# Set all shader params
+	setup_shader_textures(mat)
+	mat.set_shader_param("uv1_scale", Vector3(1,1,1))
+	
+	# Use material for current mesh instance
+	mesh_instance.mesh.surface_set_material(0, mat)
+
+func create_mpaint_files(folder :String, type :String):
+	ImageManager.create_mpaint_file(folder + type + "_brush.mpaint", Color(0,0,0,0))
+	ImageManager.create_mpaint_file(folder + type + "_color.mpaint", Color(1,1,1,1))
+	ImageManager.create_mpaint_file(folder + type + "_layer_0.mpaint", Color(1,1,1,1))
+	ImageManager.create_mpaint_file(folder + type + "_layer_1.mpaint", Color(1,1,1,1))
+	ImageManager.create_mpaint_file(folder + type + "_layer_2.mpaint", Color(1,1,1,1))
+	ImageManager.create_mpaint_file(folder + type + "_layer_3.mpaint", Color(1,1,1,1))
+
+func setup_textures(folder):
+	tex_albedo_brush = ImageManager.mpaint_file_to_texture(folder + "albedo_brush.mpaint")
+	print(tex_albedo_brush)
+	tex_albedo_color = ImageManager.mpaint_file_to_texture(folder + "albedo_color.mpaint")
+	tex_albedo_layer_0 = ImageManager.mpaint_file_to_texture(folder + "albedo_layer_0.mpaint")
+	tex_albedo_layer_1 = ImageManager.mpaint_file_to_texture(folder + "albedo_layer_1.mpaint")
+	tex_albedo_layer_2 = ImageManager.mpaint_file_to_texture(folder + "albedo_layer_2.mpaint")
+	tex_albedo_layer_3 = ImageManager.mpaint_file_to_texture(folder + "albedo_layer_3.mpaint")
+
+	tex_roughness_brush = ImageManager.mpaint_file_to_texture(folder + "roughness_brush.mpaint")
+	tex_roughness_color = ImageManager.mpaint_file_to_texture(folder + "roughness_color.mpaint")
+	tex_roughness_layer_0 = ImageManager.mpaint_file_to_texture(folder + "roughness_layer_0.mpaint")
+	tex_roughness_layer_1 = ImageManager.mpaint_file_to_texture(folder + "roughness_layer_1.mpaint")
+	tex_roughness_layer_2 = ImageManager.mpaint_file_to_texture(folder + "roughness_layer_2.mpaint")
+	tex_roughness_layer_3 = ImageManager.mpaint_file_to_texture(folder +  "roughness_layer_3.mpaint")
+
+	tex_metalness_brush = ImageManager.mpaint_file_to_texture(folder + "metalness_brush.mpaint")
+	tex_metalness_color = ImageManager.mpaint_file_to_texture(folder + "metalness_color.mpaint")
+	tex_metalness_layer_0 = ImageManager.mpaint_file_to_texture(folder + "metalness_layer_0.mpaint")
+	tex_metalness_layer_1 = ImageManager.mpaint_file_to_texture(folder + "metalness_layer_1.mpaint")
+	tex_metalness_layer_2 = ImageManager.mpaint_file_to_texture(folder + "metalness_layer_2.mpaint")
+	tex_metalness_layer_3 = ImageManager.mpaint_file_to_texture(folder + "metalness_layer_3.mpaint")
+
+	tex_emission_brush = ImageManager.mpaint_file_to_texture(folder + "emission_brush.mpaint")
+	tex_emission_color = ImageManager.mpaint_file_to_texture(folder + "emission_color.mpaint")
+	tex_emission_layer_0 = ImageManager.mpaint_file_to_texture(folder + "emission_layer_0.mpaint")
+	tex_emission_layer_1 = ImageManager.mpaint_file_to_texture(folder + "emission_layer_1.mpaint")
+	tex_emission_layer_2 = ImageManager.mpaint_file_to_texture(folder + "emission_layer_2.mpaint")
+	tex_emission_layer_3 = ImageManager.mpaint_file_to_texture(folder + "emission_layer_3.mpaint")
+
+func setup_shader_textures(mat :ShaderMaterial):
+	mat.set_shader_param("tex_albedo_brush", tex_albedo_brush)
+	mat.set_shader_param("tex_albedo_color", tex_albedo_color)
+	mat.set_shader_param("tex_albedo_layer_0", tex_albedo_layer_0)
+	mat.set_shader_param("tex_albedo_layer_1", tex_albedo_layer_1)
+	mat.set_shader_param("tex_albedo_layer_2", tex_albedo_layer_2)
+	mat.set_shader_param("tex_albedo_layer_3", tex_albedo_layer_3)
+	
+	mat.set_shader_param("tex_roughness_brush", tex_roughness_brush)
+	mat.set_shader_param("tex_roughness_color", tex_roughness_color)
+	mat.set_shader_param("tex_roughness_layer_0", tex_roughness_layer_0)
+	mat.set_shader_param("tex_roughness_layer_1", tex_roughness_layer_1)
+	mat.set_shader_param("tex_roughness_layer_2", tex_roughness_layer_2)
+	mat.set_shader_param("tex_roughness_layer_3", tex_roughness_layer_3)
+	
+	mat.set_shader_param("tex_metalness_brush", tex_metalness_brush)
+	mat.set_shader_param("tex_metalness_color", tex_metalness_color)
+	mat.set_shader_param("tex_metalness_layer_0", tex_metalness_layer_0)
+	mat.set_shader_param("tex_metalness_layer_1", tex_metalness_layer_1)
+	mat.set_shader_param("tex_metalness_layer_2", tex_metalness_layer_2)
+	mat.set_shader_param("tex_metalness_layer_3", tex_metalness_layer_3)
+	
+	mat.set_shader_param("tex_emission_brush", tex_emission_brush)
+	mat.set_shader_param("tex_emission_color", tex_emission_color)
+	mat.set_shader_param("tex_emission_layer_0", tex_emission_layer_0)
+	mat.set_shader_param("tex_emission_layer_1", tex_emission_layer_1)
+	mat.set_shader_param("tex_emission_layer_2", tex_emission_layer_2)
+	mat.set_shader_param("tex_emission_layer_3", tex_emission_layer_3)
 
 func setup_tabs():
 	$VBoxContainer/TabContainer/E.setup(tex_emission_layer_0, tex_emission_layer_1, tex_emission_layer_2, tex_emission_layer_3)
@@ -297,3 +229,74 @@ func _on_Emission_values_changed(brush_color, brush_opacity, brush_size) -> void
 	plugin_cursor.set_brush_color(brush_color)
 	plugin_cursor.set_brush_opacity(brush_opacity)
 	plugin_cursor.set_brush_size(brush_size)
+
+
+# Hide panel, remove added plugin nodes from tree and hide cursor
+func hide_panel():
+	
+	if mesh_instance:
+		save()
+		if temp_plugin_node:
+			mesh_instance.remove_child(temp_plugin_node)
+		mesh_instance = null
+	
+	if plugin_cursor:
+		plugin_cursor.hide_cursor()
+	hide()
+
+func save():
+	# Save mpaint files
+	var id :String = str(mesh_instance.get_instance_id())
+	var folder :String = dir_path + "/" + id + "/"
+	save_textures(folder, "albedo")
+	save_textures(folder, "roughness")
+	save_textures(folder, "metalness")
+	save_textures(folder, "emission")
+	
+	# Scan those new images
+#	editor_filesystem.scan_sources()
+	
+	# Setup stream textures
+#	setup_stream_textures_to_shader(folder, "albedo")
+#	setup_stream_textures_to_shader(folder, "roughness")
+#	setup_stream_textures_to_shader(folder, "metalness")
+#	setup_stream_textures_to_shader(folder, "emission")
+
+func save_textures(folder, type):
+	var tex_brush :ImageTexture = get("tex_" + type + "_brush")
+	var tex_color :ImageTexture = get("tex_" + type + "_color")
+	var tex_layer_0 :ImageTexture = get("tex_" + type + "_layer_0")
+	var tex_layer_1 :ImageTexture = get("tex_" + type + "_layer_1")
+	var tex_layer_2 :ImageTexture = get("tex_" + type + "_layer_2")
+	var tex_layer_3 :ImageTexture = get("tex_" + type + "_layer_3")
+	
+	
+	ImageManager.texture_to_mpaint_file(tex_brush, folder + type + "_brush.mpaint")
+	ImageManager.texture_to_mpaint_file(tex_color, folder + type + "_color.mpaint")
+	ImageManager.texture_to_mpaint_file(tex_layer_0, folder + type + "_layer_0.mpaint")
+	ImageManager.texture_to_mpaint_file(tex_layer_1, folder + type + "_layer_1.mpaint")
+	ImageManager.texture_to_mpaint_file(tex_layer_2, folder + type + "_layer_2.mpaint")
+	ImageManager.texture_to_mpaint_file(tex_layer_3, folder + type + "_layer_3.mpaint")
+
+func setup_stream_textures_to_shader(folder, type):
+	var tex_brush :StreamTexture
+	var tex_color :StreamTexture
+	var tex_layer_0 :StreamTexture
+	var tex_layer_1 :StreamTexture
+	var tex_layer_2 :StreamTexture
+	var tex_layer_3 :StreamTexture
+	
+	tex_brush = load(folder + type + "_brush.mpaint")
+	tex_color = load(folder + type + "_color.mpaint")
+	tex_layer_0 = load(folder + type + "_layer_0.mpaint")
+	tex_layer_1 = load(folder + type + "_layer_1.mpaint")
+	tex_layer_2 = load(folder + type + "_layer_2.mpaint")
+	tex_layer_3 = load(folder + type + "_layer_3.mpaint")
+	
+	var mat :ShaderMaterial = mesh_instance.mesh.surface_get_material(0)
+	mat.set_shader_param("tex_" + type + "_brush", tex_brush)
+	mat.set_shader_param("tex_" + type + "_color", tex_color)
+	mat.set_shader_param("tex_" + type + "_layer_0", tex_layer_0)
+	mat.set_shader_param("tex_" + type + "_layer_1", tex_layer_1)
+	mat.set_shader_param("tex_" + type + "_layer_2", tex_layer_2)
+	mat.set_shader_param("tex_" + type + "_layer_3", tex_layer_3)

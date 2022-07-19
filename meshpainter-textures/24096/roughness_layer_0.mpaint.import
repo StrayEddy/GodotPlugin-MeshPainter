@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/roughness_layer_0.mpaint-56f233c3e19c651c91ab5c0a16ac7455.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/24096/roughness_layer_0.mpaint"
+dest_files=[ "res://.import/roughness_layer_0.mpaint-56f233c3e19c651c91ab5c0a16ac7455.res" ]
+
+[params]
+
+my_option=false

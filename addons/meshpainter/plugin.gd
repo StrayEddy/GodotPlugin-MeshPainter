@@ -4,10 +4,12 @@
 tool
 extends EditorPlugin
 
+var plugin_importer :EditorImportPlugin
 var plugin_panel :PluginPanel
 var plugin_button :PluginButton
 var plugin_cursor :PluginCursor
 var editable = false
+var dir_path = "res://meshpainter-textures"
 
 func selection_changed() -> void:
 	var selection = get_editor_interface().get_selection().get_selected_nodes()
@@ -33,6 +35,14 @@ func forward_spatial_gui_input(camera, event) -> bool:
 
 # Create whole plugin
 func _enter_tree():
+	plugin_importer = preload("res://addons/meshpainter/plugin_importer.gd").new()
+	add_import_plugin(plugin_importer)
+	
+	var dir = Directory.new()
+	if not dir.dir_exists(dir_path):
+		OS.alert("A folder at " + str(dir_path) + " will be created to keep all generated textures from painting.")
+		dir.make_dir(dir_path)
+	
 	# Add cursor instance: shows where to paint on mesh
 	plugin_cursor = preload("res://addons/meshpainter/plugin_cursor.tscn").instance()
 	plugin_cursor.hide()
@@ -43,6 +53,8 @@ func _enter_tree():
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT, plugin_panel)
 	plugin_panel.hide()
 	plugin_panel.plugin_cursor = plugin_cursor
+	plugin_panel.editor_filesystem = get_editor_interface().get_resource_filesystem()
+	plugin_panel.dir_path = dir_path
 	
 	# Add button to 3D scene UI
 	# Shows panel when toggled

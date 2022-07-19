@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/albedo_layer_3.mpaint-a1222b42616a8ef119b37ff37e574c83.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/24096/albedo_layer_3.mpaint"
+dest_files=[ "res://.import/albedo_layer_3.mpaint-a1222b42616a8ef119b37ff37e574c83.res" ]
+
+[params]
+
+my_option=false

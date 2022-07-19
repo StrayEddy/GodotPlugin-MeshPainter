@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/albedo_brush.mpaint-a55ba7394ef41ae7ec59a31e7c88651e.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/24096/albedo_brush.mpaint"
+dest_files=[ "res://.import/albedo_brush.mpaint-a55ba7394ef41ae7ec59a31e7c88651e.res" ]
+
+[params]
+
+my_option=false

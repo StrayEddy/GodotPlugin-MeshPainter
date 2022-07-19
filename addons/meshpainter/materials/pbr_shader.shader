@@ -76,11 +76,14 @@ vec4 get_albedo() {
 			vec4 brush_texel = texelFetch(tex_albedo_brush, ivec2(x, y), 0);
 			
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
-			float brush_size = brush_texel.a * 100.0;
+			float brush_size = brush_texel.a;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
 			// If we reach the end of brush buffer, we stop the loop
 			if (brush_size == 0.0)
 				break;
+			else if (brush_size == 1.0)
+				brush_size *= 100.0;
+			
 			// Get color of close enough brush to mix paint the current pixel
 			if (dist < brush_size) {
 				vec4 color = texelFetch(tex_albedo_color, ivec2(x, y), 0);
@@ -124,11 +127,13 @@ float get_roughness() {
 			// Get brush pixel info
 			vec4 brush_texel = texelFetch(tex_roughness_brush, ivec2(x, y), 0);
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
-			float brush_size = brush_texel.a * 100.0;
+			float brush_size = brush_texel.a;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
 			// If we reach the end of brush buffer, we stop the loop
 			if (brush_size == 0.0)
 				break;
+			else if (brush_size == 1.0)
+				brush_size *= 100.0;
 			
 			// Get color of close enough brush to mix paint the current pixel
 			if (dist < brush_size) {
@@ -175,11 +180,13 @@ float get_metalness() {
 			// Get brush pixel info
 			vec4 brush_texel = texelFetch(tex_metalness_brush, ivec2(x, y), 0);
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
-			float brush_size = brush_texel.a * 100.0;
+			float brush_size = brush_texel.a;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
 			// If we reach the end of brush buffer, we stop the loop
 			if (brush_size == 0.0)
 				break;
+			else if (brush_size == 1.0)
+				brush_size *= 100.0;
 			
 			// Use last color of close enough brush for current pixel
 			if (dist < brush_size) {
@@ -226,11 +233,13 @@ vec4 get_emission() {
 			// Get brush pixel info
 			vec4 brush_texel = texelFetch(tex_emission_brush, ivec2(x, y), 0);
 			// Increase size of brush so it can be possible to have a huge size brush for bucket fill
-			float brush_size = brush_texel.a * 100.0;
+			float brush_size = brush_texel.a;
 			float dist = distance(vertex_pos.xyz, brush_texel.xyz);
 			// If we reach the end of brush buffer, we stop the loop
 			if (brush_size == 0.0)
 				break;
+			else if (brush_size == 1.0)
+				brush_size *= 100.0;
 			
 			// Get color of close enough brush to mix paint the current pixel
 			if (dist < brush_size) {
@@ -273,12 +282,3 @@ void fragment() {
 	METALLIC = metalness; // r, g or b all have same value
 	EMISSION = emission.rgb * emission.a; // rgb is color of emission, a is intensity
 }
-
-
-
-
-
-
-
-
-

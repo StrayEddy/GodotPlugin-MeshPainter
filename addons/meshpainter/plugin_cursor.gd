@@ -73,7 +73,9 @@ func set_brush_opacity(alpha: float):
 # Brush size param is very small, scale cursor mesh to fit new real size
 func set_brush_size(size :float):
 	brush_size = size
-	$Cursor.scale = Vector3(1.0, 1.0, 1.0) * size * 100
+	if size == 1.0:
+		size *= 100
+	$Cursor.scale = Vector3(1.0, 1.0, 1.0) * size
 
 # Take current textures and create the associated buffers (brush and color info)
 func textures_to_buffers():
@@ -82,6 +84,8 @@ func textures_to_buffers():
 	
 	var brush_image = tex_brush.get_data()
 	var color_image = tex_color.get_data()
+	brush_image.decompress()
+	color_image.decompress()
 	
 	brush_image.lock()
 	color_image.lock()
@@ -108,6 +112,8 @@ func textures_to_buffers():
 func buffers_to_textures():
 	var brush_image = tex_brush.get_data()
 	var color_image = tex_color.get_data()
+	brush_image.decompress()
+	color_image.decompress()
 	
 	# Clear textures first
 	brush_image.fill(Color(0,0,0,0))
@@ -132,7 +138,6 @@ func buffers_to_textures():
 	
 	tex_brush.set_data(brush_image)
 	tex_color.set_data(color_image)
-	
 
 # Where we paint with mouse
 func input(camera :Camera, event: InputEvent) -> bool:

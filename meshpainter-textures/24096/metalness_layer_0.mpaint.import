@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/metalness_layer_0.mpaint-d8a8357097f6f8f30e3e70810d8ef704.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/24096/metalness_layer_0.mpaint"
+dest_files=[ "res://.import/metalness_layer_0.mpaint-d8a8357097f6f8f30e3e70810d8ef704.res" ]
+
+[params]
+
+my_option=false

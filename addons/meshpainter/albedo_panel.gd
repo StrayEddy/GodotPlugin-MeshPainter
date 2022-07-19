@@ -156,11 +156,11 @@ func update_brush():
 			if layer_value is Color:
 				brush_color = layer_value
 				brush_opacity = intensity
-				brush_size = size/100
+				brush_size = size
 			else:
 				brush_color = Color(layer_nb, intensity, 0, 0)
 				brush_opacity = 0.0
-				brush_size = size/100
+				brush_size = size
 		Modes.BUCKET:
 			if layer_value is Color:
 				brush_color = layer_value
@@ -173,6 +173,6 @@ func update_brush():
 		Modes.ERASER:
 			brush_color = Color.white
 			brush_opacity = 1.0
-			brush_size = size/100
+			brush_size = size
 	
 	emit_signal("values_changed", brush_color, brush_opacity, brush_size)

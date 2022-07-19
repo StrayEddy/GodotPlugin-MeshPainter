@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/emission_layer_1.mpaint-a4fbbe60afe3a4d694a72729e2445e98.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/24096/emission_layer_1.mpaint"
+dest_files=[ "res://.import/emission_layer_1.mpaint-a4fbbe60afe3a4d694a72729e2445e98.res" ]
+
+[params]
+
+my_option=false
