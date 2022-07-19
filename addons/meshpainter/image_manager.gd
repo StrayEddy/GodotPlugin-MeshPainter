@@ -3,6 +3,8 @@ extends Control
 
 class_name ImageManager
 
+const size = 512
+
 static func generate_mpaint_color(color :Color):
 	return "\"" + str(color.r) + "," + str(color.g) + "," + str(color.b) + "," + str(color.a) + "\""
 
@@ -11,9 +13,9 @@ static func create_mpaint_file(image_path :String, fill_color :Color):
 	file.open(image_path, File.WRITE)
 	# "0,0,0,0","0,0,0,0",
 	# "0,0,0,0","0,0,0,0",
-	for x in range(512):
+	for x in range(size):
 		var line = ""
-		for y in range(512):
+		for y in range(size):
 			line += generate_mpaint_color(fill_color) + ","
 		file.store_line(line)
 	file.close()
@@ -30,12 +32,12 @@ static func texture_to_mpaint_file(tex :ImageTexture, save_path :String):
 	file.open(save_path, File.WRITE)
 	# "0,0,0,0","0,0,0,0",
 	# "0,0,0,0","0,0,0,0",
-	for x in range(512):
+	for x in range(size):
 		var line = ""
-		for y in range(512):
+		for y in range(size):
 			var color :Color = image.get_pixel(x, y)
 			line += generate_mpaint_color(color) + ","
 		file.store_line(line)
 	file.close()
-
+	
 	image.unlock()

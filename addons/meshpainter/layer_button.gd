@@ -6,6 +6,7 @@ signal selected(value, is_color)
 
 export var can_pick_color = true
 
+const size = 512
 var value = Color.white
 
 func select():
@@ -34,8 +35,8 @@ func set_texture(texture :ImageTexture):
 	var image = texture.get_data()
 	if image.get_format() != Image.FORMAT_RGBAH:
 		image.convert(Image.FORMAT_RGBAH)
-	if image.get_size() != Vector2(512, 512):
-		image.resize(512, 512)
+	if image.get_size() != Vector2(size, size):
+		image.resize(size, size)
 	var tex :ImageTexture = ImageTexture.new()
 	tex.create_from_image(image)
 	self.value = tex

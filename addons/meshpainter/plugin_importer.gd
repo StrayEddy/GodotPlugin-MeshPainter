@@ -1,6 +1,8 @@
 tool
 extends EditorImportPlugin
 
+const size = 512
+
 func get_importer_name():
 	return "mesh.painter.plugin"
 
@@ -30,7 +32,7 @@ func get_option_visibility(option, options):
 
 func import(source_file, save_path, options, platform_variants, gen_files):
 	var image = Image.new()
-	image.create(512,512,false,Image.FORMAT_RGBAH)
+	image.create(size,size,false,Image.FORMAT_RGBAH)
 	image.lock()
 	
 	var file = File.new()
@@ -40,9 +42,9 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 	
 		# [0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0] 
 		# [0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]
-	for x in range(512):
+	for x in range(size):
 		var row :PoolStringArray = file.get_csv_line()
-		for y in range(512):
+		for y in range(size):
 			var channels = row[y].split(",")
 			if channels.size() != 4:
 				return ERR_PARSE_ERROR
