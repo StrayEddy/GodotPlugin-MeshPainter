@@ -55,7 +55,7 @@ var tex_emission_layer_3 :ImageTexture
 # PBR shader which will receive all textures
 var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.shader")
 
-var time :int = 0
+var mesh_id :String
 
 # Add collision to current mesh to retreive brush positions on mesh later on
 func generate_collision():
@@ -87,12 +87,17 @@ func retrieve_material(mat :ShaderMaterial):
 		set("tex_" + type + "_layer_2", mat.get_shader_param("tex_" + type +"_layer_2"))
 		set("tex_" + type + "_layer_3", mat.get_shader_param("tex_" + type +"_layer_3"))
 
+func generate_id(name :String):
+	randomize()
+	name = get_tree().edited_scene_root.filename + name
+	mesh_id = str(name.hash())
+
 # Show panel, generate collisions for painting, setup PBR material and start with albedo mode
 func show_panel(root :Node, mesh_instance :MeshInstance):
-	time = OS.get_system_time_secs()
 	show()
 	self.root = root
 	self.mesh_instance = mesh_instance
+	generate_id(mesh_instance.name)
 	setup_part_1()
 
 func setup_part_1():
@@ -111,9 +116,8 @@ func setup_part_1():
 		mat.shader = pbr_shader
 		
 		# Get folder which will hold that meshinstance textures
-		var id :String = str(mesh_instance.get_instance_id())
 		var dir :Directory = Directory.new()
-		var folder :String = dir_path + "/" + id
+		var folder :String = dir_path + "/" + mesh_id
 		dir.make_dir(folder)
 		folder += "/"
 		create_material_part_1_4(mat, folder)
@@ -266,8 +270,7 @@ func hide_panel():
 
 func save():
 	# Save mpaint files
-	var id :String = str(mesh_instance.get_instance_id())
-	var folder :String = dir_path + "/" + id + "/"
+	var folder :String = dir_path + "/" + mesh_id + "/"
 	
 	var types = ["albedo", "roughness", "metalness", "emission"]
 	for type in types:

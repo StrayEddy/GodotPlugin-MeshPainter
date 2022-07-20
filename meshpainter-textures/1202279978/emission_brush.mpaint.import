@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/emission_brush.mpaint-fb0f5f9a81b9e05e9441c3198db057aa.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/1202279978/emission_brush.mpaint"
+dest_files=[ "res://.import/emission_brush.mpaint-fb0f5f9a81b9e05e9441c3198db057aa.res" ]
+
+[params]
+
+my_option=false

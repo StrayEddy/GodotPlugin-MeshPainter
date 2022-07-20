@@ -1,7 +1,61 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://demo/demo.gd" type="Script" id=1]
+[ext_resource path="res://addons/meshpainter/materials/pbr_shader.shader" type="Shader" id=2]
+[ext_resource path="res://meshpainter-textures/1202279978/albedo_brush.mpaint" type="Texture" id=3]
 [ext_resource path="res://demo/ninomaru_teien_2k.exr" type="Texture" id=4]
+[ext_resource path="res://meshpainter-textures/1202279978/albedo_layer_0.mpaint" type="Texture" id=5]
+[ext_resource path="res://meshpainter-textures/1202279978/roughness_layer_0.mpaint" type="Texture" id=6]
+[ext_resource path="res://meshpainter-textures/1202279978/albedo_layer_1.mpaint" type="Texture" id=7]
+[ext_resource path="res://meshpainter-textures/1202279978/roughness_layer_1.mpaint" type="Texture" id=8]
+[ext_resource path="res://meshpainter-textures/1202279978/roughness_layer_2.mpaint" type="Texture" id=9]
+[ext_resource path="res://meshpainter-textures/1202279978/albedo_color.mpaint" type="Texture" id=10]
+[ext_resource path="res://meshpainter-textures/1202279978/metalness_color.mpaint" type="Texture" id=11]
+[ext_resource path="res://meshpainter-textures/1202279978/roughness_brush.mpaint" type="Texture" id=12]
+[ext_resource path="res://meshpainter-textures/1202279978/metalness_brush.mpaint" type="Texture" id=13]
+[ext_resource path="res://meshpainter-textures/1202279978/metalness_layer_0.mpaint" type="Texture" id=14]
+[ext_resource path="res://meshpainter-textures/1202279978/metalness_layer_1.mpaint" type="Texture" id=15]
+[ext_resource path="res://meshpainter-textures/1202279978/metalness_layer_2.mpaint" type="Texture" id=16]
+[ext_resource path="res://meshpainter-textures/1202279978/metalness_layer_3.mpaint" type="Texture" id=17]
+[ext_resource path="res://meshpainter-textures/1202279978/emission_brush.mpaint" type="Texture" id=18]
+[ext_resource path="res://meshpainter-textures/1202279978/emission_layer_0.mpaint" type="Texture" id=19]
+[ext_resource path="res://meshpainter-textures/1202279978/emission_color.mpaint" type="Texture" id=20]
+[ext_resource path="res://meshpainter-textures/1202279978/emission_layer_1.mpaint" type="Texture" id=21]
+[ext_resource path="res://meshpainter-textures/1202279978/emission_layer_2.mpaint" type="Texture" id=22]
+[ext_resource path="res://meshpainter-textures/1202279978/emission_layer_3.mpaint" type="Texture" id=23]
+[ext_resource path="res://meshpainter-textures/1202279978/roughness_layer_3.mpaint" type="Texture" id=24]
+[ext_resource path="res://meshpainter-textures/1202279978/albedo_layer_3.mpaint" type="Texture" id=25]
+[ext_resource path="res://meshpainter-textures/1202279978/albedo_layer_2.mpaint" type="Texture" id=26]
+[ext_resource path="res://meshpainter-textures/1202279978/roughness_color.mpaint" type="Texture" id=27]
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = ExtResource( 2 )
+shader_param/uv1_scale = Vector3( 1, 1, 1 )
+shader_param/uv1_offset = null
+shader_param/tex_albedo_brush = ExtResource( 3 )
+shader_param/tex_albedo_color = ExtResource( 10 )
+shader_param/tex_albedo_layer_0 = ExtResource( 5 )
+shader_param/tex_albedo_layer_1 = ExtResource( 7 )
+shader_param/tex_albedo_layer_2 = ExtResource( 26 )
+shader_param/tex_albedo_layer_3 = ExtResource( 25 )
+shader_param/tex_roughness_brush = ExtResource( 12 )
+shader_param/tex_roughness_color = ExtResource( 27 )
+shader_param/tex_roughness_layer_0 = ExtResource( 6 )
+shader_param/tex_roughness_layer_1 = ExtResource( 8 )
+shader_param/tex_roughness_layer_2 = ExtResource( 9 )
+shader_param/tex_roughness_layer_3 = ExtResource( 24 )
+shader_param/tex_metalness_brush = ExtResource( 13 )
+shader_param/tex_metalness_color = ExtResource( 11 )
+shader_param/tex_metalness_layer_0 = ExtResource( 14 )
+shader_param/tex_metalness_layer_1 = ExtResource( 15 )
+shader_param/tex_metalness_layer_2 = ExtResource( 16 )
+shader_param/tex_metalness_layer_3 = ExtResource( 17 )
+shader_param/tex_emission_brush = ExtResource( 18 )
+shader_param/tex_emission_color = ExtResource( 20 )
+shader_param/tex_emission_layer_0 = ExtResource( 19 )
+shader_param/tex_emission_layer_1 = ExtResource( 21 )
+shader_param/tex_emission_layer_2 = ExtResource( 22 )
+shader_param/tex_emission_layer_3 = ExtResource( 23 )
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "demo_Mesh"
@@ -12,6 +66,7 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 2194711,
 "index_count": 47232,
+"material": SubResource( 5 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 10603
@@ -27,6 +82,7 @@ background_energy = 0.5
 dof_blur_far_enabled = true
 dof_blur_far_amount = 0.2
 dof_blur_far_quality = 2
+glow_enabled = true
 
 [node name="Demo" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000454187 )
