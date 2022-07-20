@@ -40,6 +40,7 @@ func _on_BrushButton_pressed() -> void:
 	$VBoxContainer/Modes/BucketButton.set_pressed_no_signal(false)
 	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(false)
 	
+	$VBoxContainer/ColorContainer.show()
 	$VBoxContainer/IntensityContainer.show()
 	$VBoxContainer/SizeContainer.show()
 	
@@ -53,6 +54,7 @@ func _on_BucketButton_pressed() -> void:
 	$VBoxContainer/Modes/BucketButton.set_pressed_no_signal(true)
 	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(false)
 	
+	$VBoxContainer/ColorContainer.show()
 	$VBoxContainer/IntensityContainer.show()
 	$VBoxContainer/SizeContainer.hide()
 	
@@ -66,6 +68,7 @@ func _on_EraserButton_pressed() -> void:
 	$VBoxContainer/Modes/BucketButton.set_pressed_no_signal(false)
 	$VBoxContainer/Modes/EraserButton.set_pressed_no_signal(true)
 	
+	$VBoxContainer/ColorContainer.hide()
 	$VBoxContainer/IntensityContainer.hide()
 	$VBoxContainer/SizeContainer.show()
 	
