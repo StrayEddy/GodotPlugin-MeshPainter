@@ -84,8 +84,6 @@ func textures_to_buffers():
 	
 	var brush_image = tex_brush.get_data()
 	var color_image = tex_color.get_data()
-	brush_image.decompress()
-	color_image.decompress()
 	
 	brush_image.lock()
 	color_image.lock()
@@ -112,8 +110,6 @@ func textures_to_buffers():
 func buffers_to_textures():
 	var brush_image = tex_brush.get_data()
 	var color_image = tex_color.get_data()
-	brush_image.decompress()
-	color_image.decompress()
 	
 	# Clear textures first
 	brush_image.fill(Color(0,0,0,0))

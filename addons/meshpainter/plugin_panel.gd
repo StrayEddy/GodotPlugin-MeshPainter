@@ -124,10 +124,6 @@ func setup_part_2():
 
 # Create mpaint files
 func create_material_part_1_4(mat :ShaderMaterial, folder :String):
-	print("create_material_part_1_4")
-	print(OS.get_system_time_secs() - time)
-	time = OS.get_system_time_secs()
-	
 	create_mpaint_files(folder)
 	call_deferred("create_material_part_2_4", mat, folder)
 
@@ -137,9 +133,6 @@ func create_material_part_2_4(mat :ShaderMaterial, folder :String):
 		var thread :Thread = threads[i]
 		thread.wait_to_finish()
 	threads = []
-	print("create_material_part_2_4")
-	print(OS.get_system_time_secs() - time)
-	time = OS.get_system_time_secs()
 	
 	editor_filesystem.scan_sources()
 	while(not scan_new_files(folder)):
@@ -153,9 +146,6 @@ func create_material_part_3_4(mat :ShaderMaterial, folder :String):
 		var thread :Thread = threads[i]
 		thread.wait_to_finish()
 	threads = []
-	print("create_material_part_3_4")
-	print(OS.get_system_time_secs() - time)
-	time = OS.get_system_time_secs()
 	
 	create_textures(folder)
 	call_deferred("create_material_part_4_4", mat, folder)
@@ -166,9 +156,6 @@ func create_material_part_4_4(mat :ShaderMaterial, folder :String):
 		var thread :Thread = threads[i]
 		thread.wait_to_finish()
 	threads = []
-	print("create_material_part_4_4")
-	print(OS.get_system_time_secs() - time)
-	time = OS.get_system_time_secs()
 	
 	# Set all shader params
 	setup_shader_textures(mat)
@@ -289,7 +276,6 @@ func save():
 		for i in range(layers.size()):
 			var thread = Thread.new()
 			threads.append(thread)
-			print("tex_" + type + "_" + layers[i])
 			var tex :ImageTexture = get("tex_" + type + "_" + layers[i])
 			var path = folder + type + "_" + layers[i] + ".mpaint"
 			thread.start(ImageManager, "texture_to_mpaint_file", [tex, path])
