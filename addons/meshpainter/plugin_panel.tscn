@@ -47,6 +47,17 @@ visible = false
 [node name="E" parent="VBoxContainer/TabContainer" instance=ExtResource( 4 )]
 visible = false
 
+[node name="SavingPopup" type="PopupPanel" parent="."]
+margin_right = 8.0
+margin_bottom = 8.0
+
+[node name="Label" type="Label" parent="SavingPopup"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 144.0
+margin_bottom = 18.0
+text = "Mesh Painter saving..."
+
 [connection signal="tab_selected" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_selected"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/A" to="." method="_on_Albedo_values_changed"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/G" to="." method="_on_Roughness_values_changed"]

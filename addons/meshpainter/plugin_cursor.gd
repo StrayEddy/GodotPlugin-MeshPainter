@@ -186,7 +186,7 @@ func input(camera :Camera, event: InputEvent) -> bool:
 
 # Show the cursor where we are pointing on mesh
 func display_brush_at(pos = null, normal = null) -> void:
-	if pos:
+	if pos and self.owner:
 		$Cursor.visible = true
 		$Cursor.global_transform.origin = pos
 		$CursorMiddle.visible = true

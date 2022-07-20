@@ -125,38 +125,26 @@ func setup_part_2():
 # Create mpaint files
 func create_material_part_1_4(mat :ShaderMaterial, folder :String):
 	create_mpaint_files(folder)
+	for i in range(threads.size()):
+		var thread :Thread = threads[i]
+		thread.wait_to_finish()
+	threads = []
 	call_deferred("create_material_part_2_4", mat, folder)
 
 # Scan mpaint files
 func create_material_part_2_4(mat :ShaderMaterial, folder :String):
-	for i in range(threads.size()):
-		var thread :Thread = threads[i]
-		thread.wait_to_finish()
-	threads = []
-	
 	editor_filesystem.scan_sources()
 	while(not scan_new_files(folder)):
 		yield(get_tree().create_timer(1.0), "timeout")
-	
 	call_deferred("create_material_part_3_4", mat, folder)
 
 # Create textures for mpaint files
 func create_material_part_3_4(mat :ShaderMaterial, folder :String):
-	for i in range(threads.size()):
-		var thread :Thread = threads[i]
-		thread.wait_to_finish()
-	threads = []
-	
 	create_textures(folder)
 	call_deferred("create_material_part_4_4", mat, folder)
 
 # Finished creation of material
 func create_material_part_4_4(mat :ShaderMaterial, folder :String):
-	for i in range(threads.size()):
-		var thread :Thread = threads[i]
-		thread.wait_to_finish()
-	threads = []
-	
 	# Set all shader params
 	setup_shader_textures(mat)
 	mat.set_shader_param("uv1_scale", Vector3(1,1,1))
@@ -251,11 +239,22 @@ func _on_Emission_values_changed(brush_color, brush_opacity, brush_size) -> void
 # Hide panel, remove added plugin nodes from tree and hide cursor
 func hide_panel():
 	if mesh_instance:
+		$SavingPopup.popup_centered()
+		yield(get_tree().create_timer(1.0), "timeout")
 		save()
-#		for i in range(threads.size()):
-#			var thread :Thread = threads[i]
-#			thread.wait_to_finish()
-#		threads = []
+		var threads_working = true
+		while threads_working:
+			threads_working = false
+			for i in range(threads.size()):
+				var thread :Thread = threads[i]
+				if thread.is_alive():
+					threads_working = true
+				elif thread.is_active():
+					thread.wait_to_finish()
+			yield(get_tree().create_timer(1.0), "timeout")
+		
+		threads = []
+		$SavingPopup.hide()
 		
 		if temp_plugin_node:
 			mesh_instance.remove_child(temp_plugin_node)
@@ -274,10 +273,11 @@ func save():
 	for type in types:
 		var layers = ["brush", "color", "layer_0", "layer_1", "layer_2", "layer_3"]
 		for i in range(layers.size()):
-			var thread = Thread.new()
-			threads.append(thread)
 			var tex :ImageTexture = get("tex_" + type + "_" + layers[i])
 			var path = folder + type + "_" + layers[i] + ".mpaint"
+			
+			var thread = Thread.new()
+			threads.append(thread)
 			thread.start(ImageManager, "texture_to_mpaint_file", [tex, path])
 
 func _exit_tree() -> void:
