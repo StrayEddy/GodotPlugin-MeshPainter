@@ -172,7 +172,7 @@ func update_brush():
 				brush_size = 1.0
 		Modes.ERASER:
 			brush_color = Color.white
-			brush_opacity = 0.0
+			brush_opacity = 1.0
 			brush_size = size
 	
 	emit_signal("values_changed", brush_color, brush_opacity, brush_size)

@@ -258,11 +258,14 @@ vec4 get_emission() {
 					else if (color.r == 3.0) {
 						new_emission = triplanar_texture(tex_emission_layer_3,uv1_power_normal,uv1_triplanar_pos);
 					}
-					emission = clamp(emission + color.g/10.0, 0.0, new_emission.g*2.0);
+					emission = clamp(emission + color.g/10.0, 0.0, new_emission.g*5.0);
+				}
+				else if (color.a == 1.0) {
+					emission.a = clamp(emission.a - .1, 0.0, 5.0);
 				}
 				else {
 					emission.rgb = color.rgb;
-					emission.a = clamp(emission.a + color.a, 0.0, 2.0);
+					emission.a = clamp(emission.a + color.a, 0.0, 5.0);
 				}
 			}
 		}
