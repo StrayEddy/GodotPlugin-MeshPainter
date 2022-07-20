@@ -2,7 +2,7 @@ extends Spatial
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	ImageManager.create_mpaint_file("test.mpaint")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/blank.mpaint-77e341a36293c5b8c1e125325446f321.res"
+
+[deps]
+
+source_file="res://addons/meshpainter/mpaints/blank.mpaint"
+dest_files=[ "res://.import/blank.mpaint-77e341a36293c5b8c1e125325446f321.res" ]
+
+[params]
+
+my_option=false

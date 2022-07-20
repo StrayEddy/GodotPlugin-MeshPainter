@@ -1,0 +1,14 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="ImageTexture"
+path="res://.import/white.mpaint-164acb6a42ee6a37f0711c57b97174b1.res"
+
+[deps]
+
+source_file="res://addons/meshpainter/mpaints/white.mpaint"
+dest_files=[ "res://.import/white.mpaint-164acb6a42ee6a37f0711c57b97174b1.res" ]
+
+[params]
+
+my_option=false
