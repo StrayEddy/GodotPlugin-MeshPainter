@@ -21,6 +21,9 @@ var color_buffer :Array
 var tex_brush :ImageTexture
 var tex_color :ImageTexture
 
+# history undo-redo management
+var history_manager :HistoryManager
+
 # Show cursor and setup textures to paint
 func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, tex_brush :ImageTexture, tex_color :ImageTexture):
 	show()
@@ -31,8 +34,11 @@ func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spat
 	self.tex_brush = tex_brush
 	self.tex_color = tex_color
 	
+	history_manager = HistoryManager.new()
+	
 	# Retrieve buffers from current textures, buffers are easier to manipulate
 	textures_to_buffers()
+	history_manager.add_history(brush_buffer, color_buffer)
 	
 	# Add cursor to tree under the temporary plugin node
 	var cursor_absent = true
@@ -180,6 +186,8 @@ func input(camera :Camera, event: InputEvent) -> bool:
 			# We start painting
 			painting = event.pressed
 			captured_event = true
+			if not painting:
+				history_manager.add_history(brush_buffer, color_buffer)
 	
 	# Return tells editor if we caputre mouse events or not
 	return captured_event
@@ -194,3 +202,15 @@ func display_brush_at(pos = null, normal = null) -> void:
 	else:
 		$Cursor.visible = false
 		$CursorMiddle.visible = false
+
+func undo():
+	history_manager.undo()
+	brush_buffer = history_manager.get_brush_buffer()
+	color_buffer = history_manager.get_color_buffer()
+	buffers_to_textures()
+
+func redo():
+	history_manager.redo()
+	brush_buffer = history_manager.get_brush_buffer()
+	color_buffer = history_manager.get_color_buffer()
+	buffers_to_textures()

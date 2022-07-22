@@ -101,6 +101,11 @@ func show_panel(root :Node, mesh_instance :MeshInstance):
 	setup_part_1()
 
 func setup_part_1():
+	var dir = Directory.new()
+	if not dir.dir_exists(dir_path):
+		OS.alert("A folder at " + str(dir_path) + " will be created to keep all generated textures from painting.")
+		dir.make_dir(dir_path)
+	
 	var needs_material = true
 	if mesh_instance.mesh:
 		generate_collision()
@@ -116,7 +121,6 @@ func setup_part_1():
 		mat.shader = pbr_shader
 		
 		# Get folder which will hold that meshinstance textures
-		var dir :Directory = Directory.new()
 		var folder :String = dir_path + "/" + mesh_id
 		dir.make_dir(folder)
 		folder += "/"
@@ -287,3 +291,10 @@ func _exit_tree() -> void:
 	for i in range(threads.size()):
 		if threads[i].is_active():
 			threads[i].wait_to_finish()
+
+
+func _on_UndoButton_pressed() -> void:
+	plugin_cursor.undo()
+
+func _on_RedoButton_pressed() -> void:
+	plugin_cursor.redo()

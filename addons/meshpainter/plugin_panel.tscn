@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/meshpainter/plugin_panel.gd" type="Script" id=1]
 [ext_resource path="res://addons/meshpainter/roughness_panel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/meshpainter/metalness_panel.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/meshpainter/emission_panel.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/meshpainter/icons/undo.svg" type="Texture" id=5]
+[ext_resource path="res://addons/meshpainter/icons/undo-hover.svg" type="Texture" id=6]
 [ext_resource path="res://addons/meshpainter/albedo_panel.tscn" type="PackedScene" id=8]
 
 [node name="PluginPanel" type="Control"]
@@ -47,6 +49,25 @@ visible = false
 [node name="E" parent="VBoxContainer/TabContainer" instance=ExtResource( 4 )]
 visible = false
 
+[node name="UndoButton" type="TextureButton" parent="."]
+margin_left = 122.0
+margin_top = 66.0
+margin_right = 138.0
+margin_bottom = 82.0
+rect_scale = Vector2( 2, 2 )
+texture_normal = ExtResource( 5 )
+texture_hover = ExtResource( 6 )
+
+[node name="RedoButton" type="TextureButton" parent="."]
+margin_left = 161.0
+margin_top = 66.0
+margin_right = 177.0
+margin_bottom = 82.0
+rect_scale = Vector2( 2, 2 )
+texture_normal = ExtResource( 5 )
+texture_hover = ExtResource( 6 )
+flip_h = true
+
 [node name="SavingPopup" type="PopupPanel" parent="."]
 margin_right = 8.0
 margin_bottom = 8.0
@@ -63,3 +84,5 @@ text = "Mesh Painter saving..."
 [connection signal="values_changed" from="VBoxContainer/TabContainer/G" to="." method="_on_Roughness_values_changed"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/M" to="." method="_on_Metalness_values_changed"]
 [connection signal="values_changed" from="VBoxContainer/TabContainer/E" to="." method="_on_Emission_values_changed"]
+[connection signal="pressed" from="UndoButton" to="." method="_on_UndoButton_pressed"]
+[connection signal="pressed" from="RedoButton" to="." method="_on_RedoButton_pressed"]

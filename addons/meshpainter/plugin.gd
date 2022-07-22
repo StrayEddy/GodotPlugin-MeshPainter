@@ -35,13 +35,9 @@ func forward_spatial_gui_input(camera, event) -> bool:
 
 # Create whole plugin
 func _enter_tree():
+	
 	plugin_importer = preload("res://addons/meshpainter/plugin_importer.gd").new()
 	add_import_plugin(plugin_importer)
-	
-	var dir = Directory.new()
-	if not dir.dir_exists(dir_path):
-		OS.alert("A folder at " + str(dir_path) + " will be created to keep all generated textures from painting.")
-		dir.make_dir(dir_path)
 	
 	# Add cursor instance: shows where to paint on mesh
 	plugin_cursor = preload("res://addons/meshpainter/plugin_cursor.tscn").instance()

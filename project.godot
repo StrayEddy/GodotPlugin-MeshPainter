@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "HistoryManager",
+"language": "GDScript",
+"path": "res://addons/meshpainter/history_manager.gd"
+}, {
 "base": "Control",
 "class": "ImageManager",
 "language": "GDScript",
@@ -30,6 +35,7 @@ _global_script_classes=[ {
 "path": "res://addons/meshpainter/plugin_panel.gd"
 } ]
 _global_script_class_icons={
+"HistoryManager": "",
 "ImageManager": "",
 "PluginButton": "",
 "PluginCursor": "",
