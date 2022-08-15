@@ -1,13 +1,13 @@
 # Cursor that will paint on textures, based on mesh surface position and brush info (color, opacity, size)
 
-tool
-extends Spatial
+@tool
+extends Node3D
 
 class_name PluginCursor
 
 var root :Node
-var mesh_instance :MeshInstance
-var temp_plugin_node :Spatial
+var mesh_instance :MeshInstance3D
+var temp_plugin_node :Node3D
 
 var brush_color :Color
 var brush_size :float
@@ -25,7 +25,7 @@ var tex_color :ImageTexture
 var history_manager :HistoryManager
 
 # Show cursor and setup textures to paint
-func show_cursor(root :Node, mesh_instance :MeshInstance, temp_plugin_node :Spatial, tex_brush :ImageTexture, tex_color :ImageTexture):
+func show_cursor(root :Node, mesh_instance :MeshInstance3D, temp_plugin_node :Node3D, tex_brush :ImageTexture, tex_color :ImageTexture):
 	show()
 	
 	self.root = root
@@ -142,7 +142,7 @@ func buffers_to_textures():
 	tex_color.set_data(color_image)
 
 # Where we paint with mouse
-func input(camera :Camera, event: InputEvent) -> bool:
+func input(camera :Camera3D, event: InputEvent) -> bool:
 	var captured_event = false
 	
 	if event is InputEventMouseMotion:
@@ -182,7 +182,7 @@ func input(camera :Camera, event: InputEvent) -> bool:
 			display_brush_at()
 	
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and visible:
+		if event.button_index == MOUSE_BUTTON_LEFT and visible:
 			# We start painting
 			painting = event.pressed
 			captured_event = true

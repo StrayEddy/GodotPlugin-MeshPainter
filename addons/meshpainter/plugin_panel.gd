@@ -1,6 +1,6 @@
 # Paiting panel that contains all the modes and parameters for painting the mesh instance selected
 
-tool
+@tool
 extends Control
 
 class_name PluginPanel
@@ -12,16 +12,16 @@ var dir_path :String
 var threads = []
 
 var root :Node
-var mesh_instance :MeshInstance
+var mesh_instance :MeshInstance3D
 
 # All painting types, default is albedo
 enum TabMode {ALBEDO, ROUGHNESS, METALNESS, EMISSION}
 var tab_mode = TabMode.ALBEDO
 
 # Temporary nodes needed to paint on mesh
-var temp_plugin_node :Spatial
-var temp_collision :CollisionShape
-var temp_body :StaticBody
+var temp_plugin_node :Node
+var temp_collision :CollisionShape3D
+var temp_body :StaticBody3D
 
 # All the textures containing brush and color info, which will be passed on to PBR shader
 var tex_albedo_brush :ImageTexture
@@ -53,22 +53,22 @@ var tex_emission_layer_2 :ImageTexture
 var tex_emission_layer_3 :ImageTexture
 
 # PBR shader which will receive all textures
-var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.shader")
+var pbr_shader :Shader = preload("res://addons/meshpainter/materials/pbr_shader.gdshader")
 
 var mesh_id :String
 
 # Add collision to current mesh to retreive brush positions on mesh later on
 func generate_collision():
 	# Generate collision shape from mesh 
-	temp_collision = CollisionShape.new()
+	temp_collision = CollisionShape3D.new()
 	temp_collision.set_shape(mesh_instance.mesh.create_trimesh_shape())
 	temp_collision.hide()
 	# Add static body to use collisions
-	temp_body = StaticBody.new()
+	temp_body = StaticBody3D.new()
 	temp_body.add_child(temp_collision)
 	temp_body.collision_layer = 32
 	# Add main plugin node where body and collision shape will be
-	temp_plugin_node = Spatial.new()
+	temp_plugin_node = Node3D.new()
 	temp_plugin_node.name = "MeshPainter"
 	temp_plugin_node.add_child(temp_body)
 	
@@ -93,7 +93,7 @@ func generate_id(name :String):
 	mesh_id = str(name.hash())
 
 # Show panel, generate collisions for painting, setup PBR material and start with albedo mode
-func show_panel(root :Node, mesh_instance :MeshInstance):
+func show_panel(root :Node, mesh_instance :MeshInstance3D):
 	show()
 	self.root = root
 	self.mesh_instance = mesh_instance
@@ -143,7 +143,7 @@ func create_material_part_1_4(mat :ShaderMaterial, folder :String):
 func create_material_part_2_4(mat :ShaderMaterial, folder :String):
 	editor_filesystem.scan_sources()
 	while(not scan_new_files(folder)):
-		yield(get_tree().create_timer(1.0), "timeout")
+		await get_tree().create_timer(1.0).timeout
 	call_deferred("create_material_part_3_4", mat, folder)
 
 # Create textures for mpaint files
@@ -169,7 +169,7 @@ func create_mpaint_files(folder :String):
 			var thread = Thread.new()
 			threads.append(thread)
 			var path = folder + type + "_" + layers[i] + ".mpaint"
-			thread.start(ImageManager, "create_mpaint_file", path)
+			thread.start(ImageManager.create_mpaint_file(path))
 
 func scan_new_files(folder :String):
 	var dir :Directory = Directory.new()
@@ -201,10 +201,11 @@ func setup_shader_textures(mat :ShaderMaterial):
 		mat.set_shader_param("tex_" + type + "_layer_3", get("tex_" + type + "_layer_3"))
 
 func setup_tabs():
-	$VBoxContainer/TabContainer/E.setup(tex_emission_layer_0, tex_emission_layer_1, tex_emission_layer_2, tex_emission_layer_3)
-	$VBoxContainer/TabContainer/M.setup(tex_metalness_layer_0, tex_metalness_layer_1, tex_metalness_layer_2, tex_metalness_layer_3)
-	$VBoxContainer/TabContainer/G.setup(tex_roughness_layer_0, tex_roughness_layer_1, tex_roughness_layer_2, tex_roughness_layer_3)
-	$VBoxContainer/TabContainer/A.setup(tex_albedo_layer_0, tex_albedo_layer_1, tex_albedo_layer_2, tex_albedo_layer_3)
+	var folder :String = dir_path + "/" + mesh_id + "/"
+	$VBoxContainer/TabContainer/E.setup(tex_emission_layer_0, tex_emission_layer_1, tex_emission_layer_2, tex_emission_layer_3, folder)
+	$VBoxContainer/TabContainer/M.setup(tex_metalness_layer_0, tex_metalness_layer_1, tex_metalness_layer_2, tex_metalness_layer_3, folder)
+	$VBoxContainer/TabContainer/G.setup(tex_roughness_layer_0, tex_roughness_layer_1, tex_roughness_layer_2, tex_roughness_layer_3, folder)
+	$VBoxContainer/TabContainer/A.setup(tex_albedo_layer_0, tex_albedo_layer_1, tex_albedo_layer_2, tex_albedo_layer_3, folder)
 
 # When tab selected, pass on right textures for cursor to paint on (albedo, roughness, metalness, emission)
 func _on_TabContainer_tab_selected(tab: int) -> void:
@@ -248,7 +249,7 @@ func _on_Emission_values_changed(brush_color, brush_opacity, brush_size) -> void
 func hide_panel():
 	if mesh_instance:
 		$SavingPopup.popup_centered()
-		yield(get_tree().create_timer(1.0), "timeout")
+		await get_tree().create_timer(1.0).timeout
 		save()
 		var threads_working = true
 		while threads_working:
@@ -259,7 +260,7 @@ func hide_panel():
 					threads_working = true
 				elif thread.is_active():
 					thread.wait_to_finish()
-			yield(get_tree().create_timer(1.0), "timeout")
+			await get_tree().create_timer(1.0).timeout
 		
 		threads = []
 		$SavingPopup.hide()
@@ -278,14 +279,14 @@ func save():
 	
 	var types = ["albedo", "roughness", "metalness", "emission"]
 	for type in types:
-		var layers = ["brush", "color", "layer_0", "layer_1", "layer_2", "layer_3"]
+		var layers = ["brush", "color"]
 		for i in range(layers.size()):
 			var tex :ImageTexture = get("tex_" + type + "_" + layers[i])
 			var path = folder + type + "_" + layers[i] + ".mpaint"
 			
 			var thread = Thread.new()
 			threads.append(thread)
-			thread.start(ImageManager, "texture_to_mpaint_file", [tex, path])
+			thread.start(ImageManager.texture_to_mpaint_file([tex, path]))
 
 func _exit_tree() -> void:
 	for i in range(threads.size()):

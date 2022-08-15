@@ -6,34 +6,34 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
+config_version=5
 
-_global_script_classes=[ {
+_global_script_classes=[{
 "base": "Node",
-"class": "HistoryManager",
-"language": "GDScript",
+"class": &"HistoryManager",
+"language": &"GDScript",
 "path": "res://addons/meshpainter/history_manager.gd"
 }, {
 "base": "Control",
-"class": "ImageManager",
-"language": "GDScript",
+"class": &"ImageManager",
+"language": &"GDScript",
 "path": "res://addons/meshpainter/image_manager.gd"
 }, {
 "base": "TextureButton",
-"class": "PluginButton",
-"language": "GDScript",
+"class": &"PluginButton",
+"language": &"GDScript",
 "path": "res://addons/meshpainter/plugin_button.gd"
 }, {
-"base": "Spatial",
-"class": "PluginCursor",
-"language": "GDScript",
+"base": "Node3D",
+"class": &"PluginCursor",
+"language": &"GDScript",
 "path": "res://addons/meshpainter/plugin_cursor.gd"
 }, {
 "base": "Control",
-"class": "PluginPanel",
-"language": "GDScript",
+"class": &"PluginPanel",
+"language": &"GDScript",
 "path": "res://addons/meshpainter/plugin_panel.gd"
-} ]
+}]
 _global_script_class_icons={
 "HistoryManager": "",
 "ImageManager": "",
@@ -44,8 +44,9 @@ _global_script_class_icons={
 
 [application]
 
-config/name="MeshPainter"
+config/name="GodotPlugin-MeshPainter"
 run/main_scene="res://demo/Demo.tscn"
+config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
 [display]
@@ -55,7 +56,7 @@ window/size/fullscreen=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/meshpainter/plugin.cfg" )
+enabled=PackedStringArray()
 
 [meshpainter]
 

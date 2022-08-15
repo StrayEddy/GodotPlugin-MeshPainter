@@ -1,9 +1,9 @@
-tool
+@tool
 extends Control
 
 class_name ImageManager
 
-const size = 512
+const tex_size = 512
 
 static func generate_mpaint_color(color :Color):
 	return "\"" + str(color.r) + "," + str(color.g) + "," + str(color.b) + "," + str(color.a) + "\""
@@ -30,12 +30,14 @@ static func texture_to_mpaint_file(params :Array):
 	file.open(save_path, File.WRITE)
 	# "0,0,0,0","0,0,0,0",
 	# "0,0,0,0","0,0,0,0",
-	for x in range(size):
+	for x in range(tex_size):
 		var line = ""
-		for y in range(size):
+		for y in range(tex_size):
 			var color :Color = image.get_pixel(x, y)
 			line += generate_mpaint_color(color) + ","
 		file.store_line(line)
 	file.close()
+	
+	print(save_path + " is saved")
 	
 	image.unlock()

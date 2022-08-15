@@ -2,7 +2,7 @@
 # Brush color and opacity are used for albedo
 # Brush size is used for size
 
-tool
+@tool
 extends PanelContainer
 
 # Signal sent when parameters are changed
@@ -19,14 +19,19 @@ var tex_layer_1 :ImageTexture
 var tex_layer_2 :ImageTexture
 var tex_layer_3 :ImageTexture
 var layer_nb = 0
-var layer_value = Color.black
+var layer_value = Color.BLACK
 
-func setup(tex_layer_0 :ImageTexture, tex_layer_1 :ImageTexture, tex_layer_2 :ImageTexture, tex_layer_3 :ImageTexture):
+func setup(tex_layer_0 :ImageTexture, tex_layer_1 :ImageTexture, tex_layer_2 :ImageTexture, tex_layer_3 :ImageTexture, folder :String):
 	self.tex_layer_0 = tex_layer_0
 	self.tex_layer_1 = tex_layer_1
 	self.tex_layer_2 = tex_layer_2
 	self.tex_layer_3 = tex_layer_3
 	_on_BrushButton_pressed()
+	$VBoxContainer/ColorContainer/LayerButton4.folder = folder
+	$VBoxContainer/ColorContainer/LayerButton3.folder = folder
+	$VBoxContainer/ColorContainer/LayerButton2.folder = folder
+	$VBoxContainer/ColorContainer/LayerButton.folder = folder
+	
 	$VBoxContainer/ColorContainer/LayerButton4.set_value(tex_layer_3)
 	$VBoxContainer/ColorContainer/LayerButton3.set_value(tex_layer_2)
 	$VBoxContainer/ColorContainer/LayerButton2.set_value(tex_layer_1)
@@ -151,7 +156,7 @@ func update_brush():
 	match mode:
 		Modes.BRUSH:
 			if layer_value is Color:
-				brush_color = Color.black
+				brush_color = Color.BLACK
 				brush_opacity = intensity
 				brush_size = size
 			else:
@@ -160,7 +165,7 @@ func update_brush():
 				brush_size = size
 		Modes.BUCKET:
 			if layer_value is Color:
-				brush_color = Color.black
+				brush_color = Color.BLACK
 				brush_opacity = intensity
 				brush_size = 1.0
 			else:
@@ -168,7 +173,7 @@ func update_brush():
 				brush_opacity = 0.0
 				brush_size = 1.0
 		Modes.ERASER:
-			brush_color = Color.black
+			brush_color = Color.BLACK
 			brush_opacity = 1.0
 			brush_size = size
 	

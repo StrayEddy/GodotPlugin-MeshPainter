@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 # buffer 0 to 3, from oldest to newest
@@ -48,13 +48,13 @@ func redo():
 		history_index -= 1
 
 func get_brush_buffer() -> Array:
-	if brush_buffer_history.empty():
+	if brush_buffer_history.is_empty():
 		return []
 	else:
 		return brush_buffer_history[history_index].duplicate()
 
 func get_color_buffer() -> Array:
-	if color_buffer_history.empty():
+	if color_buffer_history.is_empty():
 		return []
 	else:
 		return color_buffer_history[history_index].duplicate()

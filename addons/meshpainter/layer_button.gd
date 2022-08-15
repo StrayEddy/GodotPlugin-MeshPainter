@@ -1,17 +1,20 @@
-tool
+@tool
 extends TextureButton
 
 signal value_changed(value, is_color)
 signal selected(value, is_color)
 
-export var can_pick_color = true
+@export var can_pick_color = true
+@export var type = "albedo"
+@export var layer_nb = 0
+var folder = ""
 
-const size = 512
-var value = Color.white
+const tex_size = 512
+var value = Color.WHITE
 
 func select():
 	var event = InputEventMouseButton.new()
-	event.button_mask = BUTTON_LEFT
+	event.button_mask = MOUSE_BUTTON_LEFT
 	_on_LayerButton_gui_input(event)
 
 func deselect():
@@ -25,7 +28,7 @@ func set_value(value):
 
 func set_color(color :Color):
 	self.value = color
-	var gradient_tex = GradientTexture.new()
+	var gradient_tex = GradientTexture1D.new()
 	gradient_tex.gradient = Gradient.new()
 	gradient_tex.gradient.colors = [color]
 	self.texture_normal = gradient_tex
@@ -35,10 +38,11 @@ func set_texture(texture :ImageTexture):
 	var image = texture.get_data()
 	if image.get_format() != Image.FORMAT_RGBAH:
 		image.convert(Image.FORMAT_RGBAH)
-	if image.get_size() != Vector2(size, size):
-		image.resize(size, size)
+	if image.get_size() != Vector2(tex_size, tex_size):
+		image.resize(tex_size, tex_size)
 	var tex :ImageTexture = ImageTexture.new()
 	tex.create_from_image(image)
+	
 	self.value = tex
 	self.texture_normal = tex
 	emit_signal("value_changed", value, false)
@@ -50,7 +54,7 @@ func _on_ColorButton_pressed() -> void:
 		$ColorDialog.set_global_position(get_global_mouse_position())
 	else:
 		$PopupDialog.hide()
-		$ColorDialog/ColorPicker.color = Color.white
+		$ColorDialog/ColorPicker.color = Color.WHITE
 		_on_ColorDialog_confirmed()
 
 func _on_TextureButton_pressed() -> void:
@@ -73,15 +77,19 @@ func _on_TextureDialog_file_selected(path: String) -> void:
 	self.value = tex
 	set_value(tex)
 	
+	# Save new layer texture
+	var savepath = folder + type + "_layer_" + str(layer_nb) + ".mpaint"
+	ImageManager.texture_to_mpaint_file([tex, savepath])
+	
 	$Frame.show()
 	emit_signal("selected", value, value is Color)
 
 func _on_LayerButton_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
-		if event.button_mask == BUTTON_LEFT:
+		if event.button_mask == MOUSE_BUTTON_LEFT:
 			$Frame.show()
 			emit_signal("selected", value, value is Color)
-		if event.button_mask == BUTTON_RIGHT:
+		if event.button_mask == MOUSE_BUTTON_RIGHT:
 			$PopupDialog.popup()
 			$PopupDialog.set_global_position(get_global_mouse_position())
 			$PopupDialog.set_as_minsize()
