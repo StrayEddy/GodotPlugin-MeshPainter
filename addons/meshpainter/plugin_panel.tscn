@@ -1,82 +1,74 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://m2yk7bohumom"]
 
-[ext_resource path="res://addons/meshpainter/plugin_panel.gd" type="Script" id=1]
-[ext_resource path="res://addons/meshpainter/roughness_panel.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/meshpainter/metalness_panel.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/meshpainter/emission_panel.tscn" type="PackedScene" id=4]
-[ext_resource path="res://addons/meshpainter/icons/undo.svg" type="Texture" id=5]
-[ext_resource path="res://addons/meshpainter/icons/undo-hover.svg" type="Texture" id=6]
-[ext_resource path="res://addons/meshpainter/albedo_panel.tscn" type="PackedScene" id=8]
+[ext_resource type="Script" path="res://addons/meshpainter/plugin_panel.gd" id="1"]
+[ext_resource type="PackedScene" path="res://addons/meshpainter/roughness_panel.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://addons/meshpainter/metalness_panel.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://addons/meshpainter/emission_panel.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://dho471j3jk7pi" path="res://addons/meshpainter/icons/undo.svg" id="5"]
+[ext_resource type="Texture2D" uid="uid://ds80toopt04oc" path="res://addons/meshpainter/icons/undo-hover.svg" id="6"]
+[ext_resource type="PackedScene" uid="uid://dyaolnnrvrqa1" path="res://addons/meshpainter/albedo_panel.tscn" id="8"]
 
 [node name="PluginPanel" type="Control"]
+custom_minimum_size = Vector2(200, 0)
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -822.0
-margin_bottom = -138.0
-rect_min_size = Vector2( 238, 526 )
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_right = 202.0
-margin_bottom = 500.0
+custom_minimum_size = Vector2(200, 0)
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_right = 202.0
-margin_bottom = 14.0
+offset_right = 200.0
+offset_bottom = 26.0
 text = "Mesh Painter"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
-margin_top = 18.0
-margin_right = 202.0
-margin_bottom = 22.0
+offset_top = 30.0
+offset_right = 200.0
+offset_bottom = 34.0
 
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
-margin_top = 26.0
-margin_right = 202.0
-margin_bottom = 526.0
-rect_min_size = Vector2( 202, 500 )
-tab_align = 0
+offset_top = 38.0
+offset_right = 200.0
+offset_bottom = 239.0
 
-[node name="A" parent="VBoxContainer/TabContainer" instance=ExtResource( 8 )]
-margin_right = -4.0
+[node name="A" parent="VBoxContainer/TabContainer" instance=ExtResource("8")]
+offset_top = 31.0
 
-[node name="G" parent="VBoxContainer/TabContainer" instance=ExtResource( 2 )]
+[node name="G" parent="VBoxContainer/TabContainer" instance=ExtResource("2")]
 visible = false
 
-[node name="M" parent="VBoxContainer/TabContainer" instance=ExtResource( 3 )]
+[node name="M" parent="VBoxContainer/TabContainer" instance=ExtResource("3")]
 visible = false
 
-[node name="E" parent="VBoxContainer/TabContainer" instance=ExtResource( 4 )]
+[node name="E" parent="VBoxContainer/TabContainer" instance=ExtResource("4")]
 visible = false
 
 [node name="UndoButton" type="TextureButton" parent="."]
-margin_left = 122.0
-margin_top = 66.0
-margin_right = 138.0
-margin_bottom = 82.0
-rect_scale = Vector2( 2, 2 )
-texture_normal = ExtResource( 5 )
-texture_hover = ExtResource( 6 )
+offset_left = 140.0
+offset_top = 84.0
+offset_right = 156.0
+offset_bottom = 100.0
+texture_normal = ExtResource("5")
+texture_hover = ExtResource("6")
 
 [node name="RedoButton" type="TextureButton" parent="."]
-margin_left = 161.0
-margin_top = 66.0
-margin_right = 177.0
-margin_bottom = 82.0
-rect_scale = Vector2( 2, 2 )
-texture_normal = ExtResource( 5 )
-texture_hover = ExtResource( 6 )
+offset_left = 163.0
+offset_top = 84.0
+offset_right = 179.0
+offset_bottom = 100.0
+texture_normal = ExtResource("5")
+texture_hover = ExtResource("6")
 flip_h = true
 
 [node name="SavingPopup" type="PopupPanel" parent="."]
-margin_right = 8.0
-margin_bottom = 8.0
+size = Vector2i(177, 100)
 
 [node name="Label" type="Label" parent="SavingPopup"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 144.0
-margin_bottom = 18.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 173.0
+offset_bottom = 96.0
 text = "Mesh Painter saving..."
 
 [connection signal="tab_selected" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_selected"]

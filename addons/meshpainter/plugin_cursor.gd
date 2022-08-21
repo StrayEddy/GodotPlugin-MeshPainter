@@ -88,58 +88,41 @@ func textures_to_buffers():
 	brush_buffer = []
 	color_buffer = []
 	
-	var brush_image = tex_brush.get_data()
-	var color_image = tex_color.get_data()
-	
-	brush_image.lock()
-	color_image.lock()
+	var brush_image = tex_brush.get_image()
+	var color_image = tex_color.get_image()
 	
 	# Build buffers one row at a time
 	var is_done = false
-	for y in range(0, brush_image.get_height()):
-		if is_done:
+	for x in range(0, brush_image.get_width()):
+		var brush_info = brush_image.get_pixel(x, 0)
+		if brush_info.a == 0.0:
+			# Brush color alpha means we reached the end of brush info
+			is_done = true
 			break
-		for x in range(0, brush_image.get_width()):
-			var brush_info = brush_image.get_pixel(x, y)
-			if brush_info.a == 0.0:
-				# Brush color alpha means we reached the end of brush info
-				is_done = true
-				break
-			else:
-				brush_buffer.append(brush_info)
-				color_buffer.append(color_image.get_pixel(x, y))
-	
-	brush_image.unlock()
-	color_image.unlock()
+		else:
+			brush_buffer.append(brush_info)
+			color_buffer.append(color_image.get_pixel(x, 0))
 
 # Use buffers to update current textures
 func buffers_to_textures():
-	var brush_image = tex_brush.get_data()
-	var color_image = tex_color.get_data()
+	var brush_image = tex_brush.get_image()
+	var color_image = tex_color.get_image()
 	
 	# Clear textures first
 	brush_image.fill(Color(0,0,0,0))
 	color_image.fill(Color(1,1,1,1))
-	
-	brush_image.lock()
-	color_image.lock()
 	
 	var width = brush_image.get_width()
 	var height = brush_image.get_height()
 	
 	# Color pixels row by row
 	# Indexes example: [0,1,2,3,4], [5,6,7,8,9]...
-	for i in range(0, brush_buffer.size()):
-		var x = i % width
-		var y = i / width
-		brush_image.set_pixel(x, y, brush_buffer[i])
-		color_image.set_pixel(x, y, color_buffer[i])
+	for x in range(0, brush_buffer.size()):
+		brush_image.set_pixel(x, 0, brush_buffer[x])
+		color_image.set_pixel(x, 0, color_buffer[x])
 	
-	brush_image.unlock()
-	color_image.unlock()
-	
-	tex_brush.set_data(brush_image)
-	tex_color.set_data(color_image)
+	tex_brush.set_image(brush_image)
+	tex_color.set_image(color_image)
 
 # Where we paint with mouse
 func input(camera :Camera3D, event: InputEvent) -> bool:
@@ -151,8 +134,11 @@ func input(camera :Camera3D, event: InputEvent) -> bool:
 		var ray_dir = camera.project_ray_normal(event.position)
 		var ray_distance = camera.far
 		
-		var space_state =  camera.get_world().direct_space_state
-		var hit = space_state.intersect_ray(ray_origin, ray_origin + ray_dir * ray_distance, [], 32)
+		var space_state =  camera.get_world_3d().direct_space_state
+		var ray_params :PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+		ray_params.from = ray_origin
+		ray_params.to =  ray_origin + ray_dir * ray_distance
+		var hit = space_state.intersect_ray(ray_params)
 		if hit:
 			# Mouse is over mesh, we get surface position and place the cursor there
 			display_brush_at(hit.position, hit.normal)

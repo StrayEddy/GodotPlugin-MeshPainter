@@ -35,23 +35,25 @@ func set_color(color :Color):
 	emit_signal("value_changed", value, true)
 
 func set_texture(texture :ImageTexture):
-	var image = texture.get_data()
+	var image :Image = texture.get_image()
 	if image.get_format() != Image.FORMAT_RGBAH:
 		image.convert(Image.FORMAT_RGBAH)
-	if image.get_size() != Vector2(tex_size, tex_size):
+	if image.get_size() != Vector2i(tex_size, tex_size):
 		image.resize(tex_size, tex_size)
-	var tex :ImageTexture = ImageTexture.new()
+	var tex :ImageTexture = ImageTexture.create_from_image(image)
 	tex.create_from_image(image)
 	
 	self.value = tex
 	self.texture_normal = tex
+	print(value)
+	print(value.get_image())
 	emit_signal("value_changed", value, false)
 
 func _on_ColorButton_pressed() -> void:
 	if can_pick_color:
 		$PopupDialog.hide()
 		$ColorDialog.popup()
-		$ColorDialog.set_global_position(get_global_mouse_position())
+		$ColorDialog.set_global_positionvalue_changed(get_global_mouse_position())
 	else:
 		$PopupDialog.hide()
 		$ColorDialog/ColorPicker.color = Color.WHITE

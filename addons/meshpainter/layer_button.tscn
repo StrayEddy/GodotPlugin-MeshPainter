@@ -1,85 +1,65 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://cdq04ihbsugad"]
 
-[ext_resource path="res://addons/meshpainter/icons/selected-layer-frame.png" type="Texture" id=1]
-[ext_resource path="res://addons/meshpainter/layer_button.gd" type="Script" id=2]
-[ext_resource path="res://addons/meshpainter/icons/color-picker.svg" type="Texture" id=3]
-[ext_resource path="res://addons/meshpainter/icons/folder.svg" type="Texture" id=4]
+[ext_resource type="Texture2D" uid="uid://dq2y7o3x6e1kj" path="res://addons/meshpainter/icons/selected-layer-frame.png" id="1"]
+[ext_resource type="Script" path="res://addons/meshpainter/layer_button.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://5ukajiwtggya" path="res://addons/meshpainter/icons/color-picker.svg" id="3"]
+[ext_resource type="Texture2D" uid="uid://o0waejw1pc5n" path="res://addons/meshpainter/icons/folder.svg" id="4"]
 
-[sub_resource type="GradientTexture" id=1]
+[sub_resource type="GradientTexture1D" id="1"]
 
 [node name="LayerButton" type="TextureButton"]
-margin_right = 172.0
-margin_bottom = 172.0
-texture_normal = SubResource( 1 )
-expand = true
-script = ExtResource( 2 )
+offset_right = 64.0
+offset_bottom = 64.0
+texture_normal = SubResource("1")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("2")
 
-[node name="PopupDialog" type="PopupDialog" parent="."]
-anchor_right = 0.5
-margin_right = 40.0
-margin_bottom = 67.0
-grow_horizontal = 2
-grow_vertical = 2
-rect_min_size = Vector2( 126, 67 )
+[node name="PopupDialog" type="Popup" parent="."]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PopupDialog"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -42.0
-margin_top = -20.0
-margin_right = 42.0
-margin_bottom = 20.0
 
 [node name="ColorButton" type="TextureButton" parent="PopupDialog/HBoxContainer"]
-margin_right = 40.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 40, 40 )
-texture_normal = ExtResource( 3 )
-expand = true
+offset_right = 16.0
+offset_bottom = 16.0
+texture_normal = ExtResource("3")
 
 [node name="VSeparator" type="VSeparator" parent="PopupDialog/HBoxContainer"]
-margin_left = 44.0
-margin_right = 48.0
-margin_bottom = 40.0
+offset_left = 20.0
+offset_right = 24.0
+offset_bottom = 16.0
 
 [node name="TextureButton" type="TextureButton" parent="PopupDialog/HBoxContainer"]
-margin_left = 52.0
-margin_right = 92.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 40, 40 )
-texture_normal = ExtResource( 4 )
-expand = true
+offset_left = 28.0
+offset_right = 44.0
+offset_bottom = 16.0
+texture_normal = ExtResource("4")
 
 [node name="TextureDialog" type="FileDialog" parent="."]
-margin_right = 443.0
-margin_bottom = 268.0
-window_title = "Choose a texture"
 dialog_hide_on_ok = true
 mode_overrides_title = false
-mode = 0
-filters = PoolStringArray( "*.png", "*.jpg", "*.jpeg" )
+filters = PackedStringArray("*.png", "*.jpg", "*.jpeg")
 
 [node name="ColorDialog" type="ConfirmationDialog" parent="."]
-margin_right = 324.0
-margin_bottom = 482.0
-window_title = ""
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorDialog"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 316.0
-margin_bottom = 446.0
-color = Color( 0, 0, 0, 1 )
+offset_left = 72.0
+offset_top = 36.0
+offset_right = 36.0
+offset_bottom = 36.0
+color = Color(0, 0, 0, 1)
 edit_alpha = false
 
 [node name="Frame" type="TextureRect" parent="."]
 visible = false
-margin_right = 86.0
-margin_bottom = 86.0
-texture = ExtResource( 1 )
-expand = true
+offset_right = 64.0
+offset_bottom = 64.0
+texture = ExtResource("1")
+ignore_texture_size = true
 
 [connection signal="gui_input" from="." to="." method="_on_LayerButton_gui_input"]
 [connection signal="pressed" from="PopupDialog/HBoxContainer/ColorButton" to="." method="_on_ColorButton_pressed"]

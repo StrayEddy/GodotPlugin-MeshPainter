@@ -1,4 +1,4 @@
-# Paiting panel that contains all the modes and parameters for painting the mesh instance selected
+# Paiting panel that contains all the modes and uniformeters for painting the mesh instance selected
 
 @tool
 extends Control
@@ -8,8 +8,6 @@ class_name PluginPanel
 var plugin_cursor :PluginCursor
 var editor_filesystem :EditorFileSystem
 var dir_path :String
-
-var threads = []
 
 var root :Node
 var mesh_instance :MeshInstance3D
@@ -80,16 +78,16 @@ func generate_collision():
 func retrieve_material(mat :ShaderMaterial):
 	var types = ["albedo", "roughness", "metalness", "emission"]
 	for type in types:
-		set("tex_" + type + "_brush", mat.get_shader_param("tex_" + type +"_brush"))
-		set("tex_" + type + "_color", mat.get_shader_param("tex_" + type +"_color"))
-		set("tex_" + type + "_layer_0", mat.get_shader_param("tex_" + type +"_layer_0"))
-		set("tex_" + type + "_layer_1", mat.get_shader_param("tex_" + type +"_layer_1"))
-		set("tex_" + type + "_layer_2", mat.get_shader_param("tex_" + type +"_layer_2"))
-		set("tex_" + type + "_layer_3", mat.get_shader_param("tex_" + type +"_layer_3"))
+		set("tex_" + type + "_brush", mat.get_shader_uniform("tex_" + type +"_brush"))
+		set("tex_" + type + "_color", mat.get_shader_uniform("tex_" + type +"_color"))
+		set("tex_" + type + "_layer_0", mat.get_shader_uniform("tex_" + type +"_layer_0"))
+		set("tex_" + type + "_layer_1", mat.get_shader_uniform("tex_" + type +"_layer_1"))
+		set("tex_" + type + "_layer_2", mat.get_shader_uniform("tex_" + type +"_layer_2"))
+		set("tex_" + type + "_layer_3", mat.get_shader_uniform("tex_" + type +"_layer_3"))
 
 func generate_id(name :String):
 	randomize()
-	name = get_tree().edited_scene_root.filename + name
+	name = get_tree().edited_scene_root.scene_file_path + name
 	mesh_id = str(name.hash())
 
 # Show panel, generate collisions for painting, setup PBR material and start with albedo mode
@@ -130,75 +128,78 @@ func setup_part_2():
 	setup_tabs()
 	_on_TabContainer_tab_selected(0)
 
-# Create mpaint files
+# Create files
 func create_material_part_1_4(mat :ShaderMaterial, folder :String):
-	create_mpaint_files(folder)
-	for i in range(threads.size()):
-		var thread :Thread = threads[i]
-		thread.wait_to_finish()
-	threads = []
+	create_brush_and_color_files(folder)
+	create_layer_files(folder)
 	call_deferred("create_material_part_2_4", mat, folder)
 
-# Scan mpaint files
+# Scan files
 func create_material_part_2_4(mat :ShaderMaterial, folder :String):
 	editor_filesystem.scan_sources()
 	while(not scan_new_files(folder)):
 		await get_tree().create_timer(1.0).timeout
 	call_deferred("create_material_part_3_4", mat, folder)
 
-# Create textures for mpaint files
+# Create textures from files
 func create_material_part_3_4(mat :ShaderMaterial, folder :String):
 	create_textures(folder)
 	call_deferred("create_material_part_4_4", mat, folder)
 
 # Finished creation of material
 func create_material_part_4_4(mat :ShaderMaterial, folder :String):
-	# Set all shader params
+	# Set all shader uniforms
 	setup_shader_textures(mat)
-	mat.set_shader_param("uv1_scale", Vector3(1,1,1))
+	mat.set_shader_uniform("uv1_scale", Vector3(1,1,1))
 	
 	# Use material for current mesh instance
 	mesh_instance.mesh.surface_set_material(0, mat)
 	call_deferred("setup_part_2")
 
-func create_mpaint_files(folder :String):
+func create_brush_and_color_files(folder :String):
 	var types = ["albedo", "roughness", "metalness", "emission"]
 	for type in types:
-		var layers = ["brush", "color", "layer_0", "layer_1", "layer_2", "layer_3"]
+		var layers = ["brush", "color"]
 		for i in range(layers.size()):
-			var thread = Thread.new()
-			threads.append(thread)
-			var path = folder + type + "_" + layers[i] + ".mpaint"
-			thread.start(ImageManager.create_mpaint_file(path))
+			var path = folder + type + "_" + layers[i] + ".json"
+			ImageManager.create_json_file(path)
+
+func create_layer_files(folder :String):
+	var types = ["albedo", "roughness", "metalness", "emission"]
+	for type in types:
+		var layers = ["layer_0", "layer_1", "layer_2", "layer_3"]
+		for i in range(layers.size()):
+			var path = folder + type + "_" + layers[i] + ".png"
+			ImageManager.create_layer_file(path)
 
 func scan_new_files(folder :String):
 	var dir :Directory = Directory.new()
 	var all_files_are_ready = true
 	for type in ["albedo", "roughness", "metalness", "emission"]:
-		for layer in ["brush", "color", "layer_0", "layer_1", "layer_2", "layer_3"]:
-			if not dir.file_exists(folder + type + "_" + layer + ".mpaint.import"):
+		for layer in ["layer_0", "layer_1", "layer_2", "layer_3"]:
+			if not dir.file_exists(folder + type + "_" + layer + ".png.import"):
 				all_files_are_ready = false
 	return all_files_are_ready
 
 func create_textures(folder):
 	var types = ["albedo", "roughness", "metalness", "emission"]
 	for type in types:
-		set("tex_" + type + "_brush", ImageManager.mpaint_file_to_texture(folder + type + "_brush.mpaint"))
-		set("tex_" + type + "_color", ImageManager.mpaint_file_to_texture(folder + type + "_color.mpaint"))
-		set("tex_" + type + "_layer_0", ImageManager.mpaint_file_to_texture(folder + type + "_layer_0.mpaint"))
-		set("tex_" + type + "_layer_1", ImageManager.mpaint_file_to_texture(folder + type + "_layer_1.mpaint"))
-		set("tex_" + type + "_layer_2", ImageManager.mpaint_file_to_texture(folder + type + "_layer_2.mpaint"))
-		set("tex_" + type + "_layer_3", ImageManager.mpaint_file_to_texture(folder + type + "_layer_3.mpaint"))
+		set("tex_" + type + "_brush", ImageManager.json_to_texture(folder + type + "_brush.json"))
+		set("tex_" + type + "_color", ImageManager.json_to_texture(folder + type + "_color.json"))
+		set("tex_" + type + "_layer_0", ImageManager.layer_to_texture(folder + type + "_layer_0.png"))
+		set("tex_" + type + "_layer_1", ImageManager.layer_to_texture(folder + type + "_layer_1.png"))
+		set("tex_" + type + "_layer_2", ImageManager.layer_to_texture(folder + type + "_layer_2.png"))
+		set("tex_" + type + "_layer_3", ImageManager.layer_to_texture(folder + type + "_layer_3.png"))
 
 func setup_shader_textures(mat :ShaderMaterial):
 	var types = ["albedo", "roughness", "metalness", "emission"]
 	for type in types:
-		mat.set_shader_param("tex_" + type + "_brush", get("tex_" + type + "_brush"))
-		mat.set_shader_param("tex_" + type + "_color", get("tex_" + type + "_color"))
-		mat.set_shader_param("tex_" + type + "_layer_0", get("tex_" + type + "_layer_0"))
-		mat.set_shader_param("tex_" + type + "_layer_1", get("tex_" + type + "_layer_1"))
-		mat.set_shader_param("tex_" + type + "_layer_2", get("tex_" + type + "_layer_2"))
-		mat.set_shader_param("tex_" + type + "_layer_3", get("tex_" + type + "_layer_3"))
+		mat.set_shader_uniform("tex_" + type + "_brush", get("tex_" + type + "_brush"))
+		mat.set_shader_uniform("tex_" + type + "_color", get("tex_" + type + "_color"))
+		mat.set_shader_uniform("tex_" + type + "_layer_0", get("tex_" + type + "_layer_0"))
+		mat.set_shader_uniform("tex_" + type + "_layer_1", get("tex_" + type + "_layer_1"))
+		mat.set_shader_uniform("tex_" + type + "_layer_2", get("tex_" + type + "_layer_2"))
+		mat.set_shader_uniform("tex_" + type + "_layer_3", get("tex_" + type + "_layer_3"))
 
 func setup_tabs():
 	var folder :String = dir_path + "/" + mesh_id + "/"
@@ -220,25 +221,25 @@ func _on_TabContainer_tab_selected(tab: int) -> void:
 		TabMode.EMISSION:
 			plugin_cursor.show_cursor(root, mesh_instance, temp_plugin_node, tex_emission_brush, tex_emission_color)
 
-# When changing Albedo panel params, pass new brush info to cursor
+# When changing Albedo panel uniforms, pass new brush info to cursor
 func _on_Albedo_values_changed(brush_color, brush_opacity, brush_size) -> void:
 	plugin_cursor.set_brush_color(brush_color)
 	plugin_cursor.set_brush_opacity(brush_opacity)
 	plugin_cursor.set_brush_size(brush_size)
 
-# When changing Roughness panel params, pass new brush info to cursor
+# When changing Roughness panel uniforms, pass new brush info to cursor
 func _on_Roughness_values_changed(brush_color, brush_opacity, brush_size) -> void:
 	plugin_cursor.set_brush_color(brush_color)
 	plugin_cursor.set_brush_opacity(brush_opacity)
 	plugin_cursor.set_brush_size(brush_size)
 
-# When changing Metalness panel params, pass new brush info to cursor
+# When changing Metalness panel uniforms, pass new brush info to cursor
 func _on_Metalness_values_changed(brush_color, brush_opacity, brush_size) -> void:
 	plugin_cursor.set_brush_color(brush_color)
 	plugin_cursor.set_brush_opacity(brush_opacity)
 	plugin_cursor.set_brush_size(brush_size)
 
-# When changing Emission panel params, pass new brush info to cursor
+# When changing Emission panel uniforms, pass new brush info to cursor
 func _on_Emission_values_changed(brush_color, brush_opacity, brush_size) -> void:
 	plugin_cursor.set_brush_color(brush_color)
 	plugin_cursor.set_brush_opacity(brush_opacity)
@@ -251,18 +252,6 @@ func hide_panel():
 		$SavingPopup.popup_centered()
 		await get_tree().create_timer(1.0).timeout
 		save()
-		var threads_working = true
-		while threads_working:
-			threads_working = false
-			for i in range(threads.size()):
-				var thread :Thread = threads[i]
-				if thread.is_alive():
-					threads_working = true
-				elif thread.is_active():
-					thread.wait_to_finish()
-			await get_tree().create_timer(1.0).timeout
-		
-		threads = []
 		$SavingPopup.hide()
 		
 		if temp_plugin_node:
@@ -282,17 +271,8 @@ func save():
 		var layers = ["brush", "color"]
 		for i in range(layers.size()):
 			var tex :ImageTexture = get("tex_" + type + "_" + layers[i])
-			var path = folder + type + "_" + layers[i] + ".mpaint"
-			
-			var thread = Thread.new()
-			threads.append(thread)
-			thread.start(ImageManager.texture_to_mpaint_file([tex, path]))
-
-func _exit_tree() -> void:
-	for i in range(threads.size()):
-		if threads[i].is_active():
-			threads[i].wait_to_finish()
-
+			var path = folder + type + "_" + layers[i] + ".json"
+			ImageManager.texture_to_json(tex, path)
 
 func _on_UndoButton_pressed() -> void:
 	plugin_cursor.undo()

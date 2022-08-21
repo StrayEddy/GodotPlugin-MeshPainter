@@ -4,7 +4,6 @@
 @tool
 extends EditorPlugin
 
-var plugin_importer :EditorImportPlugin
 var plugin_panel :PluginPanel
 var plugin_button :PluginButton
 var plugin_cursor :PluginCursor
@@ -28,17 +27,13 @@ func selection_changed() -> void:
 		plugin_button.hide_button()
 
 # Override functions to capture mouse events when painting an object
-func handles(obj) -> bool:
+func _handles(obj) -> bool:
 	return editable
-func forward_spatial_gui_input(camera, event) -> bool:
-	return plugin_cursor.input(camera, event)
+func _forward_3d_gui_input(viewport_camera, event):
+	return plugin_cursor.input(viewport_camera, event)
 
 # Create whole plugin
 func _enter_tree():
-	
-	plugin_importer = preload("res://addons/meshpainter/plugin_importer.gd").new()
-	add_import_plugin(plugin_importer)
-	
 	# Add cursor instance: shows where to paint on mesh
 	plugin_cursor = preload("res://addons/meshpainter/plugin_cursor.tscn").instantiate()
 	plugin_cursor.hide()

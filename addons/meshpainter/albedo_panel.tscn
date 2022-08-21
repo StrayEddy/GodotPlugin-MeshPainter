@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://513m8rkua7oj" path="res://addons/meshpainter/icons/brush-selected.svg" id="5"]
 [ext_resource type="Texture2D" uid="uid://ddwnmqelecfa6" path="res://addons/meshpainter/icons/eraser-selected.svg" id="6"]
 [ext_resource type="Script" path="res://addons/meshpainter/albedo_panel.gd" id="7"]
-[ext_resource type="PackedScene" path="res://addons/meshpainter/layer_button.tscn" id="9"]
+[ext_resource type="PackedScene" uid="uid://cdq04ihbsugad" path="res://addons/meshpainter/layer_button.tscn" id="9"]
 
 [node name="A" type="PanelContainer"]
 anchor_right = 1.0
@@ -60,45 +60,45 @@ offset_bottom = 54.0
 [node name="ColorContainer" type="GridContainer" parent="VBoxContainer"]
 offset_top = 58.0
 offset_right = 1024.0
-offset_bottom = 64.0
+offset_bottom = 190.0
 columns = 2
 
 [node name="LayerButton" parent="VBoxContainer/ColorContainer" instance=ExtResource("9")]
-offset_right = 256.0
-offset_bottom = 1.0
+custom_minimum_size = Vector2(64, 64)
 button_mask = 3
 
 [node name="LayerButton2" parent="VBoxContainer/ColorContainer" instance=ExtResource("9")]
-offset_left = 260.0
-offset_right = 516.0
-offset_bottom = 1.0
+custom_minimum_size = Vector2(64, 64)
+offset_left = 68.0
+offset_right = 132.0
 button_mask = 3
 layer_nb = 1
 
 [node name="LayerButton3" parent="VBoxContainer/ColorContainer" instance=ExtResource("9")]
-offset_top = 5.0
-offset_right = 256.0
-offset_bottom = 6.0
+custom_minimum_size = Vector2(64, 64)
+offset_top = 68.0
+offset_bottom = 132.0
 button_mask = 3
 layer_nb = 2
 
 [node name="LayerButton4" parent="VBoxContainer/ColorContainer" instance=ExtResource("9")]
-offset_left = 260.0
-offset_top = 5.0
-offset_right = 516.0
-offset_bottom = 6.0
+custom_minimum_size = Vector2(64, 64)
+offset_left = 68.0
+offset_top = 68.0
+offset_right = 132.0
+offset_bottom = 132.0
 button_mask = 3
 layer_nb = 3
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
-offset_top = 68.0
+offset_top = 194.0
 offset_right = 1024.0
-offset_bottom = 72.0
+offset_bottom = 198.0
 
 [node name="IntensityContainer" type="VBoxContainer" parent="VBoxContainer"]
-offset_top = 76.0
+offset_top = 202.0
 offset_right = 1024.0
-offset_bottom = 122.0
+offset_bottom = 248.0
 
 [node name="Label" type="Label" parent="VBoxContainer/IntensityContainer"]
 offset_right = 1024.0
@@ -115,9 +115,9 @@ step = 0.01
 value = 0.1
 
 [node name="SizeContainer" type="VBoxContainer" parent="VBoxContainer"]
-offset_top = 126.0
+offset_top = 252.0
 offset_right = 1024.0
-offset_bottom = 172.0
+offset_bottom = 298.0
 
 [node name="Label" type="Label" parent="VBoxContainer/SizeContainer"]
 offset_right = 1024.0

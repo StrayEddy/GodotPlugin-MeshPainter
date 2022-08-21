@@ -115,13 +115,13 @@ func on_layer_change(value, is_color, layer_idx):
 	if not is_color:
 		match layer_idx:
 			0:
-				tex_layer_0.set_data(value.get_data())
+				tex_layer_0.set_image(value.get_image())
 			1:
-				tex_layer_1.set_data(value.get_data())
+				tex_layer_1.set_image(value.get_image())
 			2:
-				tex_layer_2.set_data(value.get_data())
+				tex_layer_2.set_image(value.get_image())
 			3:
-				tex_layer_3.set_data(value.get_data())
+				tex_layer_3.set_image(value.get_image())
 	update_brush()
 
 func _on_IntensitySlider_value_changed(value: float) -> void:
@@ -143,7 +143,7 @@ func get_layer_value():
 func get_intensity():
 	return $VBoxContainer/IntensityContainer/IntensitySlider.value
 
-func get_size():
+func get_size_value():
 	return $VBoxContainer/SizeContainer/SizeSlider.value
 
 func update_brush():
@@ -151,18 +151,18 @@ func update_brush():
 	var layer_nb = get_layer_nb()
 	var layer_value = get_layer_value()
 	var intensity = get_intensity()
-	var size = get_size()
+	var size_value = get_size_value()
 	
 	match mode:
 		Modes.BRUSH:
 			if layer_value is Color:
 				brush_color = Color.BLACK
 				brush_opacity = intensity
-				brush_size = size
+				brush_size = size_value
 			else:
 				brush_color = Color(layer_nb, intensity, 0, 0)
 				brush_opacity = 0.0
-				brush_size = size
+				brush_size = size_value
 		Modes.BUCKET:
 			if layer_value is Color:
 				brush_color = Color.BLACK
@@ -175,6 +175,6 @@ func update_brush():
 		Modes.ERASER:
 			brush_color = Color.BLACK
 			brush_opacity = 1.0
-			brush_size = size
+			brush_size = size_value
 	
 	emit_signal("values_changed", brush_color, brush_opacity, brush_size)

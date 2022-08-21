@@ -3,41 +3,53 @@ extends Control
 
 class_name ImageManager
 
-const tex_size = 512
-
-static func generate_mpaint_color(color :Color):
-	return "\"" + str(color.r) + "," + str(color.g) + "," + str(color.b) + "," + str(color.a) + "\""
-
-static func create_mpaint_file(path :String):
+static func create_json_file(path :String):
+	print("creating " + path)
 	var dir = Directory.new()
-	if "brush" in path:
-		dir.copy("res://addons/meshpainter/mpaints/blank.mpaint", path)
-	else:
-		dir.copy("res://addons/meshpainter/mpaints/white.mpaint", path)
+	dir.open("res://addons/meshpainter/materials/")
+	dir.copy("res://addons/meshpainter/materials/blank.json", path)
 
-static func mpaint_file_to_texture(image_path :String) -> ImageTexture:
-	var image_texture :ImageTexture = load(image_path)
-	return image_texture
+static func create_layer_file(path :String):
+	print("creating " + path)
+	var dir = Directory.new()
+	dir.open("res://addons/meshpainter/materials/")
+	dir.copy("res://addons/meshpainter/materials/white.png", path)
 
-static func texture_to_mpaint_file(params :Array):
-	var tex :ImageTexture = params[0]
-	var save_path :String = params[1]
-	
-	var image = tex.get_data()
-	image.lock()
-
+static func json_to_texture(path :String) -> ImageTexture:
 	var file = File.new()
-	file.open(save_path, File.WRITE)
-	# "0,0,0,0","0,0,0,0",
-	# "0,0,0,0","0,0,0,0",
-	for x in range(tex_size):
-		var line = ""
-		for y in range(tex_size):
-			var color :Color = image.get_pixel(x, y)
-			line += generate_mpaint_color(color) + ","
-		file.store_line(line)
+	file.open(path, File.READ)
+	var content = file.get_as_text()
 	file.close()
 	
-	print(save_path + " is saved")
+	var json = JSON.new()
+	var error = json.parse(content)
+	var json_data :Array = json.get_data()
+	var image = Image.new()
+	image.create(32768, 1, false, Image.FORMAT_RGBAH)
+	for x in range(json_data.size()):
+		var r = json_data[x][0]
+		var g = json_data[x][1]
+		var b = json_data[x][2]
+		var a = json_data[x][3]
+		image.set_pixel(x,0,Color(r,g,b,a))
 	
-	image.unlock()
+	return ImageTexture.create_from_image(image)
+
+static func layer_to_texture(path :String) -> ImageTexture:
+	var compressed_tex :CompressedTexture2D = load(path)
+	var image :Image = compressed_tex.get_image()
+	return ImageTexture.create_from_image(image)
+
+static func texture_to_json(tex :ImageTexture, save_path :String):
+	var image :Image = tex.get_image()
+	var data_to_send = []
+	for x in 32768:
+		var color :Color = image.get_pixel(x, 0)
+		data_to_send.append([color.r,color.g,color.b,color.a])
+	
+	var json = JSON.new()
+	var json_string = json.stringify(data_to_send)
+	var file = File.new()
+	file.open(save_path, File.WRITE_READ)
+	file.store_string(json_string)
+	file.close()
