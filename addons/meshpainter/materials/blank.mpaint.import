@@ -1,0 +1,15 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="Image"
+uid="uid://dje0tnqvls0e1"
+path="res://.godot/imported/blank.mpaint-b0a31b12918179ce14afe01548eb6c62.res"
+
+[deps]
+
+source_file="res://addons/meshpainter/materials/blank.mpaint"
+dest_files=["res://.godot/imported/blank.mpaint-b0a31b12918179ce14afe01548eb6c62.res"]
+
+[params]
+
+my_option=false

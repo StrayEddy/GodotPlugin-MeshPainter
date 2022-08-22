@@ -130,8 +130,7 @@ func setup_part_2():
 
 # Create files
 func create_material_part_1_4(mat :ShaderMaterial, folder :String):
-	create_brush_and_color_files(folder)
-	create_layer_files(folder)
+	create_mpaint_files(folder)
 	call_deferred("create_material_part_2_4", mat, folder)
 
 # Scan files
@@ -156,44 +155,33 @@ func create_material_part_4_4(mat :ShaderMaterial, folder :String):
 	mesh_instance.mesh.surface_set_material(0, mat)
 	call_deferred("setup_part_2")
 
-func create_brush_and_color_files(folder :String):
-	var types = ["albedo", "roughness", "metalness", "emission"]
-	for type in types:
-		var layers = ["brush", "color"]
+func create_mpaint_files(folder :String):
+	for type in ["albedo", "roughness", "metalness", "emission"]:
+		var layers = ["brush", "color", "layer_0", "layer_1", "layer_2", "layer_3"]
 		for i in range(layers.size()):
-			var path = folder + type + "_" + layers[i] + ".json"
-			ImageManager.create_json_file(path)
-
-func create_layer_files(folder :String):
-	var types = ["albedo", "roughness", "metalness", "emission"]
-	for type in types:
-		var layers = ["layer_0", "layer_1", "layer_2", "layer_3"]
-		for i in range(layers.size()):
-			var path = folder + type + "_" + layers[i] + ".png"
-			ImageManager.create_layer_file(path)
+			var path = folder + type + "_" + layers[i] + ".mpaint"
+			ImageManager.create_mpaint_file(path)
 
 func scan_new_files(folder :String):
 	var dir :Directory = Directory.new()
 	var all_files_are_ready = true
 	for type in ["albedo", "roughness", "metalness", "emission"]:
-		for layer in ["layer_0", "layer_1", "layer_2", "layer_3"]:
-			if not dir.file_exists(folder + type + "_" + layer + ".png.import"):
+		for layer in ["brush", "color", "layer_0", "layer_1", "layer_2", "layer_3"]:
+			if not dir.file_exists(folder + type + "_" + layer + ".mpaint.import"):
 				all_files_are_ready = false
 	return all_files_are_ready
 
 func create_textures(folder):
-	var types = ["albedo", "roughness", "metalness", "emission"]
-	for type in types:
-		set("tex_" + type + "_brush", ImageManager.json_to_texture(folder + type + "_brush.json"))
-		set("tex_" + type + "_color", ImageManager.json_to_texture(folder + type + "_color.json"))
-		set("tex_" + type + "_layer_0", ImageManager.layer_to_texture(folder + type + "_layer_0.png"))
-		set("tex_" + type + "_layer_1", ImageManager.layer_to_texture(folder + type + "_layer_1.png"))
-		set("tex_" + type + "_layer_2", ImageManager.layer_to_texture(folder + type + "_layer_2.png"))
-		set("tex_" + type + "_layer_3", ImageManager.layer_to_texture(folder + type + "_layer_3.png"))
+	for type in ["albedo", "roughness", "metalness", "emission"]:
+		set("tex_" + type + "_brush", ImageManager.mpaint_to_texture(folder + type + "_brush.mpaint"))
+		set("tex_" + type + "_color", ImageManager.mpaint_to_texture(folder + type + "_color.mpaint"))
+		set("tex_" + type + "_layer_0", ImageManager.mpaint_to_texture(folder + type + "_layer_0.mpaint"))
+		set("tex_" + type + "_layer_1", ImageManager.mpaint_to_texture(folder + type + "_layer_1.mpaint"))
+		set("tex_" + type + "_layer_2", ImageManager.mpaint_to_texture(folder + type + "_layer_2.mpaint"))
+		set("tex_" + type + "_layer_3", ImageManager.mpaint_to_texture(folder + type + "_layer_3.mpaint"))
 
 func setup_shader_textures(mat :ShaderMaterial):
-	var types = ["albedo", "roughness", "metalness", "emission"]
-	for type in types:
+	for type in ["albedo", "roughness", "metalness", "emission"]:
 		mat.set_shader_uniform("tex_" + type + "_brush", get("tex_" + type + "_brush"))
 		mat.set_shader_uniform("tex_" + type + "_color", get("tex_" + type + "_color"))
 		mat.set_shader_uniform("tex_" + type + "_layer_0", get("tex_" + type + "_layer_0"))
@@ -271,8 +259,8 @@ func save():
 		var layers = ["brush", "color"]
 		for i in range(layers.size()):
 			var tex :ImageTexture = get("tex_" + type + "_" + layers[i])
-			var path = folder + type + "_" + layers[i] + ".json"
-			ImageManager.texture_to_json(tex, path)
+			var path = folder + type + "_" + layers[i] + ".mpaint"
+			ImageManager.texture_to_mpaint(tex, path)
 
 func _on_UndoButton_pressed() -> void:
 	plugin_cursor.undo()

@@ -1,16 +1,16 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=5 format=3 uid="uid://c6qqva0vd4kvl"]
 
-[ext_resource path="res://addons/meshpainter/icons/icon.svg" type="Texture" id=1]
-[ext_resource path="res://addons/meshpainter/icons/icon-pressed.svg" type="Texture" id=2]
-[ext_resource path="res://addons/meshpainter/icons/icon-hover.svg" type="Texture" id=3]
-[ext_resource path="res://addons/meshpainter/plugin_button.gd" type="Script" id=4]
+[ext_resource type="Texture2D" uid="uid://toyy7hjfndnt" path="res://addons/meshpainter/icons/icon.svg" id="1_amhp4"]
+[ext_resource type="Texture2D" uid="uid://dmuhpwfhfq6om" path="res://addons/meshpainter/icons/icon-pressed.svg" id="2_rlcuq"]
+[ext_resource type="Texture2D" uid="uid://beaohr65m4ve8" path="res://addons/meshpainter/icons/icon-hover.svg" id="3_s87s0"]
+[ext_resource type="Script" path="res://addons/meshpainter/plugin_button.gd" id="4"]
 
 [node name="PluginButton" type="TextureButton"]
 toggle_mode = true
 shortcut_in_tooltip = false
-texture_normal = ExtResource( 1 )
-texture_pressed = ExtResource( 2 )
-texture_hover = ExtResource( 3 )
-script = ExtResource( 4 )
+texture_normal = ExtResource("1_amhp4")
+texture_pressed = ExtResource("2_rlcuq")
+texture_hover = ExtResource("3_s87s0")
+script = ExtResource("4")
 
 [connection signal="toggled" from="." to="." method="_on_PluginButton_toggled"]

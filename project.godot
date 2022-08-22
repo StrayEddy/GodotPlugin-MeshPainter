@@ -29,6 +29,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/meshpainter/plugin_cursor.gd"
 }, {
+"base": "EditorImportPlugin",
+"class": &"PluginImporter",
+"language": &"GDScript",
+"path": "res://addons/meshpainter/plugin_importer.gd"
+}, {
 "base": "Control",
 "class": &"PluginPanel",
 "language": &"GDScript",
@@ -39,13 +44,14 @@ _global_script_class_icons={
 "ImageManager": "",
 "PluginButton": "",
 "PluginCursor": "",
+"PluginImporter": "",
 "PluginPanel": ""
 }
 
 [application]
 
 config/name="GodotPlugin-MeshPainter"
-run/main_scene="res://demo/Demo.tscn"
+run/main_scene="res://demo/demo.tscn"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
@@ -57,28 +63,6 @@ window/size/fullscreen=true
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/meshpainter/plugin.cfg")
-
-[importer_defaults]
-
-texture={
-"compress/bptc_ldr": 0,
-"compress/channel_pack": 0,
-"compress/hdr_compression": 1,
-"compress/lossy_quality": 0.7,
-"compress/mode": 0,
-"compress/normal_map": 0,
-"detect_3d/compress_to": 0,
-"mipmaps/generate": false,
-"mipmaps/limit": -1,
-"process/fix_alpha_border": true,
-"process/hdr_as_srgb": false,
-"process/hdr_clamp_exposure": false,
-"process/normal_map_invert_y": false,
-"process/premult_alpha": false,
-"process/size_limit": 0,
-"roughness/mode": 0,
-"roughness/src_normal": ""
-}
 
 [physics]
 

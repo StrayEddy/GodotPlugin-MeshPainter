@@ -1,0 +1,15 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="Image"
+uid="uid://dh132175oj6h5"
+path="res://.godot/imported/default_layer.mpaint-8b06256eef4e0c05d9669fa89dab7371.res"
+
+[deps]
+
+source_file="res://addons/meshpainter/materials/default_layer.mpaint"
+dest_files=["res://.godot/imported/default_layer.mpaint-8b06256eef4e0c05d9669fa89dab7371.res"]
+
+[params]
+
+my_option=false

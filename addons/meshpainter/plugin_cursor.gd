@@ -115,8 +115,6 @@ func buffers_to_textures():
 	var width = brush_image.get_width()
 	var height = brush_image.get_height()
 	
-	# Color pixels row by row
-	# Indexes example: [0,1,2,3,4], [5,6,7,8,9]...
 	for x in range(0, brush_buffer.size()):
 		brush_image.set_pixel(x, 0, brush_buffer[x])
 		color_image.set_pixel(x, 0, color_buffer[x])

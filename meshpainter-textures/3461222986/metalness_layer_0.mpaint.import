@@ -1,0 +1,15 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="Image"
+uid="uid://ckx1k0xkph0pe"
+path="res://.godot/imported/metalness_layer_0.mpaint-7f9f4e306955b6624072579891b4d105.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/3461222986/metalness_layer_0.mpaint"
+dest_files=["res://.godot/imported/metalness_layer_0.mpaint-7f9f4e306955b6624072579891b4d105.res"]
+
+[params]
+
+my_option=false

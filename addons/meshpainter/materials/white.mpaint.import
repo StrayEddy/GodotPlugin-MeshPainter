@@ -1,0 +1,15 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="Image"
+uid="uid://dn8aogtb1qnym"
+path="res://.godot/imported/white.mpaint-e20abaac4525b166cc847f65e881c560.res"
+
+[deps]
+
+source_file="res://addons/meshpainter/materials/white.mpaint"
+dest_files=["res://.godot/imported/white.mpaint-e20abaac4525b166cc847f65e881c560.res"]
+
+[params]
+
+my_option=false

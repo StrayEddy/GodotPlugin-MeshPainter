@@ -83,6 +83,8 @@ func _on_EraserButton_pressed() -> void:
 func _on_LayerButton_selected(value, is_color) -> void:
 	on_layer_change(value, is_color, 0)
 	$VBoxContainer/ColorContainer/LayerButton2.deselect()
+func _on_brush_button_pressed():
+	pass # Replace with function body.
 	$VBoxContainer/ColorContainer/LayerButton3.deselect()
 	$VBoxContainer/ColorContainer/LayerButton4.deselect()
 func _on_LayerButton2_selected(value, is_color) -> void:

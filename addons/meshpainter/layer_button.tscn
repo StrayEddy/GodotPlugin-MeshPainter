@@ -40,17 +40,20 @@ offset_bottom = 16.0
 texture_normal = ExtResource("4")
 
 [node name="TextureDialog" type="FileDialog" parent="."]
+title = "Choose texture"
+size = Vector2i(400, 400)
+ok_button_text = "Open"
 dialog_hide_on_ok = true
-mode_overrides_title = false
+file_mode = 0
 filters = PackedStringArray("*.png", "*.jpg", "*.jpeg")
 
 [node name="ColorDialog" type="ConfirmationDialog" parent="."]
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorDialog"]
-offset_left = 72.0
-offset_top = 36.0
-offset_right = 36.0
-offset_bottom = 36.0
+offset_left = 120.0
+offset_top = 60.0
+offset_right = 60.0
+offset_bottom = 60.0
 color = Color(0, 0, 0, 1)
 edit_alpha = false
 

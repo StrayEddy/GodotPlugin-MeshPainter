@@ -1,11 +1,4 @@
-res://demo/Demo.tscn
-res://addons/meshpainter/image_manager.gd
-res://addons/meshpainter/plugin_panel.gd
-res://addons/meshpainter/albedo_panel.gd
-res://addons/meshpainter/layer_button.gd
-res://addons/meshpainter/plugin_panel.tscn
-res://addons/meshpainter/layer_button.tscn
-res://addons/meshpainter/albedo_panel.tscn
-res://addons/meshpainter/plugin_cursor.tscn
-res://addons/meshpainter/plugin_cursor.gd
-res://addons/meshpainter/plugin.gd
+res://demo/demo.tscn
+res://addons/meshpainter/emission_panel.tscn
+res://addons/meshpainter/metalness_panel.tscn
+res://addons/meshpainter/roughness_panel.tscn

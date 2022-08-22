@@ -1,0 +1,15 @@
+[remap]
+
+importer="mesh.painter.plugin"
+type="Image"
+uid="uid://djymg1s8bsunc"
+path="res://.godot/imported/roughness_brush.mpaint-986f8fd89d4ff7d7507d0aa6d43c33fa.res"
+
+[deps]
+
+source_file="res://meshpainter-textures/3461222986/roughness_brush.mpaint"
+dest_files=["res://.godot/imported/roughness_brush.mpaint-986f8fd89d4ff7d7507d0aa6d43c33fa.res"]
+
+[params]
+
+my_option=false

@@ -36,8 +36,10 @@ func set_color(color :Color):
 
 func set_texture(texture :ImageTexture):
 	var image :Image = texture.get_image()
-	if image.get_format() != Image.FORMAT_RGBAH:
-		image.convert(Image.FORMAT_RGBAH)
+	if image.is_compressed():
+		image.decompress()
+	if image.get_format() != Image.FORMAT_RGBA4444:
+		image.convert(Image.FORMAT_RGBA4444)
 	if image.get_size() != Vector2i(tex_size, tex_size):
 		image.resize(tex_size, tex_size)
 	var tex :ImageTexture = ImageTexture.create_from_image(image)
@@ -45,15 +47,13 @@ func set_texture(texture :ImageTexture):
 	
 	self.value = tex
 	self.texture_normal = tex
-	print(value)
-	print(value.get_image())
 	emit_signal("value_changed", value, false)
 
 func _on_ColorButton_pressed() -> void:
 	if can_pick_color:
 		$PopupDialog.hide()
 		$ColorDialog.popup()
-		$ColorDialog.set_global_positionvalue_changed(get_global_mouse_position())
+		$ColorDialog.set_ime_position(Vector2i(get_global_mouse_position()))
 	else:
 		$PopupDialog.hide()
 		$ColorDialog/ColorPicker.color = Color.WHITE
@@ -62,7 +62,7 @@ func _on_ColorButton_pressed() -> void:
 func _on_TextureButton_pressed() -> void:
 	$PopupDialog.hide()
 	$TextureDialog.popup()
-	$TextureDialog.set_global_position(get_global_mouse_position())
+	$TextureDialog.set_ime_position(Vector2i(get_global_mouse_position()))
 
 func _on_ColorDialog_confirmed() -> void:
 	var color = $ColorDialog/ColorPicker.color
@@ -72,16 +72,13 @@ func _on_ColorDialog_confirmed() -> void:
 	emit_signal("selected", value, value is Color)
 
 func _on_TextureDialog_file_selected(path: String) -> void:
-	var image :Image = Image.new()
-	image.load(path)
-	var tex = ImageTexture.new()
-	tex.create_from_image(image)
+	var tex = load(path)
 	self.value = tex
 	set_value(tex)
 	
 	# Save new layer texture
-	var savepath = folder + type + "_layer_" + str(layer_nb) + ".mpaint"
-	ImageManager.texture_to_mpaint_file([tex, savepath])
+	var save_path = folder + type + "_layer_" + str(layer_nb) + ".mpaint"
+	ImageManager.texture_to_mpaint(tex, save_path)
 	
 	$Frame.show()
 	emit_signal("selected", value, value is Color)
@@ -93,5 +90,5 @@ func _on_LayerButton_gui_input(event: InputEvent) -> void:
 			emit_signal("selected", value, value is Color)
 		if event.button_mask == MOUSE_BUTTON_RIGHT:
 			$PopupDialog.popup()
-			$PopupDialog.set_global_position(get_global_mouse_position())
+			$PopupDialog.set_ime_position(Vector2i(get_global_mouse_position()))
 			$PopupDialog.set_as_minsize()
