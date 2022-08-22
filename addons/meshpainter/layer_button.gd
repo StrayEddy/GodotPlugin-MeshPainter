@@ -53,7 +53,7 @@ func _on_ColorButton_pressed() -> void:
 	if can_pick_color:
 		$PopupDialog.hide()
 		$ColorDialog.popup()
-		$ColorDialog.set_ime_position(Vector2i(get_global_mouse_position()))
+		$ColorDialog.position = Vector2i(get_global_mouse_position())
 	else:
 		$PopupDialog.hide()
 		$ColorDialog/ColorPicker.color = Color.WHITE
@@ -62,7 +62,7 @@ func _on_ColorButton_pressed() -> void:
 func _on_TextureButton_pressed() -> void:
 	$PopupDialog.hide()
 	$TextureDialog.popup()
-	$TextureDialog.set_ime_position(Vector2i(get_global_mouse_position()))
+	$TextureDialog.position = Vector2i(get_global_mouse_position())
 
 func _on_ColorDialog_confirmed() -> void:
 	var color = $ColorDialog/ColorPicker.color
@@ -90,5 +90,4 @@ func _on_LayerButton_gui_input(event: InputEvent) -> void:
 			emit_signal("selected", value, value is Color)
 		if event.button_mask == MOUSE_BUTTON_RIGHT:
 			$PopupDialog.popup()
-			$PopupDialog.set_ime_position(Vector2i(get_global_mouse_position()))
-			$PopupDialog.set_as_minsize()
+			$PopupDialog.position = Vector2i(get_global_mouse_position())
