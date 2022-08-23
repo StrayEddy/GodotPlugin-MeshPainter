@@ -45,8 +45,8 @@ func set_texture(texture :ImageTexture):
 	var tex :ImageTexture = ImageTexture.create_from_image(image)
 	tex.create_from_image(image)
 	
-	self.value = tex
-	self.texture_normal = tex
+	self.value = texture
+	self.texture_normal = texture
 	emit_signal("value_changed", value, false)
 
 func _on_ColorButton_pressed() -> void:

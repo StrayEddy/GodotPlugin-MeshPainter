@@ -52,10 +52,10 @@ filters = PackedStringArray("*.png", "*.jpg", "*.jpeg")
 [node name="ColorDialog" type="ConfirmationDialog" parent="."]
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorDialog"]
-offset_left = 176.0
-offset_top = 88.0
-offset_right = 88.0
-offset_bottom = 88.0
+offset_left = 352.0
+offset_top = 176.0
+offset_right = 176.0
+offset_bottom = 176.0
 color = Color(0, 0, 0, 1)
 edit_alpha = false
 

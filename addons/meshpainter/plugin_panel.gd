@@ -2,7 +2,6 @@
 
 @tool
 extends Control
-
 class_name PluginPanel
 
 var plugin_cursor :PluginCursor

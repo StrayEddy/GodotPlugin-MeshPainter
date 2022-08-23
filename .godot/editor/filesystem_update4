@@ -1,6 +1,3 @@
 res://demo/demo.tscn
-res://addons/meshpainter/emission_panel.tscn
-res://addons/meshpainter/metalness_panel.tscn
-res://addons/meshpainter/roughness_panel.tscn
-res://addons/meshpainter/layer_button.tscn
 res://addons/meshpainter/layer_button.gd
+res://addons/meshpainter/layer_button.tscn
