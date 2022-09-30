@@ -33,24 +33,35 @@ uniform sampler2D tex_emission_layer_1;
 uniform sampler2D tex_emission_layer_2;
 uniform sampler2D tex_emission_layer_3;
 
-uniform vec3 uv1_scale;
-uniform vec3 uv1_offset;
-varying vec3 uv1_triplanar_pos;
-varying vec3 uv1_power_normal;
+uniform vec3 uv_scale = vec3(1.0,1.0,1.0);
+uniform vec3 uv_offset = vec3(1.0,1.0,1.0);
 
 varying vec3 vertex_pos;
+varying vec3 triplanar_pos;
+varying vec3 power_normal;
 
+//void vertex() {
+//	UV=UV*uv1_scale.xy+uv1_offset.xy;
+//
+//	// Keep vertex position to use in fragment()
+//	vertex_pos = vec3(VERTEX.x, VERTEX.y, VERTEX.z);
+//
+//	// Prepare triplanar
+//	uv1_power_normal=pow(abs(NORMAL),vec3(100));
+//	uv1_power_normal/=dot(uv1_power_normal,vec3(1.0));
+//	uv1_triplanar_pos = VERTEX * uv1_scale + uv1_offset;
+//	uv1_triplanar_pos *= vec3(1.0,-1.0, 1.0);
+//}
 void vertex() {
-	UV=UV*uv1_scale.xy+uv1_offset.xy;
-	
+	UV=UV*uv_scale.xy+uv_offset.xy;
+
 	// Keep vertex position to use in fragment()
 	vertex_pos = vec3(VERTEX.x, VERTEX.y, VERTEX.z);
-
-	// Prepare triplanar
-	uv1_power_normal=pow(abs(NORMAL),vec3(100));
-	uv1_power_normal/=dot(uv1_power_normal,vec3(1.0));
-	uv1_triplanar_pos = VERTEX * uv1_scale + uv1_offset;
-	uv1_triplanar_pos *= vec3(1.0,-1.0, 1.0);
+	
+	power_normal = pow(abs(NORMAL), vec3(10.0));
+	power_normal = normalize(power_normal);
+	
+	triplanar_pos = VERTEX.xyz * vec3(1.0, -1.0, 1.0)  * uv_scale + uv_offset;
 }
 
 vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights,vec3 p_triplanar_pos) {
@@ -60,6 +71,7 @@ vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights,vec3 p_triplanar_pos)
 	samp+= texture(p_sampler,p_triplanar_pos.zy * vec2(-1.0,1.0)) * p_weights.x;
 	return samp;
 }
+
 
 // Albefo retrieval
 vec4 get_albedo() {
@@ -90,16 +102,16 @@ vec4 get_albedo() {
 				if (color.a == 0.0) {
 					vec4 new_albedo;
 					if (color.r == 0.0) {
-						new_albedo = triplanar_texture(tex_albedo_layer_0,uv1_power_normal,uv1_triplanar_pos);
+						new_albedo = triplanar_texture(tex_albedo_layer_0,power_normal,triplanar_pos);
 					}
 					else if (color.r == 1.0) {
-						new_albedo = triplanar_texture(tex_albedo_layer_1,uv1_power_normal,uv1_triplanar_pos);
+						new_albedo = triplanar_texture(tex_albedo_layer_1,power_normal,triplanar_pos);
 					}
 					else if (color.r == 2.0) {
-						new_albedo = triplanar_texture(tex_albedo_layer_2,uv1_power_normal,uv1_triplanar_pos);
+						new_albedo = triplanar_texture(tex_albedo_layer_2,power_normal,triplanar_pos);
 					}
 					else if (color.r == 3.0) {
-						new_albedo = triplanar_texture(tex_albedo_layer_3,uv1_power_normal,uv1_triplanar_pos);
+						new_albedo = triplanar_texture(tex_albedo_layer_3,power_normal,triplanar_pos);
 					}
 						
 					albedo = mix(albedo, new_albedo, color.g);
@@ -141,16 +153,16 @@ float get_roughness() {
 				if (color.a == 0.0) {
 					vec4 new_roughness;
 					if (color.r == 0.0) {
-						new_roughness = triplanar_texture(tex_roughness_layer_0,uv1_power_normal,uv1_triplanar_pos);
+						new_roughness = triplanar_texture(tex_roughness_layer_0,power_normal,triplanar_pos);
 					}
 					else if (color.r == 1.0) {
-						new_roughness = triplanar_texture(tex_roughness_layer_1,uv1_power_normal,uv1_triplanar_pos);
+						new_roughness = triplanar_texture(tex_roughness_layer_1,power_normal,triplanar_pos);
 					}
 					else if (color.r == 2.0) {
-						new_roughness = triplanar_texture(tex_roughness_layer_2,uv1_power_normal,uv1_triplanar_pos);
+						new_roughness = triplanar_texture(tex_roughness_layer_2,power_normal,triplanar_pos);
 					}
 					else if (color.r == 3.0) {
-						new_roughness = triplanar_texture(tex_roughness_layer_3,uv1_power_normal,uv1_triplanar_pos);
+						new_roughness = triplanar_texture(tex_roughness_layer_3,power_normal,triplanar_pos);
 					}
 					roughness = clamp(roughness - color.g/10.0, 1.0-new_roughness.g, 1.0);
 				}
@@ -194,16 +206,16 @@ float get_metalness() {
 				if (color.a == 0.0) {
 					vec4 new_metalness;
 					if (color.r == 0.0) {
-						new_metalness = triplanar_texture(tex_metalness_layer_0,uv1_power_normal,uv1_triplanar_pos);
+						new_metalness = triplanar_texture(tex_metalness_layer_0,power_normal,triplanar_pos);
 					}
 					else if (color.r == 1.0) {
-						new_metalness = triplanar_texture(tex_metalness_layer_1,uv1_power_normal,uv1_triplanar_pos);
+						new_metalness = triplanar_texture(tex_metalness_layer_1,power_normal,triplanar_pos);
 					}
 					else if (color.r == 2.0) {
-						new_metalness = triplanar_texture(tex_metalness_layer_2,uv1_power_normal,uv1_triplanar_pos);
+						new_metalness = triplanar_texture(tex_metalness_layer_2,power_normal,triplanar_pos);
 					}
 					else if (color.r == 3.0) {
-						new_metalness = triplanar_texture(tex_metalness_layer_3,uv1_power_normal,uv1_triplanar_pos);
+						new_metalness = triplanar_texture(tex_metalness_layer_3,power_normal,triplanar_pos);
 					}
 					metalness = clamp(metalness + color.g/10.0, 0.0, new_metalness.g);
 				}
@@ -247,16 +259,16 @@ vec4 get_emission() {
 				if (color.a == 0.0) {
 					vec4 new_emission;
 					if (color.r == 0.0) {
-						new_emission = triplanar_texture(tex_emission_layer_0,uv1_power_normal,uv1_triplanar_pos);
+						new_emission = triplanar_texture(tex_emission_layer_0,power_normal,triplanar_pos);
 					}
 					else if (color.r == 1.0) {
-						new_emission = triplanar_texture(tex_emission_layer_1,uv1_power_normal,uv1_triplanar_pos);
+						new_emission = triplanar_texture(tex_emission_layer_1,power_normal,triplanar_pos);
 					}
 					else if (color.r == 2.0) {
-						new_emission = triplanar_texture(tex_emission_layer_2,uv1_power_normal,uv1_triplanar_pos);
+						new_emission = triplanar_texture(tex_emission_layer_2,power_normal,triplanar_pos);
 					}
 					else if (color.r == 3.0) {
-						new_emission = triplanar_texture(tex_emission_layer_3,uv1_power_normal,uv1_triplanar_pos);
+						new_emission = triplanar_texture(tex_emission_layer_3,power_normal,triplanar_pos);
 					}
 					emission = clamp(emission + color.g/10.0, 0.0, new_emission.g*5.0);
 				}

@@ -4,7 +4,10 @@ extends Control
 class_name ImageManager
 
 static func create_mpaint_file(path :String):
-	var dir = Directory.new()
+	var dir = DirAccess.open("res://")
+	if !dir.dir_exists("res://addons/meshpainter/materials/"):
+		dir.make_dir("res://addons/meshpainter/materials/")
+	
 	if "brush" in path:
 		dir.open("res://addons/meshpainter/materials/")
 		dir.copy("res://addons/meshpainter/materials/blank.mpaint", path)
@@ -34,8 +37,6 @@ static func texture_to_mpaint(image_tex :Texture2D, path :String):
 			row.append([color.r,color.g,color.b,color.a])
 		data.append(row)
 	
-	var file = File.new()
-	file.open(path, File.WRITE)
+	var file = FileAccess.open(path, FileAccess.WRITE)
 	file.store_var(data_size)
 	file.store_var(data)
-	file.close()

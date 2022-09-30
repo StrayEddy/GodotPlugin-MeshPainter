@@ -15,15 +15,11 @@ func _ready():
 	open("res://default_layer.mpaint")
 
 func save(data_size, data):
-	var file = File.new()
-	file.open("res://default_layer.mpaint", File.WRITE)
+	var file = FileAccess.open("res://default_layer.mpaint", FileAccess.WRITE)
 	file.store_var(data_size)
 	file.store_var(data)
-	file.close()
 
 func open(path):
-	var file = File.new()
-	file.open(path, File.READ)
+	var file = FileAccess.open(path, FileAccess.READ)
 	var data_size = file.get_var()
 	var data = file.get_var()
-	file.close()

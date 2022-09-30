@@ -77,12 +77,12 @@ func generate_collision():
 func retrieve_material(mat :ShaderMaterial):
 	var types = ["albedo", "roughness", "metalness", "emission"]
 	for type in types:
-		set("tex_" + type + "_brush", mat.get_shader_uniform("tex_" + type +"_brush"))
-		set("tex_" + type + "_color", mat.get_shader_uniform("tex_" + type +"_color"))
-		set("tex_" + type + "_layer_0", mat.get_shader_uniform("tex_" + type +"_layer_0"))
-		set("tex_" + type + "_layer_1", mat.get_shader_uniform("tex_" + type +"_layer_1"))
-		set("tex_" + type + "_layer_2", mat.get_shader_uniform("tex_" + type +"_layer_2"))
-		set("tex_" + type + "_layer_3", mat.get_shader_uniform("tex_" + type +"_layer_3"))
+		set("tex_" + type + "_brush", mat.get_shader_parameter("tex_" + type +"_brush"))
+		set("tex_" + type + "_color", mat.get_shader_parameter("tex_" + type +"_color"))
+		set("tex_" + type + "_layer_0", mat.get_shader_parameter("tex_" + type +"_layer_0"))
+		set("tex_" + type + "_layer_1", mat.get_shader_parameter("tex_" + type +"_layer_1"))
+		set("tex_" + type + "_layer_2", mat.get_shader_parameter("tex_" + type +"_layer_2"))
+		set("tex_" + type + "_layer_3", mat.get_shader_parameter("tex_" + type +"_layer_3"))
 
 func generate_id(name :String):
 	randomize()
@@ -98,7 +98,7 @@ func show_panel(root :Node, mesh_instance :MeshInstance3D):
 	setup_part_1()
 
 func setup_part_1():
-	var dir = Directory.new()
+	var dir = DirAccess.open("res://")
 	if not dir.dir_exists(dir_path):
 		OS.alert("A folder at " + str(dir_path) + " will be created to keep all generated textures from painting.")
 		dir.make_dir(dir_path)
@@ -148,7 +148,7 @@ func create_material_part_3_4(mat :ShaderMaterial, folder :String):
 func create_material_part_4_4(mat :ShaderMaterial, folder :String):
 	# Set all shader uniforms
 	setup_shader_textures(mat)
-	mat.set_shader_uniform("uv1_scale", Vector3(1,1,1))
+	mat.set_shader_parameter("uv_scale", Vector3(1,1,1))
 	
 	# Use material for current mesh instance
 	mesh_instance.mesh.surface_set_material(0, mat)
@@ -162,7 +162,7 @@ func create_mpaint_files(folder :String):
 			ImageManager.create_mpaint_file(path)
 
 func scan_new_files(folder :String):
-	var dir :Directory = Directory.new()
+	var dir = DirAccess.open("res://")
 	var all_files_are_ready = true
 	for type in ["albedo", "roughness", "metalness", "emission"]:
 		for layer in ["brush", "color", "layer_0", "layer_1", "layer_2", "layer_3"]:
@@ -181,12 +181,12 @@ func create_textures(folder):
 
 func setup_shader_textures(mat :ShaderMaterial):
 	for type in ["albedo", "roughness", "metalness", "emission"]:
-		mat.set_shader_uniform("tex_" + type + "_brush", get("tex_" + type + "_brush"))
-		mat.set_shader_uniform("tex_" + type + "_color", get("tex_" + type + "_color"))
-		mat.set_shader_uniform("tex_" + type + "_layer_0", get("tex_" + type + "_layer_0"))
-		mat.set_shader_uniform("tex_" + type + "_layer_1", get("tex_" + type + "_layer_1"))
-		mat.set_shader_uniform("tex_" + type + "_layer_2", get("tex_" + type + "_layer_2"))
-		mat.set_shader_uniform("tex_" + type + "_layer_3", get("tex_" + type + "_layer_3"))
+		mat.set_shader_parameter("tex_" + type + "_brush", get("tex_" + type + "_brush"))
+		mat.set_shader_parameter("tex_" + type + "_color", get("tex_" + type + "_color"))
+		mat.set_shader_parameter("tex_" + type + "_layer_0", get("tex_" + type + "_layer_0"))
+		mat.set_shader_parameter("tex_" + type + "_layer_1", get("tex_" + type + "_layer_1"))
+		mat.set_shader_parameter("tex_" + type + "_layer_2", get("tex_" + type + "_layer_2"))
+		mat.set_shader_parameter("tex_" + type + "_layer_3", get("tex_" + type + "_layer_3"))
 
 func setup_tabs():
 	var folder :String = dir_path + "/" + mesh_id + "/"

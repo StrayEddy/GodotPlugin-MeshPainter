@@ -38,11 +38,9 @@ func _get_option_visibility(path: String, option_name: StringName, options: Dict
 	return true
 
 func _import(source_file, save_path, options, platform_variants, gen_files):
-	var file = File.new()
-	file.open(source_file, File.READ)
+	var file = FileAccess.open(source_file, FileAccess.READ)
 	var data_size = file.get_var()
 	var data = file.get_var()
-	file.close()
 	
 	var image = Image.new()
 	if data_size[1] == 1:
